@@ -104,3 +104,11 @@ NT-Xent loss. BYOL separates online and stop-gradient target paths, adds an
 online-only predictor and provides an explicit EMA target update. Augmentation
 is outside both fixed runtime graphs; their runtime notes therefore state that
 the two input tensors are already-created views.
+
+The bundled LDM and DiT examples connect two successive diffusion changes. LDM
+separates first-stage image compression from conditioned latent denoising; DiT
+keeps that latent diffusion setting while replacing the U-Net with latent patch
+tokens and adaLN-conditioned Transformer blocks. Both execute one deterministic
+noise-prediction step with random weights. Their runtime notes explicitly exclude
+large pretrained encoders, complete iterative sampling and production-scale
+training so the executable graph is not confused with a full generator.
