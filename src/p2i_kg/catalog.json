@@ -1742,6 +1742,164 @@
       "kind": "task",
       "label": "Unseen-node representation",
       "summary": "훈련 중 보지 못한 노드나 새 그래프의 특징에서 표현을 생성합니다."
+    },
+    {
+      "id": "model:deepsets",
+      "kind": "model",
+      "label": "Deep Sets",
+      "summary": "공유 원소 인코더의 출력을 합산한 뒤 집합 수준 함수를 학습해 입력 순서에 불변인 예측을 만듭니다.",
+      "reference_year": 2017,
+      "family": "set",
+      "runtime_id": "deepsets",
+      "runtime_note": "7개 원소에 공유 MLP를 적용하고 합 풀링과 집합 readout을 거치는 작은 rho(sum(phi(x))) 예제입니다. 무작위 초기화이며 논문 실험을 재현하지 않습니다.",
+      "aliases": [
+        "DeepSets"
+      ]
+    },
+    {
+      "id": "model:pointnet",
+      "kind": "model",
+      "label": "PointNet",
+      "summary": "정렬되지 않은 3D 점마다 공유 MLP를 적용하고 채널별 최대 풀링으로 전역 형상 표현을 만듭니다.",
+      "reference_year": 2017,
+      "family": "3d",
+      "runtime_id": "pointnet",
+      "runtime_note": "16개 3D 점에 공유 MLP와 대칭 max pooling을 적용하는 작은 형상 분류 예제입니다. 입력·특징 변환망과 분할 경로는 생략하며 무작위 초기화입니다.",
+      "aliases": [
+        "Point Net"
+      ]
+    },
+    {
+      "id": "paper:deepsets",
+      "kind": "paper",
+      "label": "Deep Sets",
+      "summary": "집합 함수의 순열 불변성을 rho(sum(phi(x))) 계열로 특성화하고 다양한 집합 학습 과제에 적용한 원논문.",
+      "reference_year": 2017,
+      "url": "https://papers.neurips.cc/paper_files/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html",
+      "authors": [
+        "Manzil Zaheer",
+        "Satwik Kottur",
+        "Siamak Ravanbakhsh",
+        "Barnabas Poczos",
+        "Ruslan Salakhutdinov",
+        "Alexander J. Smola"
+      ]
+    },
+    {
+      "id": "paper:pointnet",
+      "kind": "paper",
+      "label": "PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation",
+      "summary": "정렬되지 않은 원시 점 집합을 공유 점 특징과 대칭 함수로 직접 처리하는 3D 분류·분할 아키텍처 원논문.",
+      "reference_year": 2017,
+      "url": "https://openaccess.thecvf.com/content_cvpr_2017/html/Qi_PointNet_Deep_Learning_CVPR_2017_paper.html",
+      "authors": [
+        "Charles R. Qi",
+        "Hao Su",
+        "Kaichun Mo",
+        "Leonidas J. Guibas"
+      ]
+    },
+    {
+      "id": "concept:permutation_invariance",
+      "kind": "concept",
+      "label": "Permutation invariance",
+      "summary": "입력 원소의 순서를 바꾸어도 집합 수준 출력이 변하지 않습니다."
+    },
+    {
+      "id": "concept:shared_element_encoding",
+      "kind": "concept",
+      "label": "Shared element encoding",
+      "summary": "같은 학습 가능 함수를 집합의 각 원소에 독립적으로 적용합니다."
+    },
+    {
+      "id": "concept:sum_decomposition",
+      "kind": "concept",
+      "label": "Sum-decomposable set function",
+      "summary": "원소별 표현을 합산하고 후속 함수로 변환해 순열 불변 집합 함수를 구성합니다."
+    },
+    {
+      "id": "concept:symmetric_reduction",
+      "kind": "concept",
+      "label": "Symmetric set reduction",
+      "summary": "합이나 최대값처럼 입력 순서와 무관한 연산으로 원소 특징을 전역 표현에 모읍니다."
+    },
+    {
+      "id": "concept:pointwise_feature_learning",
+      "kind": "concept",
+      "label": "Pointwise feature learning",
+      "summary": "공유 MLP가 각 3D 점을 고차원 국소 특징으로 변환합니다."
+    },
+    {
+      "id": "concept:critical_point_selection",
+      "kind": "concept",
+      "label": "Critical-point selection",
+      "summary": "채널별 최대값을 제공하는 일부 점이 전역 형상 표현을 결정합니다."
+    },
+    {
+      "id": "concept:input_alignment",
+      "kind": "concept",
+      "label": "Learned input alignment",
+      "summary": "데이터 의존 변환망이 점 집합이나 중간 특징을 정규화된 좌표계로 정렬합니다."
+    },
+    {
+      "id": "component:element_encoder",
+      "kind": "component",
+      "label": "Shared element encoder",
+      "summary": "각 집합 원소를 동일한 MLP로 잠재 특징에 투영합니다."
+    },
+    {
+      "id": "component:set_sum_pool",
+      "kind": "component",
+      "label": "Set sum pooling",
+      "summary": "원소 잠재 특징을 집합 축으로 합산합니다."
+    },
+    {
+      "id": "component:set_readout",
+      "kind": "component",
+      "label": "Set-level readout",
+      "summary": "집계된 집합 표현을 최종 예측으로 변환합니다."
+    },
+    {
+      "id": "component:input_transform",
+      "kind": "component",
+      "label": "Point input transform",
+      "summary": "PointNet의 학습 가능한 변환망이 입력 점 또는 특징을 정렬합니다."
+    },
+    {
+      "id": "component:shared_point_mlp",
+      "kind": "component",
+      "label": "Shared point MLP",
+      "summary": "모든 점에 같은 다층 퍼셉트론을 적용해 점별 특징을 만듭니다."
+    },
+    {
+      "id": "component:symmetric_max_pool",
+      "kind": "component",
+      "label": "Symmetric max pooling",
+      "summary": "각 특징 채널의 점별 최댓값을 취해 순서 불변 전역 벡터를 만듭니다."
+    },
+    {
+      "id": "component:shape_classifier",
+      "kind": "component",
+      "label": "Shape classifier",
+      "summary": "전역 점구름 표현을 물체 범주 로짓으로 변환합니다."
+    },
+    {
+      "id": "task:set_learning",
+      "kind": "task",
+      "label": "Set-structured learning",
+      "summary": "크기와 순서가 달라질 수 있는 집합 입력으로 집합 수준 함수를 학습합니다."
+    },
+    {
+      "id": "task:point_cloud_classification",
+      "kind": "task",
+      "label": "Point-cloud classification",
+      "summary": "정렬되지 않은 3D 점 집합에서 물체 또는 장면 범주를 예측합니다."
+    },
+    {
+      "id": "task:point_segmentation",
+      "kind": "task",
+      "label": "Point-wise segmentation",
+      "summary": "점구름의 각 점에 부분 또는 의미 범주를 할당합니다."
     }
   ],
   "edges": [
@@ -6353,6 +6511,556 @@
         "paper:graphsage"
       ],
       "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "documented_in",
+      "target": "paper:deepsets",
+      "basis": "documented",
+      "explanation": "Deep Sets의 대표 원논문입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Title; §2–4; official manzilzaheer/DeepSets repository"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "PointNet의 대표 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Title; Fig. 2; §3; official charlesq34/pointnet repository"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "uses",
+      "target": "concept:permutation_invariance",
+      "basis": "documented",
+      "explanation": "Deep Sets의 집합 수준 출력은 원소 순열에 불변입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Abstract; §2 Theorem 2"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "uses",
+      "target": "concept:shared_element_encoding",
+      "basis": "documented",
+      "explanation": "동일한 원소 변환을 집합 전체에 공유합니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§2–3"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "uses",
+      "target": "concept:sum_decomposition",
+      "basis": "documented",
+      "explanation": "핵심 집합 함수 형태는 rho(sum(phi(x)))입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§2 Theorem 2; Eq. 4"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "uses",
+      "target": "concept:permutation_invariance",
+      "basis": "documented",
+      "explanation": "PointNet은 점 순서에 무관한 출력을 구성합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Abstract; §3.2"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "uses",
+      "target": "concept:shared_element_encoding",
+      "basis": "documented",
+      "explanation": "공유 MLP가 각 점을 독립적으로 처리합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §3.1"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "uses",
+      "target": "concept:symmetric_reduction",
+      "basis": "documented",
+      "explanation": "대칭 함수가 점별 특징을 전역 표현으로 모읍니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "§3.2"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "uses",
+      "target": "concept:pointwise_feature_learning",
+      "basis": "documented",
+      "explanation": "공유 점 함수가 고차원 특징을 학습합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §3.1"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "uses",
+      "target": "concept:critical_point_selection",
+      "basis": "documented",
+      "explanation": "max pooling의 채널 최댓값을 제공하는 critical points가 표현을 결정합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "§3.2; §3.3"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "uses",
+      "target": "concept:input_alignment",
+      "basis": "documented",
+      "explanation": "입력·특징 변환망이 점 집합을 정렬합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §3.1"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "has_component",
+      "target": "component:element_encoder",
+      "basis": "structural",
+      "explanation": "공유 phi 원소 인코더의 실행 모듈입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§2–3; official DeepSets experiment code"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "has_component",
+      "target": "component:set_sum_pool",
+      "basis": "structural",
+      "explanation": "원소 표현의 합 집계 실행 모듈입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§2 Eq. 4"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "has_component",
+      "target": "component:set_readout",
+      "basis": "structural",
+      "explanation": "집합 표현을 예측으로 변환하는 rho 실행 모듈입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§2 Eq. 4"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "has_component",
+      "target": "component:input_transform",
+      "basis": "structural",
+      "explanation": "논문의 입력 정렬 T-Net 구성 요소입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §3.1"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "has_component",
+      "target": "component:shared_point_mlp",
+      "basis": "structural",
+      "explanation": "점별 특징을 만드는 공유 MLP 구성 요소입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §3.1"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "has_component",
+      "target": "component:symmetric_max_pool",
+      "basis": "structural",
+      "explanation": "전역 형상 표현을 만드는 대칭 max 연산입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §3.2"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "has_component",
+      "target": "component:shape_classifier",
+      "basis": "structural",
+      "explanation": "전역 표현 이후의 분류 MLP입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §4.2"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "논문은 집합 입력의 지도 학습 과제를 포함합니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§4"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "분류와 분할 네트워크를 지도 목적함수로 학습합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "§4"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "applied_to",
+      "target": "task:set_learning",
+      "basis": "documented",
+      "explanation": "집합 통계·점구름·집합 확장 등 집합 구조 과제를 다룹니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Abstract; §4"
+    },
+    {
+      "source": "model:deepsets",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "점구름 분류를 포함한 집합 분류 실험을 보고합니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§4.2"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "applied_to",
+      "target": "task:point_cloud_classification",
+      "basis": "documented",
+      "explanation": "원시 점구름 물체 분류에 적용합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Abstract; §4.2"
+    },
+    {
+      "source": "model:pointnet",
+      "relation": "applied_to",
+      "target": "task:point_segmentation",
+      "basis": "documented",
+      "explanation": "부분 분할과 장면 의미 파싱에 적용합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Abstract; §4.3–4.4"
+    },
+    {
+      "source": "concept:sum_decomposition",
+      "relation": "subconcept_of",
+      "target": "concept:permutation_invariance",
+      "basis": "structural",
+      "explanation": "합 분해는 순열 불변 집합 함수를 구성하는 방식입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§2 Theorem 2"
+    },
+    {
+      "source": "concept:symmetric_reduction",
+      "relation": "subconcept_of",
+      "target": "concept:permutation_invariance",
+      "basis": "structural",
+      "explanation": "대칭 집계는 입력 순서에 무관합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "§3.2"
+    },
+    {
+      "source": "concept:critical_point_selection",
+      "relation": "subconcept_of",
+      "target": "concept:symmetric_reduction",
+      "basis": "structural",
+      "explanation": "critical points는 대칭 max 집계에서 채널별 최댓값을 제공합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "§3.2–3.3"
+    },
+    {
+      "source": "component:element_encoder",
+      "relation": "uses",
+      "target": "concept:shared_element_encoding",
+      "basis": "structural",
+      "explanation": "원소 인코더의 파라미터를 모든 원소에 공유합니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§2–3"
+    },
+    {
+      "source": "component:set_sum_pool",
+      "relation": "uses",
+      "target": "concept:sum_decomposition",
+      "basis": "structural",
+      "explanation": "합 풀링이 집합 함수의 불변 집계를 구현합니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "§2 Eq. 4"
+    },
+    {
+      "source": "component:shared_point_mlp",
+      "relation": "uses",
+      "target": "concept:pointwise_feature_learning",
+      "basis": "structural",
+      "explanation": "공유 MLP가 점별 특징을 학습합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §3.1"
+    },
+    {
+      "source": "component:symmetric_max_pool",
+      "relation": "uses",
+      "target": "concept:symmetric_reduction",
+      "basis": "structural",
+      "explanation": "max pooling은 점 순서와 무관한 대칭 함수입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "§3.2"
+    },
+    {
+      "source": "component:symmetric_max_pool",
+      "relation": "uses",
+      "target": "concept:critical_point_selection",
+      "basis": "structural",
+      "explanation": "채널 최댓값을 제공하는 점이 전역 표현에 남습니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "§3.3"
+    },
+    {
+      "source": "component:input_transform",
+      "relation": "uses",
+      "target": "concept:input_alignment",
+      "basis": "structural",
+      "explanation": "T-Net이 입력 또는 특징 정렬을 학습합니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "Fig. 2; §3.1"
+    },
+    {
+      "source": "concept:permutation_invariance",
+      "relation": "documented_in",
+      "target": "paper:deepsets",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Deep Sets §2–4"
+    },
+    {
+      "source": "concept:shared_element_encoding",
+      "relation": "documented_in",
+      "target": "paper:deepsets",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Deep Sets §2–4"
+    },
+    {
+      "source": "concept:sum_decomposition",
+      "relation": "documented_in",
+      "target": "paper:deepsets",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Deep Sets §2–4"
+    },
+    {
+      "source": "concept:symmetric_reduction",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "concept:pointwise_feature_learning",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "concept:critical_point_selection",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "concept:input_alignment",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "component:element_encoder",
+      "relation": "documented_in",
+      "target": "paper:deepsets",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Deep Sets §2–4"
+    },
+    {
+      "source": "component:set_sum_pool",
+      "relation": "documented_in",
+      "target": "paper:deepsets",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Deep Sets §2–4"
+    },
+    {
+      "source": "component:set_readout",
+      "relation": "documented_in",
+      "target": "paper:deepsets",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Deep Sets §2–4"
+    },
+    {
+      "source": "component:input_transform",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "component:shared_point_mlp",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "component:symmetric_max_pool",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "component:shape_classifier",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "task:set_learning",
+      "relation": "documented_in",
+      "target": "paper:deepsets",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:deepsets"
+      ],
+      "locator": "Deep Sets §2–4"
+    },
+    {
+      "source": "task:point_cloud_classification",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
+    },
+    {
+      "source": "task:point_segmentation",
+      "relation": "documented_in",
+      "target": "paper:pointnet",
+      "basis": "documented",
+      "explanation": "이 노드의 정의와 구조적 역할을 뒷받침하는 원논문입니다.",
+      "evidence": [
+        "paper:pointnet"
+      ],
+      "locator": "PointNet Fig. 2; §3–4"
     }
   ]
 }

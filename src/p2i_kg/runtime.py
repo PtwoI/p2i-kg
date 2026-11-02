@@ -3,7 +3,7 @@ import socket
 from threading import Lock, Thread
 import time
 
-RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr', 'nerf', 'perceiver', 'graphsage')
+RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr', 'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet')
 
 
 def make_model(runtime_id):
@@ -39,6 +39,11 @@ def make_model(runtime_id):
                 [1., 0., 1., 0., 0.], [1., 1., 0., 1., 0.],
                 [0., 0., 1., 0., 1.], [0., 0., 0., 1., 0.]]]).expand(2, -1, -1)
             return TinyGraphSAGE().eval(), (torch.randn(2, 5, 8), adjacency)
+        if runtime_id in ('deepsets', 'pointnet'):
+            from .models import TinyDeepSets, TinyPointNet
+            if runtime_id == 'deepsets':
+                return TinyDeepSets().eval(), (torch.randn(2, 7, 6),)
+            return TinyPointNet().eval(), (torch.randn(2, 16, 3),)
         if runtime_id == 'resnet18':
             from torchvision.models import resnet18
             return resnet18(weights=None, num_classes=4).eval(), (torch.randn(2, 3, 32, 32),)
