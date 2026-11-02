@@ -1,0 +1,680 @@
+{
+  "schema_version": "0.1",
+  "title": "P2I Architecture Atlas",
+  "nodes": [
+    {
+      "id": "paper:perceptron",
+      "kind": "paper",
+      "label": "The perceptron: A probabilistic model for information storage and organization in the brain",
+      "summary": "모델과 개념을 설명하는 대표 문헌입니다. 원문에서 해당 구조와 주장 범위를 확인할 수 있습니다.",
+      "reference_year": 1958,
+      "authors": [
+        "Frank Rosenblatt"
+      ],
+      "url": "https://doi.org/10.1037/h0042519"
+    },
+    {
+      "id": "paper:backprop",
+      "kind": "paper",
+      "label": "Learning representations by back-propagating errors",
+      "summary": "모델과 개념을 설명하는 대표 문헌입니다. 원문에서 해당 구조와 주장 범위를 확인할 수 있습니다.",
+      "reference_year": 1986,
+      "authors": [
+        "David E. Rumelhart",
+        "Geoffrey E. Hinton",
+        "Ronald J. Williams"
+      ],
+      "url": "https://www.cs.toronto.edu/~hinton/absps/naturebp.pdf"
+    },
+    {
+      "id": "paper:lenet",
+      "kind": "paper",
+      "label": "Gradient-Based Learning Applied to Document Recognition",
+      "summary": "모델과 개념을 설명하는 대표 문헌입니다. 원문에서 해당 구조와 주장 범위를 확인할 수 있습니다.",
+      "reference_year": 1998,
+      "authors": [
+        "Yann LeCun",
+        "Léon Bottou",
+        "Yoshua Bengio",
+        "Patrick Haffner"
+      ],
+      "url": "https://doi.org/10.1109/5.726791"
+    },
+    {
+      "id": "paper:elman",
+      "kind": "paper",
+      "label": "Finding Structure in Time",
+      "summary": "모델과 개념을 설명하는 대표 문헌입니다. 원문에서 해당 구조와 주장 범위를 확인할 수 있습니다.",
+      "reference_year": 1990,
+      "authors": [
+        "Jeffrey L. Elman"
+      ],
+      "url": "https://cogsci.ucsd.edu/~rik/courses/readings/elman90-fsit.pdf"
+    },
+    {
+      "id": "paper:lstm",
+      "kind": "paper",
+      "label": "Long Short-Term Memory",
+      "summary": "모델과 개념을 설명하는 대표 문헌입니다. 원문에서 해당 구조와 주장 범위를 확인할 수 있습니다.",
+      "reference_year": 1997,
+      "authors": [
+        "Sepp Hochreiter",
+        "Jürgen Schmidhuber"
+      ],
+      "url": "https://doi.org/10.1162/neco.1997.9.8.1735"
+    },
+    {
+      "id": "paper:gru",
+      "kind": "paper",
+      "label": "Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation",
+      "summary": "모델과 개념을 설명하는 대표 문헌입니다. 원문에서 해당 구조와 주장 범위를 확인할 수 있습니다.",
+      "reference_year": 2014,
+      "authors": [
+        "Kyunghyun Cho",
+        "Bart van Merriënboer",
+        "Caglar Gulcehre",
+        "Dzmitry Bahdanau",
+        "Fethi Bougares",
+        "Holger Schwenk",
+        "Yoshua Bengio"
+      ],
+      "url": "https://arxiv.org/abs/1406.1078"
+    },
+    {
+      "id": "paper:resnet",
+      "kind": "paper",
+      "label": "Deep Residual Learning for Image Recognition",
+      "summary": "모델과 개념을 설명하는 대표 문헌입니다. 원문에서 해당 구조와 주장 범위를 확인할 수 있습니다.",
+      "reference_year": 2015,
+      "authors": [
+        "Kaiming He",
+        "Xiangyu Zhang",
+        "Shaoqing Ren",
+        "Jian Sun"
+      ],
+      "url": "https://arxiv.org/abs/1512.03385"
+    },
+    {
+      "id": "paper:transformer",
+      "kind": "paper",
+      "label": "Attention Is All You Need",
+      "summary": "모델과 개념을 설명하는 대표 문헌입니다. 원문에서 해당 구조와 주장 범위를 확인할 수 있습니다.",
+      "reference_year": 2017,
+      "authors": [
+        "Ashish Vaswani",
+        "Noam Shazeer",
+        "Niki Parmar",
+        "Jakob Uszkoreit",
+        "Llion Jones",
+        "Aidan N. Gomez",
+        "Łukasz Kaiser",
+        "Illia Polosukhin"
+      ],
+      "url": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "id": "concept:weighted_sum",
+      "kind": "concept",
+      "label": "가중합",
+      "summary": "입력 특징에 가중치를 곱해 합치고 편향을 더하는 연산입니다."
+    },
+    {
+      "id": "concept:activation",
+      "kind": "concept",
+      "label": "비선형 활성화",
+      "summary": "가중합 뒤에 비선형 변환을 적용해 표현력을 높입니다. 임계 함수와 미분 가능한 활성화는 구분합니다."
+    },
+    {
+      "id": "concept:backprop",
+      "kind": "concept",
+      "label": "역전파",
+      "summary": "출력에서 시작한 미분 정보를 연결된 연산으로 전달해 학습 파라미터의 기울기를 구합니다."
+    },
+    {
+      "id": "concept:convolution",
+      "kind": "concept",
+      "label": "합성곱",
+      "summary": "공간의 작은 영역에 필터를 적용해 지역적 패턴을 추출합니다."
+    },
+    {
+      "id": "concept:weight_sharing",
+      "kind": "concept",
+      "label": "가중치 공유",
+      "summary": "서로 다른 위치나 시점에 같은 파라미터를 재사용합니다."
+    },
+    {
+      "id": "concept:recurrence",
+      "kind": "concept",
+      "label": "순환 상태",
+      "summary": "이전 시점의 상태를 다음 시점의 계산에 전달합니다."
+    },
+    {
+      "id": "concept:gating",
+      "kind": "concept",
+      "label": "게이트",
+      "summary": "상태를 유지하거나 갱신하는 정보의 비율을 입력에 따라 조절합니다."
+    },
+    {
+      "id": "concept:memory_cell",
+      "kind": "concept",
+      "label": "메모리 셀",
+      "summary": "LSTM에서 장기 정보를 전달하는 별도의 셀 상태를 사용합니다."
+    },
+    {
+      "id": "concept:residual",
+      "kind": "concept",
+      "label": "잔차 연결",
+      "summary": "변환한 결과에 입력 경로를 더해 정보와 기울기의 전달 경로를 만듭니다."
+    },
+    {
+      "id": "concept:self_attention",
+      "kind": "concept",
+      "label": "Self-Attention",
+      "summary": "같은 입력 시퀀스에서 만든 query, key, value를 이용해 위치 사이의 정보를 결합합니다."
+    },
+    {
+      "id": "concept:position",
+      "kind": "concept",
+      "label": "위치 정보",
+      "summary": "순서 정보가 필요한 Attention 모델에 위치를 표현하는 신호를 더합니다."
+    },
+    {
+      "id": "concept:ffn",
+      "kind": "concept",
+      "label": "위치별 FFN",
+      "summary": "각 위치의 표현에 동일한 피드포워드 변환을 적용합니다."
+    },
+    {
+      "id": "model:perceptron",
+      "kind": "model",
+      "label": "Perceptron",
+      "reference_year": 1958,
+      "family": "feedforward",
+      "summary": "가중합과 임계 판단으로 이진 출력을 만드는 단일 유닛부터 살펴봅니다. 임계 연산은 일반적인 역전파로 학습하지 않습니다.",
+      "runtime_id": "perceptron",
+      "runtime_note": "실제 임계 출력을 사용하는 작은 예제입니다. 미분 불가능한 출력이므로 backward 검증은 지원하지 않습니다."
+    },
+    {
+      "id": "model:mlp",
+      "kind": "model",
+      "label": "MLP",
+      "reference_year": 1986,
+      "family": "feedforward",
+      "summary": "여러 선형 층과 비선형 활성화를 쌓아 입력 표현을 바꿉니다. 1986년 문헌은 대표적인 역전파 학습 설명에 연결됩니다.",
+      "runtime_id": "mlp",
+      "runtime_note": "작은 교육용 구현입니다. 원 논문의 학습 결과를 재현한 사전학습 모델은 아닙니다."
+    },
+    {
+      "id": "model:cnn",
+      "kind": "model",
+      "label": "CNN · LeNet 계열",
+      "reference_year": 1998,
+      "family": "vision",
+      "summary": "지역적 필터와 가중치 공유를 이용해 영상의 패턴을 추출합니다. 대표 문헌은 LeNet 계열이며 실행 예제는 P2I의 작은 CNN입니다.",
+      "runtime_id": "cnn",
+      "runtime_note": "작은 교육용 구현입니다. 원 논문의 학습 결과를 재현한 사전학습 모델은 아닙니다."
+    },
+    {
+      "id": "model:rnn",
+      "kind": "model",
+      "label": "RNN · Elman 계열",
+      "reference_year": 1990,
+      "family": "sequence",
+      "summary": "같은 순환 연산과 이전 상태를 반복해 시퀀스의 문맥을 표현합니다. 실행 예제에서 출력과 숨은 상태를 함께 관찰할 수 있습니다.",
+      "runtime_id": "rnn",
+      "runtime_note": "작은 교육용 구현입니다. 원 논문의 학습 결과를 재현한 사전학습 모델은 아닙니다."
+    },
+    {
+      "id": "model:lstm",
+      "kind": "model",
+      "label": "LSTM",
+      "reference_year": 1997,
+      "family": "sequence",
+      "summary": "게이트와 셀 상태를 추가해 긴 시점 간 정보와 기울기의 전달을 다룹니다. PyTorch 구현의 현대적 게이트 구성과 원 논문의 구체적 구성은 구별합니다.",
+      "runtime_id": "lstm",
+      "runtime_note": "작은 교육용 구현입니다. 원 논문의 학습 결과를 재현한 사전학습 모델은 아닙니다."
+    },
+    {
+      "id": "model:gru",
+      "kind": "model",
+      "label": "GRU",
+      "reference_year": 2014,
+      "family": "sequence",
+      "summary": "게이트를 이용해 순환 상태의 갱신과 유지를 조절합니다. 원 문헌의 RNN Encoder-Decoder와 여기의 작은 분류기 예제는 서로 다른 전체 모델입니다.",
+      "runtime_id": "gru",
+      "runtime_note": "작은 교육용 구현입니다. 원 논문의 학습 결과를 재현한 사전학습 모델은 아닙니다."
+    },
+    {
+      "id": "model:resnet",
+      "kind": "model",
+      "label": "ResNet",
+      "reference_year": 2015,
+      "family": "vision",
+      "summary": "합성곱 변환에 입력 경로를 더하는 잔차 블록을 이용합니다. 내부 채널 폭과 잔차 출력 폭을 나눠 살펴볼 수 있습니다.",
+      "runtime_id": "resnet18",
+      "runtime_note": "TorchVision ResNet18을 무작위 가중치로 실행합니다. vision 추가 의존성이 필요하며 모델 가중치를 다운로드하지 않습니다."
+    },
+    {
+      "id": "model:transformer",
+      "kind": "model",
+      "label": "Transformer",
+      "reference_year": 2017,
+      "family": "attention",
+      "summary": "Self-Attention과 FFN, 잔차 연결로 시퀀스 표현을 갱신합니다. 실행 예제는 P2I의 작은 블록으로 원 논문의 전체 인코더-디코더 재현이 아닙니다.",
+      "runtime_id": "transformer",
+      "runtime_note": "P2I TinyTransformer의 Attention·FFN 블록을 실행합니다. 이 작은 실행 예제에는 위치 인코딩이나 전체 인코더-디코더가 없습니다."
+    }
+  ],
+  "edges": [
+    {
+      "source": "model:perceptron",
+      "relation": "documented_in",
+      "target": "paper:perceptron",
+      "basis": "documented",
+      "explanation": "대표 참고 문헌입니다. 연도는 이 문헌 기준이며 모델 계열의 최초 발명 연도를 단정하지 않습니다.",
+      "evidence": [
+        "paper:perceptron"
+      ]
+    },
+    {
+      "source": "model:perceptron",
+      "relation": "uses",
+      "target": "concept:weighted_sum",
+      "basis": "structural",
+      "explanation": "Perceptron의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:perceptron"
+      ]
+    },
+    {
+      "source": "model:perceptron",
+      "relation": "uses",
+      "target": "concept:activation",
+      "basis": "structural",
+      "explanation": "Perceptron의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:perceptron"
+      ]
+    },
+    {
+      "source": "model:mlp",
+      "relation": "documented_in",
+      "target": "paper:backprop",
+      "basis": "documented",
+      "explanation": "대표 참고 문헌입니다. 연도는 이 문헌 기준이며 모델 계열의 최초 발명 연도를 단정하지 않습니다.",
+      "evidence": [
+        "paper:backprop"
+      ]
+    },
+    {
+      "source": "model:mlp",
+      "relation": "uses",
+      "target": "concept:weighted_sum",
+      "basis": "structural",
+      "explanation": "MLP의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:backprop"
+      ]
+    },
+    {
+      "source": "model:mlp",
+      "relation": "uses",
+      "target": "concept:activation",
+      "basis": "structural",
+      "explanation": "MLP의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:backprop"
+      ]
+    },
+    {
+      "source": "model:mlp",
+      "relation": "uses",
+      "target": "concept:backprop",
+      "basis": "structural",
+      "explanation": "MLP의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:backprop"
+      ]
+    },
+    {
+      "source": "model:cnn",
+      "relation": "documented_in",
+      "target": "paper:lenet",
+      "basis": "documented",
+      "explanation": "대표 참고 문헌입니다. 연도는 이 문헌 기준이며 모델 계열의 최초 발명 연도를 단정하지 않습니다.",
+      "evidence": [
+        "paper:lenet"
+      ]
+    },
+    {
+      "source": "model:cnn",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "structural",
+      "explanation": "CNN · LeNet 계열의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:lenet"
+      ]
+    },
+    {
+      "source": "model:cnn",
+      "relation": "uses",
+      "target": "concept:weight_sharing",
+      "basis": "structural",
+      "explanation": "CNN · LeNet 계열의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:lenet"
+      ]
+    },
+    {
+      "source": "model:cnn",
+      "relation": "uses",
+      "target": "concept:activation",
+      "basis": "structural",
+      "explanation": "CNN · LeNet 계열의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:lenet"
+      ]
+    },
+    {
+      "source": "model:cnn",
+      "relation": "uses",
+      "target": "concept:backprop",
+      "basis": "structural",
+      "explanation": "CNN · LeNet 계열의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:lenet"
+      ]
+    },
+    {
+      "source": "model:rnn",
+      "relation": "documented_in",
+      "target": "paper:elman",
+      "basis": "documented",
+      "explanation": "대표 참고 문헌입니다. 연도는 이 문헌 기준이며 모델 계열의 최초 발명 연도를 단정하지 않습니다.",
+      "evidence": [
+        "paper:elman"
+      ]
+    },
+    {
+      "source": "model:rnn",
+      "relation": "uses",
+      "target": "concept:recurrence",
+      "basis": "structural",
+      "explanation": "RNN · Elman 계열의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:elman"
+      ]
+    },
+    {
+      "source": "model:rnn",
+      "relation": "uses",
+      "target": "concept:weight_sharing",
+      "basis": "structural",
+      "explanation": "RNN · Elman 계열의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:elman"
+      ]
+    },
+    {
+      "source": "model:rnn",
+      "relation": "uses",
+      "target": "concept:activation",
+      "basis": "structural",
+      "explanation": "RNN · Elman 계열의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:elman"
+      ]
+    },
+    {
+      "source": "model:rnn",
+      "relation": "uses",
+      "target": "concept:backprop",
+      "basis": "structural",
+      "explanation": "RNN · Elman 계열의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:elman"
+      ]
+    },
+    {
+      "source": "model:lstm",
+      "relation": "documented_in",
+      "target": "paper:lstm",
+      "basis": "documented",
+      "explanation": "대표 참고 문헌입니다. 연도는 이 문헌 기준이며 모델 계열의 최초 발명 연도를 단정하지 않습니다.",
+      "evidence": [
+        "paper:lstm"
+      ]
+    },
+    {
+      "source": "model:lstm",
+      "relation": "uses",
+      "target": "concept:recurrence",
+      "basis": "structural",
+      "explanation": "LSTM의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:lstm"
+      ]
+    },
+    {
+      "source": "model:lstm",
+      "relation": "uses",
+      "target": "concept:gating",
+      "basis": "structural",
+      "explanation": "LSTM의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:lstm"
+      ]
+    },
+    {
+      "source": "model:lstm",
+      "relation": "uses",
+      "target": "concept:memory_cell",
+      "basis": "structural",
+      "explanation": "LSTM의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:lstm"
+      ]
+    },
+    {
+      "source": "model:lstm",
+      "relation": "uses",
+      "target": "concept:backprop",
+      "basis": "structural",
+      "explanation": "LSTM의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:lstm"
+      ]
+    },
+    {
+      "source": "model:gru",
+      "relation": "documented_in",
+      "target": "paper:gru",
+      "basis": "documented",
+      "explanation": "대표 참고 문헌입니다. 연도는 이 문헌 기준이며 모델 계열의 최초 발명 연도를 단정하지 않습니다.",
+      "evidence": [
+        "paper:gru"
+      ]
+    },
+    {
+      "source": "model:gru",
+      "relation": "uses",
+      "target": "concept:recurrence",
+      "basis": "structural",
+      "explanation": "GRU의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:gru"
+      ]
+    },
+    {
+      "source": "model:gru",
+      "relation": "uses",
+      "target": "concept:gating",
+      "basis": "structural",
+      "explanation": "GRU의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:gru"
+      ]
+    },
+    {
+      "source": "model:gru",
+      "relation": "uses",
+      "target": "concept:backprop",
+      "basis": "structural",
+      "explanation": "GRU의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:gru"
+      ]
+    },
+    {
+      "source": "model:resnet",
+      "relation": "documented_in",
+      "target": "paper:resnet",
+      "basis": "documented",
+      "explanation": "대표 참고 문헌입니다. 연도는 이 문헌 기준이며 모델 계열의 최초 발명 연도를 단정하지 않습니다.",
+      "evidence": [
+        "paper:resnet"
+      ]
+    },
+    {
+      "source": "model:resnet",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "structural",
+      "explanation": "ResNet의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:resnet"
+      ]
+    },
+    {
+      "source": "model:resnet",
+      "relation": "uses",
+      "target": "concept:residual",
+      "basis": "structural",
+      "explanation": "ResNet의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:resnet"
+      ]
+    },
+    {
+      "source": "model:resnet",
+      "relation": "uses",
+      "target": "concept:backprop",
+      "basis": "structural",
+      "explanation": "ResNet의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:resnet"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "documented_in",
+      "target": "paper:transformer",
+      "basis": "documented",
+      "explanation": "대표 참고 문헌입니다. 연도는 이 문헌 기준이며 모델 계열의 최초 발명 연도를 단정하지 않습니다.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "structural",
+      "explanation": "Transformer의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "structural",
+      "explanation": "Transformer의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "uses",
+      "target": "concept:residual",
+      "basis": "structural",
+      "explanation": "Transformer의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "uses",
+      "target": "concept:position",
+      "basis": "structural",
+      "explanation": "Transformer의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "uses",
+      "target": "concept:backprop",
+      "basis": "structural",
+      "explanation": "Transformer의 대표 구조에서 이 개념을 살펴볼 수 있습니다.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:mlp",
+      "relation": "extends",
+      "target": "model:perceptron",
+      "basis": "pedagogical",
+      "explanation": "단일 가중합 유닛에서 다층 비선형 네트워크로 학습 범위를 넓히는 교육적 연결입니다. 직접적인 역사적 계승을 단정하지 않습니다.",
+      "evidence": [
+        "paper:backprop"
+      ]
+    },
+    {
+      "source": "model:lstm",
+      "relation": "extends",
+      "target": "model:rnn",
+      "basis": "documented",
+      "explanation": "순환 학습에서 긴 시간 간격의 정보와 기울기 전달을 다루기 위한 메모리 구조를 추가합니다.",
+      "evidence": [
+        "paper:lstm"
+      ]
+    },
+    {
+      "source": "model:gru",
+      "relation": "extends",
+      "target": "model:rnn",
+      "basis": "structural",
+      "explanation": "게이트를 추가한 순환 유닛으로 비교합니다. LSTM의 단순한 후속 버전이라는 직선 계보를 뜻하지 않습니다.",
+      "evidence": [
+        "paper:gru"
+      ]
+    },
+    {
+      "source": "model:resnet",
+      "relation": "extends",
+      "target": "model:cnn",
+      "basis": "structural",
+      "explanation": "합성곱 네트워크에 잔차 학습 구조를 연결하는 구조적 비교입니다.",
+      "evidence": [
+        "paper:resnet"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "alternative_to",
+      "target": "model:rnn",
+      "basis": "documented",
+      "explanation": "원 논문은 시퀀스 변환에서 순환·합성곱을 쓰지 않는 Attention 기반 구조를 제안합니다.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "p2i-kg"
+version = "0.1.0"
+description = "A local neural architecture knowledge graph with executable P2I models"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+dependencies = ["pydantic>=2.7,<3", "fastapi>=0.110", "uvicorn>=0.27"]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "httpx>=0.27"]
+runtime = ["p2i-core>=0.4.3,<0.5", "p2i-gui>=0.4.3,<0.5"]
+vision = ["torchvision>=0.20,<0.22"]
+
+[project.scripts]
+p2i-kg = "p2i_kg.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+p2i_kg = ["catalog.json", "static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
