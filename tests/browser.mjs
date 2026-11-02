@@ -26,7 +26,7 @@ try{
  await expect(page.locator('#state-formula')).toContainText('0.664');
  await page.getByRole('button',{name:'관계 탐색',exact:true}).click();
  await expect(page.locator('#map [data-node="component:encoder"]')).toBeVisible();
- await expect(page.locator('#stats')).toContainText('30개 모델 · 139개 노드 · 287개 관계');
+ await expect(page.locator('#stats')).toContainText('32개 모델 · 154개 노드 · 321개 관계');
  await expect(page.locator('#detail h2')).toHaveText('Transformer');
  await page.getByLabel('모델 바로가기',{exact:true}).selectOption('model:llama');
  await expect(page.locator('#detail h2')).toHaveText('LLaMA · 2023');
@@ -72,7 +72,7 @@ try{
  await mkdir(new URL('../artifacts/',import.meta.url),{recursive:true});
  const path=new URL('../artifacts/catalog.jsonld',import.meta.url).pathname;
  await download.saveAs(path);
- if(JSON.parse(await readFile(path,'utf8'))['@graph'].length!==426)throw Error('Incomplete JSON-LD export');
+ if(JSON.parse(await readFile(path,'utf8'))['@graph'].length!==475)throw Error('Incomplete JSON-LD export');
  await page.getByLabel('모델 바로가기',{exact:true}).selectOption('model:transformer');
  await page.getByRole('button',{name:'온톨로지 ↔ 실제 모듈 연결',exact:true}).click();
  await expect(page.locator('#bindings')).toContainText('decoder.0.multihead_attn',{timeout:60000});
