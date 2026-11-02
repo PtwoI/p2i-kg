@@ -3,7 +3,7 @@ import socket
 from threading import Lock, Thread
 import time
 
-RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer')
+RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2')
 
 
 def make_model(runtime_id):
@@ -22,6 +22,16 @@ def make_model(runtime_id):
         if runtime_id == 'resnet18':
             from torchvision.models import resnet18
             return resnet18(weights=None, num_classes=4).eval(), (torch.randn(2, 3, 32, 32),)
+        if runtime_id in ('bert', 'vit'):
+            from p2i.verification import make_case
+            model, inputs, _ = make_case(runtime_id)
+            return model, inputs
+        if runtime_id == 'gpt2':
+            from transformers import GPT2Config, GPT2LMHeadModel
+            config = GPT2Config(vocab_size=32, n_positions=32, n_embd=16, n_layer=1,
+                n_head=2, resid_pdrop=0.0, embd_pdrop=0.0, attn_pdrop=0.0,
+                use_cache=False, return_dict=False, attn_implementation='eager')
+            return GPT2LMHeadModel(config).eval(), (torch.randint(0, 32, (2, 6)),)
         return make_demo(runtime_id)
 
 
