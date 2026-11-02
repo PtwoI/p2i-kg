@@ -6,7 +6,9 @@ const page=await browser.newPage({viewport:{width:1500,height:1100}});
 const errors=[];page.on('pageerror',error=>errors.push(String(error)));
 try{
  await page.goto(process.env.P2I_KG_URL??'http://127.0.0.1:8010');
- await expect(page.locator('#map [data-node]')).toHaveCount(30);
+ const catalog = await (await page.request.get(new URL('/api/kg', page.url()).href)).json();
+ const modelCount = catalog.nodes.filter(n=>n.kind==='model').length;
+ await expect(page.locator('#map [data-node]')).toHaveCount(modelCount);
  await expect(page.locator('#map')).toBeVisible();
  await expect(page.locator('#lesson')).toHaveCount(0);
  const initialBox=await page.locator('#map').getAttribute('viewBox');
@@ -21,7 +23,7 @@ try{
  await expect(page.locator('#map [data-node="component:encoder"]')).toBeVisible();
  await page.getByRole('button',{name:'모델 지도',exact:true}).click();
  await page.locator('#map [data-node="model:transformer"]').click();
- await expect(page.locator('#stats')).toContainText('30개 모델 · 139개 노드 · 287개 관계');
+ await expect(page.locator('#stats')).toContainText(`${modelCount}개 모델 · ${catalog.nodes.length}개 노드 · ${catalog.edges.length}개 관계`);
  await expect(page.locator('#detail h2')).toHaveText('Transformer');
  await page.getByLabel('모델 바로가기',{exact:true}).selectOption('model:llama');
  await expect(page.locator('#detail h2')).toHaveText('LLaMA · 2023');
@@ -70,7 +72,7 @@ try{
  await mkdir(new URL('../artifacts/',import.meta.url),{recursive:true});
  const path=new URL('../artifacts/catalog.jsonld',import.meta.url).pathname;
  await download.saveAs(path);
- if(JSON.parse(await readFile(path,'utf8'))['@graph'].length!==426)throw Error('Incomplete JSON-LD export');
+ if(JSON.parse(await readFile(path,'utf8'))['@graph'].length!==catalog.nodes.length+catalog.edges.length)throw Error('Incomplete JSON-LD export');
  await page.getByRole('button',{name:'지도 데이터 닫기',exact:true}).click();
  await page.getByLabel('모델 바로가기',{exact:true}).selectOption('model:transformer');
  await page.getByRole('button',{name:'온톨로지 ↔ 실제 모듈 연결',exact:true}).click();
@@ -99,7 +101,7 @@ try{
  await page.getByRole('button',{name:'데이터',exact:true}).click();
  await page.locator('#patch-file').setInputFiles({name:'extension.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(patch))});
  await expect(page.locator('#patch-status')).toContainText('추가 완료: 1개 노드');
- await expect(page.locator('#stats')).toContainText('140개 노드');
+ await expect(page.locator('#stats')).toContainText(`${catalog.nodes.length+1}개 노드`);
  await page.getByRole('button',{name:'지도 데이터 닫기',exact:true}).click();
  await page.getByRole('button',{name:'모델 지도',exact:true}).click();
  await page.screenshot({path:new URL('../artifacts/atlas-desktop.png',import.meta.url).pathname,fullPage:true});

@@ -3,7 +3,7 @@ import socket
 from threading import Lock, Thread
 import time
 
-RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2')
+RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae')
 
 
 def make_model(runtime_id):
@@ -19,6 +19,10 @@ def make_model(runtime_id):
         if runtime_id == 'perceptron':
             from .models import ThresholdPerceptron
             return ThresholdPerceptron().eval(), (torch.tensor([[0., 0.], [0., 1.], [1., 0.], [1., 1.]]),)
+        if runtime_id in ('mixer', 'mae'):
+            from .models import TinyMixer, TinyMAE
+            model = TinyMixer() if runtime_id == 'mixer' else TinyMAE()
+            return model.eval(), (torch.randn(2, 3, 16, 16),)
         if runtime_id == 'resnet18':
             from torchvision.models import resnet18
             return resnet18(weights=None, num_classes=4).eval(), (torch.randn(2, 3, 32, 32),)

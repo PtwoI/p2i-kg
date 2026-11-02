@@ -4,6 +4,10 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'mixer': [('component:patches', 'patch_embed'), ('component:token_mixer', 'token_mixer'),
+        ('component:channel_mixer', 'channel_mixer')],
+    'mae': [('component:patches', 'patch_embed'), ('component:mae_encoder', 'encoder'),
+        ('component:mae_decoder', 'decoder'), ('component:pixel_predictor', 'head')],
     'seq2seq': [('component:encoder', 'encoder.0'), ('component:decoder', 'decoder.0'),
         ('component:positions', 'positions'), ('component:cross_attention', 'decoder.0.multihead_attn'),
         ('component:self_attention', 'encoder.0.self_attn'), ('component:ffn', 'decoder.0.linear1')],
