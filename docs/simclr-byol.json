@@ -1,0 +1,678 @@
+{
+  "schema_version": "0.2",
+  "nodes": [
+    {
+      "id": "paper:simclr",
+      "kind": "paper",
+      "label": "A Simple Framework for Contrastive Learning of Visual Representations",
+      "summary": "강한 두 시점 증강, 공유 인코더, 비선형 투영 헤드와 NT-Xent를 결합한 SimCLR 원논문.",
+      "reference_year": 2020,
+      "url": "https://proceedings.mlr.press/v119/chen20j.html",
+      "authors": [
+        "Ting Chen",
+        "Simon Kornblith",
+        "Mohammad Norouzi",
+        "Geoffrey Hinton"
+      ]
+    },
+    {
+      "id": "paper:byol",
+      "kind": "paper",
+      "label": "Bootstrap Your Own Latent: A New Approach to Self-Supervised Learning",
+      "summary": "온라인 네트워크가 EMA 표적 네트워크의 다른 시점 표현을 예측하는 BYOL 원논문.",
+      "reference_year": 2020,
+      "url": "https://papers.nips.cc/paper/2020/hash/f3ada80d5c4ee70142b17b8192b2958e-Abstract.html",
+      "authors": [
+        "Jean-Bastien Grill",
+        "Florian Strub",
+        "Florent Altché",
+        "Corentin Tallec",
+        "Pierre H. Richemond",
+        "Elena Buchatskaya",
+        "Carl Doersch",
+        "Bernardo Avila Pires",
+        "Zhaohan Daniel Guo",
+        "Mohammad Gheshlaghi Azar",
+        "Bilal Piot",
+        "Koray Kavukcuoglu",
+        "Rémi Munos",
+        "Michal Valko"
+      ]
+    },
+    {
+      "id": "model:simclr",
+      "kind": "model",
+      "label": "SimCLR",
+      "summary": "같은 이미지의 두 강한 증강 시점을 공유 인코더와 투영 헤드로 처리하고 배치 내 음성 쌍과 대조합니다.",
+      "reference_year": 2020,
+      "family": "self-supervised",
+      "runtime_id": "simclr",
+      "runtime_note": "16×16 두 시점 배치를 공유하는 작은 CNN 인코더와 2층 투영 헤드로 처리합니다. 배치 4개의 NT-Xent를 제공하며 증강 생성·대규모 ResNet 학습·사전학습 가중치는 포함하지 않습니다.",
+      "aliases": [
+        "Simple Contrastive Learning of Representations"
+      ]
+    },
+    {
+      "id": "model:byol",
+      "kind": "model",
+      "label": "BYOL",
+      "summary": "온라인 인코더·투영기·예측기가 EMA 표적 네트워크의 다른 시점 표현을 음성 쌍 없이 예측합니다.",
+      "reference_year": 2020,
+      "family": "self-supervised",
+      "runtime_id": "byol",
+      "runtime_note": "16×16 두 시점을 온라인·표적 CNN 경로로 처리하고 온라인 전용 predictor와 stop-gradient 회귀 손실을 제공합니다. EMA 갱신 1회를 실행할 수 있으며 증강 생성·대규모 학습·사전학습 가중치는 포함하지 않습니다.",
+      "aliases": [
+        "Bootstrap Your Own Latent"
+      ]
+    },
+    {
+      "id": "concept:two_view_augmentation",
+      "kind": "concept",
+      "label": "Two-view augmentation",
+      "summary": "한 표본에서 독립적으로 증강한 두 시점을 만들어 표현 일관성을 학습합니다."
+    },
+    {
+      "id": "concept:in_batch_negatives",
+      "kind": "concept",
+      "label": "In-batch negatives",
+      "summary": "같은 미니배치의 다른 표본 시점을 대조 목적의 음성 쌍으로 사용합니다."
+    },
+    {
+      "id": "concept:nonlinear_projection",
+      "kind": "concept",
+      "label": "Nonlinear projection head",
+      "summary": "표현 인코더 뒤 학습 가능한 비선형 변환에서 자기지도 손실을 계산합니다."
+    },
+    {
+      "id": "concept:momentum_target",
+      "kind": "concept",
+      "label": "Momentum target network",
+      "summary": "온라인 네트워크 파라미터의 지수 이동 평균으로 표적 네트워크를 천천히 갱신합니다."
+    },
+    {
+      "id": "concept:stop_gradient",
+      "kind": "concept",
+      "label": "Stop-gradient target",
+      "summary": "표적 표현 경로로 손실 기울기가 흐르지 않도록 차단합니다."
+    },
+    {
+      "id": "concept:bootstrap_prediction",
+      "kind": "concept",
+      "label": "Bootstrap prediction",
+      "summary": "온라인 경로가 별도 음성 쌍 없이 표적 경로의 표현을 예측합니다."
+    },
+    {
+      "id": "component:ssl_encoder",
+      "kind": "component",
+      "label": "Shared visual encoder",
+      "summary": "두 증강 시점에 같은 파라미터를 적용해 시각 표현을 만듭니다."
+    },
+    {
+      "id": "component:contrastive_projector",
+      "kind": "component",
+      "label": "Contrastive projection head",
+      "summary": "인코더 표현을 대조 손실용 정규화 공간으로 투영하는 비선형 MLP입니다."
+    },
+    {
+      "id": "component:online_encoder",
+      "kind": "component",
+      "label": "BYOL online encoder",
+      "summary": "역전파로 직접 갱신되는 온라인 시각 인코더입니다."
+    },
+    {
+      "id": "component:online_projector",
+      "kind": "component",
+      "label": "BYOL online projector",
+      "summary": "온라인 표현을 자기지도 표적 공간으로 투영합니다."
+    },
+    {
+      "id": "component:online_predictor",
+      "kind": "component",
+      "label": "BYOL online predictor",
+      "summary": "온라인 투영에서 표적 투영을 예측하는 비대칭 MLP입니다."
+    },
+    {
+      "id": "component:target_encoder",
+      "kind": "component",
+      "label": "BYOL target encoder",
+      "summary": "온라인 인코더의 이동 평균으로 갱신되는 기울기 차단 인코더입니다."
+    },
+    {
+      "id": "component:target_projector",
+      "kind": "component",
+      "label": "BYOL target projector",
+      "summary": "표적 인코더 표현을 회귀 표적으로 변환하는 이동 평균 투영기입니다."
+    },
+    {
+      "id": "objective:nt_xent",
+      "kind": "objective",
+      "label": "NT-Xent contrastive loss",
+      "summary": "양성 시점 쌍의 정규화 유사도를 높이고 온도 조절된 배치 내 음성 쌍을 구별합니다."
+    },
+    {
+      "id": "objective:byol_regression",
+      "kind": "objective",
+      "label": "BYOL symmetric prediction loss",
+      "summary": "두 방향에서 정규화한 온라인 예측과 stop-gradient 표적 투영의 거리를 줄입니다."
+    }
+  ],
+  "edges": [
+    {
+      "source": "model:simclr",
+      "relation": "documented_in",
+      "target": "paper:simclr",
+      "basis": "documented",
+      "explanation": "SimCLR의 원논문과 저자 공식 구현입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "Title; §2; official google-research/simclr model.py, objective.py"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "uses",
+      "target": "concept:contrastive",
+      "basis": "documented",
+      "explanation": "SimCLR의 대조 표현 학습 설계입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "Abstract; §2"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "uses",
+      "target": "concept:two_view_augmentation",
+      "basis": "documented",
+      "explanation": "SimCLR의 대조 표현 학습 설계입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2, Fig.2"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "uses",
+      "target": "concept:in_batch_negatives",
+      "basis": "documented",
+      "explanation": "SimCLR의 대조 표현 학습 설계입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2.2, Eq.1"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "uses",
+      "target": "concept:nonlinear_projection",
+      "basis": "documented",
+      "explanation": "SimCLR의 대조 표현 학습 설계입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2, Fig.2; §3.1"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "has_component",
+      "target": "component:ssl_encoder",
+      "basis": "documented",
+      "explanation": "원논문과 공식 구현에 대응하는 실행 구성 요소입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2, Fig.2; official model.py"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "has_component",
+      "target": "component:contrastive_projector",
+      "basis": "documented",
+      "explanation": "원논문과 공식 구현에 대응하는 실행 구성 요소입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2, Fig.2; official model_util.py"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "trained_with",
+      "target": "objective:nt_xent",
+      "basis": "documented",
+      "explanation": "정규화 표현의 온도 조절 대조 목적을 최적화합니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2.2, Eq.1; official objective.py"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "선형 평가와 전이를 위한 시각 표현을 사전학습합니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "Abstract; §3–4"
+    },
+    {
+      "source": "model:simclr",
+      "relation": "extends",
+      "target": "model:resnet",
+      "basis": "documented",
+      "explanation": "원 실험은 ResNet 백본 뒤 투영 헤드를 추가합니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2; official model.py"
+    },
+    {
+      "source": "model:byol",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "BYOL의 원논문과 저자 공식 구현입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "Title; §2; official google-deepmind/deepmind-research/byol/byol_experiment.py"
+    },
+    {
+      "source": "model:byol",
+      "relation": "uses",
+      "target": "concept:two_view_augmentation",
+      "basis": "documented",
+      "explanation": "BYOL의 음성 쌍 없는 부트스트랩 설계입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Fig.2"
+    },
+    {
+      "source": "model:byol",
+      "relation": "uses",
+      "target": "concept:nonlinear_projection",
+      "basis": "documented",
+      "explanation": "BYOL의 음성 쌍 없는 부트스트랩 설계입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Fig.2"
+    },
+    {
+      "source": "model:byol",
+      "relation": "uses",
+      "target": "concept:momentum_target",
+      "basis": "documented",
+      "explanation": "BYOL의 음성 쌍 없는 부트스트랩 설계입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Eq.1"
+    },
+    {
+      "source": "model:byol",
+      "relation": "uses",
+      "target": "concept:stop_gradient",
+      "basis": "documented",
+      "explanation": "BYOL의 음성 쌍 없는 부트스트랩 설계입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Eq.2"
+    },
+    {
+      "source": "model:byol",
+      "relation": "uses",
+      "target": "concept:bootstrap_prediction",
+      "basis": "documented",
+      "explanation": "BYOL의 음성 쌍 없는 부트스트랩 설계입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "Abstract; §2"
+    },
+    {
+      "source": "model:byol",
+      "relation": "has_component",
+      "target": "component:online_encoder",
+      "basis": "documented",
+      "explanation": "온라인/표적 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Fig.2"
+    },
+    {
+      "source": "model:byol",
+      "relation": "has_component",
+      "target": "component:online_projector",
+      "basis": "documented",
+      "explanation": "온라인/표적 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Fig.2"
+    },
+    {
+      "source": "model:byol",
+      "relation": "has_component",
+      "target": "component:online_predictor",
+      "basis": "documented",
+      "explanation": "온라인/표적 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Fig.2; official byol_experiment.py predictor"
+    },
+    {
+      "source": "model:byol",
+      "relation": "has_component",
+      "target": "component:target_encoder",
+      "basis": "documented",
+      "explanation": "온라인/표적 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Fig.2; official target_params"
+    },
+    {
+      "source": "model:byol",
+      "relation": "has_component",
+      "target": "component:target_projector",
+      "basis": "documented",
+      "explanation": "온라인/표적 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Fig.2"
+    },
+    {
+      "source": "model:byol",
+      "relation": "trained_with",
+      "target": "objective:byol_regression",
+      "basis": "documented",
+      "explanation": "교차 시점의 온라인 예측과 표적 투영을 대칭적으로 맞춥니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Eq.2"
+    },
+    {
+      "source": "model:byol",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "후속 비전 과제를 위한 표현을 자기지도 학습합니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "Abstract; §4–5"
+    },
+    {
+      "source": "model:byol",
+      "relation": "extends",
+      "target": "model:resnet",
+      "basis": "documented",
+      "explanation": "원 실험은 ResNet 인코더를 온라인·표적 경로에 사용합니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2; Appendix I"
+    },
+    {
+      "source": "model:byol",
+      "relation": "alternative_to",
+      "target": "model:simclr",
+      "basis": "documented",
+      "explanation": "음성 쌍을 쓰는 대조 방법과 달리 표적 네트워크 예측으로 학습합니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "Abstract; §1"
+    },
+    {
+      "source": "component:ssl_encoder",
+      "relation": "uses",
+      "target": "concept:weight_sharing",
+      "basis": "documented",
+      "explanation": "두 시점에 같은 인코더 파라미터를 적용합니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2, Fig.2"
+    },
+    {
+      "source": "component:contrastive_projector",
+      "relation": "uses",
+      "target": "concept:nonlinear_projection",
+      "basis": "documented",
+      "explanation": "비선형 MLP에서 대조 손실을 계산합니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2; §3.1"
+    },
+    {
+      "source": "concept:in_batch_negatives",
+      "relation": "subconcept_of",
+      "target": "concept:contrastive",
+      "basis": "documented",
+      "explanation": "배치 내 음성 쌍은 대조 학습의 구체적 비교 집합입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "§2.2"
+    },
+    {
+      "source": "component:online_predictor",
+      "relation": "uses",
+      "target": "concept:bootstrap_prediction",
+      "basis": "documented",
+      "explanation": "온라인 전용 예측기가 표적 투영을 예측합니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Fig.2"
+    },
+    {
+      "source": "component:target_encoder",
+      "relation": "uses",
+      "target": "concept:momentum_target",
+      "basis": "documented",
+      "explanation": "표적 인코더는 온라인 파라미터의 EMA로 갱신됩니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Eq.1"
+    },
+    {
+      "source": "component:target_encoder",
+      "relation": "uses",
+      "target": "concept:stop_gradient",
+      "basis": "documented",
+      "explanation": "표적 경로는 역전파에서 분리됩니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Eq.2"
+    },
+    {
+      "source": "component:target_projector",
+      "relation": "uses",
+      "target": "concept:momentum_target",
+      "basis": "documented",
+      "explanation": "표적 투영기도 온라인 투영기의 EMA로 갱신됩니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "§2, Eq.1"
+    },
+    {
+      "source": "concept:two_view_augmentation",
+      "relation": "documented_in",
+      "target": "paper:simclr",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "SimCLR §2–3; official implementation"
+    },
+    {
+      "source": "concept:in_batch_negatives",
+      "relation": "documented_in",
+      "target": "paper:simclr",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "SimCLR §2–3; official implementation"
+    },
+    {
+      "source": "concept:nonlinear_projection",
+      "relation": "documented_in",
+      "target": "paper:simclr",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "SimCLR §2–3; official implementation"
+    },
+    {
+      "source": "concept:momentum_target",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    },
+    {
+      "source": "concept:stop_gradient",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    },
+    {
+      "source": "concept:bootstrap_prediction",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    },
+    {
+      "source": "component:ssl_encoder",
+      "relation": "documented_in",
+      "target": "paper:simclr",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "SimCLR §2–3; official implementation"
+    },
+    {
+      "source": "component:contrastive_projector",
+      "relation": "documented_in",
+      "target": "paper:simclr",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "SimCLR §2–3; official implementation"
+    },
+    {
+      "source": "component:online_encoder",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    },
+    {
+      "source": "component:online_projector",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    },
+    {
+      "source": "component:online_predictor",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    },
+    {
+      "source": "component:target_encoder",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    },
+    {
+      "source": "component:target_projector",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    },
+    {
+      "source": "objective:nt_xent",
+      "relation": "documented_in",
+      "target": "paper:simclr",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:simclr"
+      ],
+      "locator": "SimCLR §2–3; official implementation"
+    },
+    {
+      "source": "objective:byol_regression",
+      "relation": "documented_in",
+      "target": "paper:byol",
+      "basis": "documented",
+      "explanation": "정의와 구조적 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:byol"
+      ],
+      "locator": "BYOL §2; official byol_experiment.py"
+    }
+  ]
+}

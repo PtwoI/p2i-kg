@@ -97,3 +97,10 @@ reductions executable: Deep Sets applies sum pooling after a shared element
 encoder, whereas PointNet applies channel-wise max pooling after a shared point
 MLP. Both examples are permutation invariant and expose the encoder, reduction
 and readout as verified P2I module bindings.
+
+The bundled SimCLR and BYOL examples expose complementary self-supervised paths.
+SimCLR shares one encoder/projector across two views and provides an in-batch
+NT-Xent loss. BYOL separates online and stop-gradient target paths, adds an
+online-only predictor and provides an explicit EMA target update. Augmentation
+is outside both fixed runtime graphs; their runtime notes therefore state that
+the two input tensors are already-created views.

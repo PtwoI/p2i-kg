@@ -28,14 +28,17 @@ def test_model_factories_edit_checkpoint_backward(name):
             assert set(model(*inputs).flatten().tolist()) <= {0.,1.}
         # Catalog factories have different head names. Exercise a real editable
         # linear projection rather than assuming every model exposes `head`.
-        editable = {node.qualified_name for node in restored.architecture().nodes if node.editable}
+        editable = {node.qualified_name for node in restored.architecture().nodes
+            if node.editable}
         target = next(path for path, module in reversed(list(model.named_modules()))
-                      if path in editable and isinstance(module, (torch.nn.Linear, torch.nn.Conv2d)))
-        action = {'type':'set_parameter','target':target,'parameter':'bias','value':model.get_submodule(target).bias is None}
+            if path in editable and isinstance(module, (torch.nn.Linear, torch.nn.Conv2d)))
+        action = {'type':'set_parameter','target':target,'parameter':'bias',
+            'value':model.get_submodule(target).bias is None}
         assert restored.apply(action).committed
         assert restored.validate(backward=True).backward_valid is (name != 'perceptron')
         rebuilt = p2i.Harness.load(checkpoint_bytes(restored), model=restored.build())
-        torch.testing.assert_close(rebuilt.build()(*inputs), restored.build()(*inputs), rtol=0, atol=0)
+        torch.testing.assert_close(rebuilt.build()(*inputs), restored.build()(*inputs),
+            rtol=0, atol=0)
     finally:
         torch.set_num_threads(previous)
 
