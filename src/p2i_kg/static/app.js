@@ -84,7 +84,7 @@ function renderDetail(){
  if(papers.length)html+=`<h3>대표 문헌</h3>${papers.map(paper=>`<a class="reference" href="${esc(paper.url)}" target="_blank" rel="noopener noreferrer">${esc(paper.label)} ↗<small>${esc(paper.authors.join(', '))} · ${paper.reference_year}</small></a>`).join('')}`;
  if(node.runtime_id){html+=`<h3>실제 구조 살펴보기</h3><p>${esc(node.runtime_note)}</p><div class="runtime-actions"><button class="primary" id="launch">P2I로 열기 ↗</button><a class="secondary" href="/api/kg/models/${encodeURIComponent(node.id)}/checkpoint">예제 체크포인트 ↓</a></div><p class="muted">편집한 결과는 열린 P2I 세션에서 저장하세요.</p><button class="secondary" id="inspect-model">온톨로지 ↔ 실제 모듈 연결</button><div id="bindings"></div><div id="runtime-status" class="runtime-status" aria-live="polite"></div>`;}
  if(hosted){html=html.replace('<button class="primary" id="launch">P2I로 열기 ↗</button>', '<a class="primary" href="http://127.0.0.1:8010/" target="_blank" rel="noopener noreferrer">로컬 P2I 열기 ↗</a>').replace(/<a class="secondary" href="[^"]+\/checkpoint">예제 체크포인트 ↓<\/a>/,'').replace('편집한 결과는 열린 P2I 세션에서 저장하세요.','실제 실행·편집은 PC에서 p2i-kg serve를 시작한 후 로컬 P2I로 연결하세요.');}
- $('#detail').innerHTML=html;
+ $('#detail').innerHTML=html;$('#detail').scrollTop=0;
  if(node.runtime_id&&sessions.has(node.id))showSession(node.id,sessions.get(node.id));
 }
 function showSession(id,session){
