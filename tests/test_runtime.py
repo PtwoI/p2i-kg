@@ -29,7 +29,8 @@ def test_model_factories_edit_checkpoint_backward(name):
         target = {'perceptron':'linear','mlp':'layers.0','cnn':'features.0','resnet18':'fc',
             'vit':'heads.head','bert':'pooler.dense','detr':'class_head',
             'nerf':'density_head','perceiver':'classifier',
-            'graphsage':'node_classifier'}.get(name,'head')
+            'graphsage':'node_classifier','deepsets':'set_head.2',
+            'pointnet':'shape_classifier.2'}.get(name,'head')
         action = {'type':'set_parameter','target':target,'parameter':'bias','value':False}
         if name == 'gpt2':action = {'type':'set_parameter','target':'transformer.drop','parameter':'p','value':0.1}
         assert restored.apply(action).committed
@@ -61,4 +62,17 @@ def test_ontology_module_bindings_are_real():
     assert bindings['component:cross_attention']['module_path'] == 'decoder.0.multihead_attn'
     assert bindings['component:cross_attention']['managed_by']
     assert bindings['component:decoder']['parameters']['dim_feedforward'] == 64
+    assert result['operations'] > 0
+
+
+@pytest.mark.parametrize('name,expected', [('deepsets','component:set_sum_pool'),
+    ('pointnet','component:symmetric_max_pool')])
+def test_set_model_bindings_and_permutation_invariance(name, expected):
+    from p2i_kg.bindings import inspect_model
+    model, inputs = make_model(name)
+    permutation = (torch.tensor([4, 0, 6, 1, 3, 2, 5])
+        if name == 'deepsets' else torch.randperm(16))
+    torch.testing.assert_close(model(*inputs), model(inputs[0][:, permutation]))
+    result = inspect_model(name)
+    assert expected in {binding['ontology_id'] for binding in result['bindings']}
     assert result['operations'] > 0
