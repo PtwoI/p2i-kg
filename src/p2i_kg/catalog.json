@@ -687,7 +687,9 @@
       "family": "vision",
       "aliases": [
         "VGG"
-      ]
+      ],
+      "runtime_id": "vgg",
+      "runtime_note": "torchvision VGG11의 합성곱 스택. 1×1 풀링과 작은 분류기로 축소했습니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:inception",
@@ -717,7 +719,9 @@
       "family": "vision",
       "aliases": [
         "INCEPTION"
-      ]
+      ],
+      "runtime_id": "inception",
+      "runtime_note": "torchvision GoogLeNet의 병렬 Inception 분기. 보조 분류기를 끈 64×64 입력 예제입니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:densenet",
@@ -742,7 +746,9 @@
       "family": "vision",
       "aliases": [
         "DENSENET"
-      ]
+      ],
+      "runtime_id": "densenet",
+      "runtime_note": "각 블록 1층·growth rate 8로 축소한 torchvision DenseNet. 특징 연결과 전이층을 유지합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:mobilenet",
@@ -771,7 +777,9 @@
       "family": "vision",
       "aliases": [
         "MOBILENET"
-      ]
+      ],
+      "runtime_id": "mobilenet",
+      "runtime_note": "2017년 MobileNet V1의 depthwise·pointwise convolution과 원래 단계 구성을 포함한 width multiplier 0.25 예제입니다. 32×32 입력·4종 분류이며 가중치는 무작위 초기화입니다."
     },
     {
       "id": "paper:efficientnet",
@@ -794,7 +802,9 @@
       "family": "vision",
       "aliases": [
         "EFFICIENTNET"
-      ]
+      ],
+      "runtime_id": "efficientnet",
+      "runtime_note": "torchvision EfficientNet-B0의 MBConv와 squeeze-excitation. 32×32 입력·4종 분류 예제입니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:convnext",
@@ -821,7 +831,9 @@
       "family": "vision",
       "aliases": [
         "CONVNEXT"
-      ]
+      ],
+      "runtime_id": "convnext",
+      "runtime_note": "단계당 블록 1개·폭 8/16/32/64의 torchvision ConvNeXt. depthwise convolution과 LayerNorm을 포함합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:unet",
@@ -845,7 +857,9 @@
       "family": "vision",
       "aliases": [
         "UNET"
-      ]
+      ],
+      "runtime_id": "unet",
+      "runtime_note": "2단계 U-Net 축소 예제. encoder–decoder와 skip concatenation을 포함하며 padding으로 공간 크기를 보존합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:bert",
@@ -931,7 +945,9 @@
       "family": "attention",
       "aliases": [
         "T5"
-      ]
+      ],
+      "runtime_id": "t5",
+      "runtime_note": "Transformers T5: 폭 16, encoder/decoder 각 1층. 상대 위치 bias·교차 어텐션·공유 임베딩을 포함합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:vit",
@@ -995,7 +1011,9 @@
       "family": "vision",
       "aliases": [
         "SWIN"
-      ]
+      ],
+      "runtime_id": "swin",
+      "runtime_note": "torchvision Swin: 두 단계, 작은 2×2 윈도, 단계당 블록 2개. shifted-window와 patch merging을 포함합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:roformer",
@@ -1022,7 +1040,9 @@
       "family": "attention",
       "aliases": [
         "ROFORMER"
-      ]
+      ],
+      "runtime_id": "roformer",
+      "runtime_note": "Transformers RoFormer 1층·폭 16. RoPE를 쓰는 양방향 어텐션 구조입니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:llama",
@@ -1057,7 +1077,9 @@
       "family": "attention",
       "aliases": [
         "LLAMA"
-      ]
+      ],
+      "runtime_id": "llama",
+      "runtime_note": "Transformers LLaMA 1층·폭 16. RMSNorm·RoPE·SwiGLU·causal attention을 포함합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:vae",
@@ -1080,7 +1102,9 @@
       "family": "generative",
       "aliases": [
         "VAE"
-      ]
+      ],
+      "runtime_id": "vae",
+      "runtime_note": "잠재 차원 4의 VAE. 평균·로그분산 추정과 reparameterization, decoder를 포함하며 epsilon도 입력으로 받습니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:gan",
@@ -1109,7 +1133,9 @@
       "family": "generative",
       "aliases": [
         "GAN"
-      ]
+      ],
+      "runtime_id": "gan",
+      "runtime_note": "작은 MLP generator와 discriminator. 생성 표본·진짜 표본의 판별을 한 번 추적하며 교대 학습은 수행하지 않습니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:ddpm",
@@ -1133,7 +1159,9 @@
       "family": "generative",
       "aliases": [
         "DDPM"
-      ]
+      ],
+      "runtime_id": "ddpm",
+      "runtime_note": "10-step noise schedule의 한 시점 forward noising과 시간 조건 U-Net의 잡음 예측. 전체 역확산 샘플링은 수행하지 않습니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:gcn",
@@ -1156,7 +1184,9 @@
       "family": "graph",
       "aliases": [
         "GCN"
-      ]
+      ],
+      "runtime_id": "gcn",
+      "runtime_note": "5개 노드의 2층 GCN. self-loop·대칭 차수 정규화·이웃 집계와 선형 투영을 실행합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:gat",
@@ -1183,7 +1213,9 @@
       "family": "graph",
       "aliases": [
         "GAT"
-      ]
+      ],
+      "runtime_id": "gat",
+      "runtime_note": "5개 노드의 1-head GAT. 이웃 마스킹·additive attention·softmax 집계를 실행합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:clip",
@@ -1216,7 +1248,9 @@
       "family": "multimodal",
       "aliases": [
         "CLIP"
-      ]
+      ],
+      "runtime_id": "clip",
+      "runtime_note": "Transformers CLIP의 작은 영상·텍스트 encoder와 8차원 투영. 정규화된 표현의 유사도 logits를 출력합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:mamba",
@@ -1239,7 +1273,9 @@
       "family": "sequence",
       "aliases": [
         "MAMBA"
-      ]
+      ],
+      "runtime_id": "mamba",
+      "runtime_note": "Transformers Mamba 1층·폭 16·state 4. 입력 의존적 selective SSM과 causal convolution을 CPU 경로로 실행합니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:switch",
@@ -1263,7 +1299,9 @@
       "family": "attention",
       "aliases": [
         "SWITCH"
-      ]
+      ],
+      "runtime_id": "switch",
+      "runtime_note": "Transformers Switch 2-expert top-1 routing. encoder와 decoder에 실제 sparse FFN을 포함하며 capacity는 16입니다. 모든 가중치는 무작위 초기화이며 학습된 모델이 아닙니다."
     },
     {
       "id": "paper:mixer",

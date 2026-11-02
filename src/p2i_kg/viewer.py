@@ -13,11 +13,19 @@ def export_viewer(store, output, *, runtime=False):
     destination = Path(output)
     destination.mkdir(parents=True, exist_ok=False)
     revision, graph = store.load_optional()
-    for resource in files('p2i_kg').joinpath('static').iterdir():
-        if resource.is_file() and resource.name not in {'study.js', 'study.css', 'study-math.js'}:
-            (destination/resource.name).write_bytes(resource.read_bytes())
+    def copy_assets(source, target):
+        for resource in source.iterdir():
+            if resource.name in {'study.js', 'study.css', 'study-math.js'}:
+                continue
+            if resource.is_dir():
+                nested = target/resource.name
+                nested.mkdir()
+                copy_assets(resource, nested)
+            else:
+                (target/resource.name).write_bytes(resource.read_bytes())
+    copy_assets(files('p2i_kg').joinpath('static'), destination)
     index = destination/'index.html'
-    html = index.read_text(encoding='utf-8').replace('<html lang="ko">', '<html lang="ko" data-mode="static">')
+    html = index.read_text(encoding='utf-8').replace('<html lang="ko">', f'<html lang="ko" data-mode="static" data-revision="{revision}">')
     for old, new in [('/api/kg/export?format=turtle', './exports/catalog.ttl'),
                      ('/api/kg/export?format=jsonld', './exports/catalog.jsonld'),
                      ('/api/kg/export', './exports/catalog.json'),
@@ -27,7 +35,7 @@ def export_viewer(store, output, *, runtime=False):
     index.write_text(html, encoding='utf-8')
 
     def write(path, value):
-        path.write_text(json.dumps(value, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+        path.write_text(json.dumps(value, ensure_ascii=False, separators=(',', ':'))+'\n', encoding='utf-8')
 
     write(destination/'catalog.json', {'revision': revision, **graph.model_dump(mode='json')})
     exports = destination/'exports'
@@ -42,7 +50,20 @@ def export_viewer(store, output, *, runtime=False):
         from .bindings import inspect_model
         (destination/'snapshots').mkdir()
         for runtime_id in sorted({node.runtime_id for node in graph.nodes if node.runtime_id}):
-            write(destination/'snapshots'/(runtime_id+'.json'), inspect_model(runtime_id))
+            result = inspect_model(runtime_id)
+            node = next(n for n in graph.nodes if n.runtime_id == runtime_id)
+            result['model_id'] = node.id
+            result['label'] = node.label
+            result['scope_note'] = node.runtime_note
+            result['observed']['metadata']['name'] = node.label
+            for module in result['observed']['modules']:
+                origin = module['origin']
+                if origin.get('file'):
+                    origin['file'] = Path(origin['file']).name
+            for operation in result['observed']['operations']:
+                if operation.get('source') and operation['source'].get('file'):
+                    operation['source']['file'] = Path(operation['source']['file']).name
+            write(destination/'snapshots'/(runtime_id+'.json'), result)
             snapshots.append(runtime_id)
     result = {'catalog_revision': revision, 'runtime_snapshots': snapshots,
               'mode': 'read-only', 'weights': 'random initialization, not trained checkpoints'}

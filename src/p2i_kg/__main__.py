@@ -19,6 +19,11 @@ def main():
     viewer = sub.add_parser('viewer')
     viewer.add_argument('directory')
     viewer.add_argument('--runtime', action='store_true')
+    pages = sub.add_parser('pages')
+    pages.add_argument('directory')
+    pages.add_argument('--source-revision', required=True)
+    verify = sub.add_parser('verify-pages')
+    verify.add_argument('directory')
     imported = sub.add_parser('import')
     imported.add_argument('file')
     extended = sub.add_parser('extend')
@@ -32,6 +37,11 @@ def main():
     opened.add_argument('model_id')
     opened.add_argument('--port', type=int, default=8000)
     args = parser.parse_args()
+    if args.command in ('pages', 'verify-pages'):
+        from .publication import build_pages, verify_pages
+        result = build_pages(args.directory, source_revision=args.source_revision) if args.command == 'pages' else verify_pages(args.directory)
+        print(json.dumps(result))
+        return
     store = GraphStore(args.database)
     if args.command == 'serve':
         import uvicorn
