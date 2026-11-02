@@ -4,6 +4,18 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'ldm': [('component:first_stage_encoder', 'first_stage_encoder'),
+        ('component:first_stage_decoder', 'first_stage_decoder'),
+        ('component:conditioning_encoder', 'condition_encoder'),
+        ('component:latent_denoiser', 'latent_denoiser'),
+        ('component:diffusion_time_embedding', 'time_embedding')],
+    'dit': [('component:latent_patch_embed', 'patch_embed'),
+        ('component:diffusion_time_embedding', 'time_embed'),
+        ('component:class_embedding', 'label_embed'),
+        ('component:adaln_block', 'blocks.0'),
+        ('component:adaln_modulation', 'blocks.0.modulation'),
+        ('component:self_attention', 'blocks.0.attention'),
+        ('component:diffusion_output_head', 'final_layer')],
     'simclr': [('component:ssl_encoder', 'encoder'),
         ('component:contrastive_projector', 'projector')],
     'byol': [('component:online_encoder', 'online_encoder'),

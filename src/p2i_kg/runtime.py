@@ -7,7 +7,8 @@ from .extended_registry import EXTENDED_IDS
 
 BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18',
     'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr',
-    'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol')
+    'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
+    'ldm', 'dit')
 RUNTIME_IDS = BASE_RUNTIME_IDS + EXTENDED_IDS
 
 
@@ -56,6 +57,16 @@ def make_model(runtime_id):
             # same batch; augmentation itself remains outside the fixed graph.
             return model.eval(), (torch.randn(4, 3, 16, 16),
                                   torch.randn(4, 3, 16, 16))
+        if runtime_id == 'ldm':
+            from .models import TinyLatentDiffusion
+            return TinyLatentDiffusion().eval(), (
+                torch.randn(2, 3, 16, 16), torch.randn(2, 4, 8),
+                torch.randn(2, 8, 8, 8), torch.tensor([2, 5]))
+        if runtime_id == 'dit':
+            from .models import TinyDiT
+            return TinyDiT().eval(), (
+                torch.randn(2, 4, 8, 8), torch.tensor([2, 5]),
+                torch.tensor([1, 3]))
         if runtime_id == 'resnet18':
             from torchvision.models import resnet18
             return resnet18(weights=None, num_classes=4).eval(), (torch.randn(2, 3, 32, 32),)

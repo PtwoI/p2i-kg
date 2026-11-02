@@ -1,0 +1,204 @@
+{
+  "schema_version": "0.2",
+  "nodes": [
+    {
+      "id": "paper:ldm",
+      "kind": "paper",
+      "label": "High-Resolution Image Synthesis with Latent Diffusion Models",
+      "summary": "지각 압축 잠재공간에서 조건부 확산을 수행해 계산량과 충실도를 조절하는 LDM 원논문.",
+      "reference_year": 2022,
+      "url": "https://openaccess.thecvf.com/content/CVPR2022/html/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.html",
+      "authors": ["Robin Rombach", "Andreas Blattmann", "Dominik Lorenz", "Patrick Esser", "Björn Ommer"]
+    },
+    {
+      "id": "paper:dit",
+      "kind": "paper",
+      "label": "Scalable Diffusion Models with Transformers",
+      "summary": "잠재 확산의 U-Net을 조건부 Transformer로 교체하고 계산량에 따른 확장성을 분석한 DiT 원논문.",
+      "reference_year": 2023,
+      "url": "https://openaccess.thecvf.com/content/ICCV2023/html/Peebles_Scalable_Diffusion_Models_with_Transformers_ICCV_2023_paper.html",
+      "authors": ["William Peebles", "Saining Xie"]
+    },
+    {
+      "id": "model:ldm",
+      "kind": "model",
+      "label": "Latent Diffusion Model",
+      "summary": "사전학습한 오토인코더의 압축 잠재공간에서 조건부 U-Net으로 확산 노이즈를 예측합니다.",
+      "reference_year": 2022,
+      "family": "generative",
+      "runtime_id": "ldm",
+      "runtime_note": "16×16 이미지를 8채널 8×8 잠재로 압축하고, 작은 조건 인코더·시간 임베딩·U-Net으로 한 번의 잠재 노이즈 예측과 디코딩을 실행합니다. 다단계 샘플링, 학습된 지각 오토인코더, 대규모 텍스트 인코더와 사전학습 가중치는 포함하지 않습니다.",
+      "aliases": ["LDM", "Latent Diffusion"]
+    },
+    {
+      "id": "model:dit",
+      "kind": "model",
+      "label": "Diffusion Transformer",
+      "summary": "잠재 패치를 토큰화하고 시간·클래스 조건의 adaLN Transformer 블록으로 확산 노이즈를 예측합니다.",
+      "reference_year": 2023,
+      "family": "generative",
+      "runtime_id": "dit",
+      "runtime_note": "4채널 8×8 잠재를 2×2 패치 토큰으로 바꾸고 두 개의 16차원 adaLN 조건부 Transformer 블록으로 한 번의 클래스 조건 노이즈 예측을 실행합니다. VAE, 다단계 샘플러, classifier-free guidance 배치 결합, 대규모 학습과 사전학습 가중치는 포함하지 않습니다.",
+      "aliases": ["DiT"]
+    },
+    {
+      "id": "concept:perceptual_compression",
+      "kind": "concept",
+      "label": "Perceptual compression",
+      "summary": "생성에 중요한 정보를 보존하면서 고주파 세부를 제거하는 학습된 압축 공간을 사용합니다."
+    },
+    {
+      "id": "concept:latent_diffusion",
+      "kind": "concept",
+      "label": "Latent-space diffusion",
+      "summary": "픽셀 공간 대신 학습된 저차원 잠재 표현에 순방향·역방향 확산을 적용합니다."
+    },
+    {
+      "id": "concept:cross_attention_conditioning",
+      "kind": "concept",
+      "label": "Cross-attention conditioning",
+      "summary": "텍스트·배치·의미 지도 같은 조건 표현을 교차 어텐션으로 확산 네트워크에 주입합니다."
+    },
+    {
+      "id": "concept:transformer_denoiser",
+      "kind": "concept",
+      "label": "Transformer denoiser",
+      "summary": "합성곱 U-Net 대신 잠재 패치 토큰의 Transformer가 확산 예측을 수행합니다."
+    },
+    {
+      "id": "concept:adaptive_layer_norm",
+      "kind": "concept",
+      "label": "Adaptive layer normalization",
+      "summary": "시간과 클래스 조건에서 정규화의 이동·크기와 잔차 게이트를 생성합니다."
+    },
+    {
+      "id": "component:first_stage_encoder",
+      "kind": "component",
+      "label": "First-stage image encoder",
+      "summary": "이미지를 확산이 실행되는 공간 잠재 표현으로 압축합니다."
+    },
+    {
+      "id": "component:first_stage_decoder",
+      "kind": "component",
+      "label": "First-stage image decoder",
+      "summary": "확산 잠재 표현을 다시 이미지 공간으로 복원합니다."
+    },
+    {
+      "id": "component:conditioning_encoder",
+      "kind": "component",
+      "label": "Conditioning encoder",
+      "summary": "조건 입력을 확산 네트워크가 사용할 문맥 표현으로 변환합니다."
+    },
+    {
+      "id": "component:latent_denoiser",
+      "kind": "component",
+      "label": "Latent U-Net denoiser",
+      "summary": "시간과 문맥에 조건부인 잠재공간 노이즈 예측 U-Net입니다."
+    },
+    {
+      "id": "component:diffusion_time_embedding",
+      "kind": "component",
+      "label": "Diffusion timestep embedding",
+      "summary": "현재 잡음 수준을 신경망의 조건 벡터로 변환합니다."
+    },
+    {
+      "id": "component:latent_patch_embed",
+      "kind": "component",
+      "label": "Latent patch embedding",
+      "summary": "공간 잠재를 고정 크기 패치 토큰 시퀀스로 투영합니다."
+    },
+    {
+      "id": "component:class_embedding",
+      "kind": "component",
+      "label": "Class condition embedding",
+      "summary": "이산 생성 클래스를 Transformer 조건 벡터로 변환합니다."
+    },
+    {
+      "id": "component:adaln_block",
+      "kind": "component",
+      "label": "adaLN Transformer block",
+      "summary": "조건별 정규화·잔차 게이트를 갖는 self-attention과 MLP 블록입니다."
+    },
+    {
+      "id": "component:adaln_modulation",
+      "kind": "component",
+      "label": "adaLN modulation network",
+      "summary": "시간·클래스 조건에서 이동, 크기와 잔차 게이트 파라미터를 생성합니다."
+    },
+    {
+      "id": "component:diffusion_output_head",
+      "kind": "component",
+      "label": "Diffusion patch output head",
+      "summary": "Transformer 토큰을 패치별 확산 예측으로 투영해 공간 잠재로 복원합니다."
+    },
+    {
+      "id": "objective:latent_denoising",
+      "kind": "objective",
+      "label": "Latent diffusion noise prediction",
+      "summary": "잡음이 더해진 잠재와 조건에서 주입된 잡음 또는 관련 확산 목표를 예측합니다."
+    },
+    {
+      "id": "task:conditional_image_generation",
+      "kind": "task",
+      "label": "Conditional image generation",
+      "summary": "텍스트나 클래스 같은 외부 조건에 맞는 이미지를 생성합니다."
+    }
+  ],
+  "edges": [
+    {"source":"model:ldm","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"LDM 원논문과 저자 공식 CompVis 구현입니다.","evidence":["paper:ldm"],"locator":"Abstract; §3; CompVis/latent-diffusion"},
+    {"source":"model:ldm","relation":"uses","target":"concept:diffusion","basis":"documented","explanation":"잠재 표현에 확산 순방향·역과정을 적용합니다.","evidence":["paper:ldm"],"locator":"§3.1"},
+    {"source":"model:ldm","relation":"uses","target":"concept:latent_diffusion","basis":"documented","explanation":"확산을 압축 잠재공간으로 이동합니다.","evidence":["paper:ldm"],"locator":"Abstract; §3.1"},
+    {"source":"model:ldm","relation":"uses","target":"concept:perceptual_compression","basis":"documented","explanation":"지각적으로 동등한 압축 공간에서 계산량을 줄입니다.","evidence":["paper:ldm"],"locator":"§3; Fig.2"},
+    {"source":"model:ldm","relation":"uses","target":"concept:cross_attention_conditioning","basis":"documented","explanation":"일반 조건 입력을 교차 어텐션으로 U-Net에 연결합니다.","evidence":["paper:ldm"],"locator":"§3.3, Eq.3"},
+    {"source":"model:ldm","relation":"has_component","target":"component:first_stage_encoder","basis":"documented","explanation":"첫 단계 오토인코더가 이미지를 잠재로 압축합니다.","evidence":["paper:ldm"],"locator":"§3, Fig.2; official ldm/models/autoencoder.py"},
+    {"source":"model:ldm","relation":"has_component","target":"component:first_stage_decoder","basis":"documented","explanation":"첫 단계 디코더가 생성 잠재를 이미지로 복원합니다.","evidence":["paper:ldm"],"locator":"§3, Fig.2; official ldm/models/autoencoder.py"},
+    {"source":"model:ldm","relation":"has_component","target":"component:conditioning_encoder","basis":"documented","explanation":"조건 입력을 확산 문맥으로 인코딩합니다.","evidence":["paper:ldm"],"locator":"§3.3"},
+    {"source":"model:ldm","relation":"has_component","target":"component:latent_denoiser","basis":"documented","explanation":"시간·문맥 조건의 U-Net이 잠재 노이즈를 예측합니다.","evidence":["paper:ldm"],"locator":"§3.1–3.3; official ldm/modules/diffusionmodules/openaimodel.py"},
+    {"source":"model:ldm","relation":"has_component","target":"component:diffusion_time_embedding","basis":"documented","explanation":"잡음 단계를 확산 네트워크에 주입합니다.","evidence":["paper:ldm"],"locator":"§3.1; official timestep_embedding"},
+    {"source":"model:ldm","relation":"trained_with","target":"objective:latent_denoising","basis":"documented","explanation":"잠재공간의 조건부 노이즈 예측 목적을 최적화합니다.","evidence":["paper:ldm"],"locator":"§3.1, Eq.1; §3.3, Eq.3"},
+    {"source":"model:ldm","relation":"applied_to","target":"task:conditional_image_generation","basis":"documented","explanation":"텍스트·클래스·공간 조건 이미지 합성을 평가합니다.","evidence":["paper:ldm"],"locator":"§4–5"},
+    {"source":"model:ldm","relation":"extends","target":"model:ddpm","basis":"structural","explanation":"DDPM의 확산 학습을 학습된 잠재공간과 조건 메커니즘으로 확장합니다.","evidence":["paper:ldm"],"locator":"§2–3"},
+    {"source":"model:ldm","relation":"extends","target":"model:vae","basis":"structural","explanation":"오토인코더의 잠재 표현 위에 확산 생성 과정을 결합합니다.","evidence":["paper:ldm"],"locator":"§3, Fig.2"},
+    {"source":"model:dit","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"DiT 원논문과 저자 공식 facebookresearch 구현입니다.","evidence":["paper:dit"],"locator":"Abstract; §3; facebookresearch/DiT models.py"},
+    {"source":"model:dit","relation":"uses","target":"concept:latent_diffusion","basis":"documented","explanation":"VAE 잠재 패치에서 확산 노이즈를 예측합니다.","evidence":["paper:dit"],"locator":"§3; Fig.2"},
+    {"source":"model:dit","relation":"uses","target":"concept:transformer_denoiser","basis":"documented","explanation":"U-Net 대신 Transformer 블록 스택을 확산 백본으로 사용합니다.","evidence":["paper:dit"],"locator":"Abstract; §3"},
+    {"source":"model:dit","relation":"uses","target":"concept:adaptive_layer_norm","basis":"documented","explanation":"시간·클래스 조건으로 adaLN의 이동·크기·게이트를 생성합니다.","evidence":["paper:dit"],"locator":"§3, Fig.3"},
+    {"source":"model:dit","relation":"uses","target":"concept:self_attention","basis":"documented","explanation":"잠재 패치 토큰 전체에 self-attention을 적용합니다.","evidence":["paper:dit"],"locator":"§3"},
+    {"source":"model:dit","relation":"uses","target":"concept:patch_embedding","basis":"documented","explanation":"공간 잠재를 패치 토큰으로 선형 임베딩합니다.","evidence":["paper:dit"],"locator":"§3, Patchify"},
+    {"source":"model:dit","relation":"has_component","target":"component:latent_patch_embed","basis":"documented","explanation":"잠재 입력을 고정 크기 패치 토큰으로 변환합니다.","evidence":["paper:dit"],"locator":"§3; official PatchEmbed"},
+    {"source":"model:dit","relation":"has_component","target":"component:diffusion_time_embedding","basis":"documented","explanation":"확산 시간을 Transformer 조건 벡터로 변환합니다.","evidence":["paper:dit"],"locator":"§3; official TimestepEmbedder"},
+    {"source":"model:dit","relation":"has_component","target":"component:class_embedding","basis":"documented","explanation":"ImageNet 클래스와 무조건 토큰을 조건 벡터로 변환합니다.","evidence":["paper:dit"],"locator":"§3; official LabelEmbedder"},
+    {"source":"model:dit","relation":"has_component","target":"component:adaln_block","basis":"documented","explanation":"adaLN-Zero 조건부 Transformer 블록을 반복합니다.","evidence":["paper:dit"],"locator":"§3, Fig.3; official DiTBlock"},
+    {"source":"model:dit","relation":"has_component","target":"component:adaln_modulation","basis":"documented","explanation":"조건으로 정규화·잔차 변조 파라미터를 생성합니다.","evidence":["paper:dit"],"locator":"§3; official adaLN_modulation"},
+    {"source":"model:dit","relation":"has_component","target":"component:self_attention","basis":"documented","explanation":"각 DiT 블록은 다중 헤드 self-attention을 포함합니다.","evidence":["paper:dit"],"locator":"§3; official DiTBlock.attn"},
+    {"source":"model:dit","relation":"has_component","target":"component:diffusion_output_head","basis":"documented","explanation":"토큰별 예측을 잠재 패치로 되돌립니다.","evidence":["paper:dit"],"locator":"§3; official FinalLayer and unpatchify"},
+    {"source":"model:dit","relation":"trained_with","target":"objective:latent_denoising","basis":"documented","explanation":"잠재공간 확산 목적을 Transformer로 최적화합니다.","evidence":["paper:dit"],"locator":"§3–4"},
+    {"source":"model:dit","relation":"applied_to","target":"task:conditional_image_generation","basis":"documented","explanation":"클래스 조건 ImageNet 생성을 평가합니다.","evidence":["paper:dit"],"locator":"Abstract; §4"},
+    {"source":"model:dit","relation":"extends","target":"model:ldm","basis":"documented","explanation":"LDM의 잠재 확산에서 U-Net 백본을 패치 Transformer로 교체합니다.","evidence":["paper:dit"],"locator":"Abstract; §2–3"},
+    {"source":"model:dit","relation":"extends","target":"model:vit","basis":"structural","explanation":"ViT식 패치 Transformer를 확산 시간·클래스 조건 노이즈 예측에 맞게 변경합니다.","evidence":["paper:dit"],"locator":"§3"},
+    {"source":"concept:latent_diffusion","relation":"subconcept_of","target":"concept:diffusion","basis":"documented","explanation":"학습된 잠재공간에서 수행하는 확산 생성의 한 형태입니다.","evidence":["paper:ldm"],"locator":"§3.1"},
+    {"source":"concept:transformer_denoiser","relation":"subconcept_of","target":"concept:denoising","basis":"documented","explanation":"Transformer를 사용한 확산 노이즈 제거 예측입니다.","evidence":["paper:dit"],"locator":"§3"},
+    {"source":"component:latent_denoiser","relation":"uses","target":"concept:latent_diffusion","basis":"documented","explanation":"U-Net은 압축 잠재공간의 잡음을 예측합니다.","evidence":["paper:ldm"],"locator":"§3.1"},
+    {"source":"component:latent_denoiser","relation":"uses","target":"concept:cross_attention_conditioning","basis":"documented","explanation":"조건 표현을 교차 어텐션 층에 주입합니다.","evidence":["paper:ldm"],"locator":"§3.3"},
+    {"source":"component:adaln_block","relation":"uses","target":"concept:adaptive_layer_norm","basis":"documented","explanation":"블록별 정규화와 잔차 경로를 조건에 따라 변조합니다.","evidence":["paper:dit"],"locator":"§3, Fig.3"},
+    {"source":"component:adaln_block","relation":"uses","target":"concept:self_attention","basis":"documented","explanation":"잠재 패치 토큰 사이의 전역 상호작용을 계산합니다.","evidence":["paper:dit"],"locator":"§3"},
+    {"source":"component:adaln_modulation","relation":"uses","target":"concept:adaptive_layer_norm","basis":"documented","explanation":"조건 벡터에서 shift, scale, gate를 만듭니다.","evidence":["paper:dit"],"locator":"§3; official DiTBlock"},
+    {"source":"objective:latent_denoising","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"잠재 확산 학습 목적의 원문 근거입니다.","evidence":["paper:ldm"],"locator":"§3.1, Eq.1"},
+    {"source":"task:conditional_image_generation","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"조건부 이미지 합성 과제의 원문 근거입니다.","evidence":["paper:ldm"],"locator":"§3.3; §4–5"},
+    {"source":"concept:perceptual_compression","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"지각 압축 단계의 원문과 공식 구현 근거입니다.","evidence":["paper:ldm"],"locator":"§3; official autoencoder.py"},
+    {"source":"concept:latent_diffusion","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"잠재공간 확산 설계의 원문과 공식 구현 근거입니다.","evidence":["paper:ldm"],"locator":"§3.1; CompVis/latent-diffusion"},
+    {"source":"concept:cross_attention_conditioning","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"교차 어텐션 조건화의 원문 근거입니다.","evidence":["paper:ldm"],"locator":"§3.3, Eq.3"},
+    {"source":"concept:transformer_denoiser","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"Transformer 확산 백본의 원문과 공식 구현 근거입니다.","evidence":["paper:dit"],"locator":"§3; facebookresearch/DiT models.py"},
+    {"source":"concept:adaptive_layer_norm","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"adaLN-Zero 조건화의 원문과 공식 구현 근거입니다.","evidence":["paper:dit"],"locator":"§3, Fig.3; official DiTBlock"},
+    {"source":"component:first_stage_encoder","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"구조적 역할의 원문과 공식 구현 근거입니다.","evidence":["paper:ldm"],"locator":"§3; autoencoder.py"},
+    {"source":"component:first_stage_decoder","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"구조적 역할의 원문과 공식 구현 근거입니다.","evidence":["paper:ldm"],"locator":"§3; autoencoder.py"},
+    {"source":"component:conditioning_encoder","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"구조적 역할의 원문 근거입니다.","evidence":["paper:ldm"],"locator":"§3.3"},
+    {"source":"component:latent_denoiser","relation":"documented_in","target":"paper:ldm","basis":"documented","explanation":"구조적 역할의 원문과 공식 구현 근거입니다.","evidence":["paper:ldm"],"locator":"§3.1–3.3; openaimodel.py"},
+    {"source":"component:diffusion_time_embedding","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"확산 시간 조건의 원문과 공식 구현 근거입니다.","evidence":["paper:dit"],"locator":"§3; TimestepEmbedder"},
+    {"source":"component:latent_patch_embed","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"잠재 패치화의 원문과 공식 구현 근거입니다.","evidence":["paper:dit"],"locator":"§3; PatchEmbed"},
+    {"source":"component:class_embedding","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"클래스 조건의 원문과 공식 구현 근거입니다.","evidence":["paper:dit"],"locator":"§3; LabelEmbedder"},
+    {"source":"component:adaln_block","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"adaLN 블록의 원문과 공식 구현 근거입니다.","evidence":["paper:dit"],"locator":"§3, Fig.3; DiTBlock"},
+    {"source":"component:adaln_modulation","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"조건 변조기의 원문과 공식 구현 근거입니다.","evidence":["paper:dit"],"locator":"§3; adaLN_modulation"},
+    {"source":"component:diffusion_output_head","relation":"documented_in","target":"paper:dit","basis":"documented","explanation":"패치 출력과 unpatchify의 원문·공식 구현 근거입니다.","evidence":["paper:dit"],"locator":"§3; FinalLayer and unpatchify"}
+  ]
+}
