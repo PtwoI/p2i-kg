@@ -40,6 +40,26 @@ BINDINGS = {
         ('component:positions', 'transformer.wpe')],
     'cnn': [('component:convolution', 'features.0')],
     'resnet18': [('component:convolution', 'layer1.0.conv1')],
+    'vgg': [('component:convolution', 'features')],
+    'inception': [('component:convolution', 'inception3a')],
+    'densenet': [('component:convolution', 'features.denseblock1')],
+    'mobilenet': [('component:convolution', 'features.1')],
+    'efficientnet': [('component:convolution', 'features.1')],
+    'convnext': [('component:convolution', 'features.1')],
+    'unet': [('component:convolution', 'encoder')],
+    'vae': [('component:latent_encoder', 'encoder'), ('component:latent_decoder', 'decoder')],
+    'gan': [('component:generator', 'generator'), ('component:discriminator', 'discriminator')],
+    'ddpm': [('component:denoiser', 'denoiser')],
+    'gcn': [('component:graph_aggregation', 'aggregation')],
+    'gat': [('component:graph_aggregation', 'attention')],
+    't5': [('component:encoder', 'backbone.encoder'), ('component:decoder', 'backbone.decoder')],
+    'swin': [('component:patches', 'features.0'), ('component:self_attention', 'features.1.0.attn')],
+    'roformer': [('component:self_attention', 'encoder.layer.0.attention.self')],
+    'llama': [('component:self_attention', 'model.layers.0.self_attn'), ('component:ffn', 'model.layers.0.mlp')],
+    'clip': [('component:image_encoder', 'backbone.vision_model'), ('component:text_encoder', 'backbone.text_model')],
+    'mamba': [('component:state_space', 'layers.0.mixer')],
+    'switch': [('component:router', 'backbone.encoder.block.0.layer.1.mlp.router'),
+               ('component:expert', 'backbone.encoder.block.0.layer.1.mlp.experts.expert_0')],
     **{key: [('component:recurrent', 'recurrent')] for key in ('rnn', 'lstm', 'gru')},
 }
 
@@ -48,7 +68,7 @@ def inspect_model(runtime_id):
     import p2i
     model, inputs = make_model(runtime_id)
     harness = p2i.Harness(model, example_inputs=inputs)
-    observed = harness.retrace(static=False)
+    observed = harness.retrace(static=False, capture_values=True)
     architecture = harness.architecture()
     paths = {node.qualified_name: node for node in architecture.nodes}
     bindings = []
@@ -63,4 +83,7 @@ def inspect_model(runtime_id):
     return {'runtime_id': runtime_id, 'p2i_version': p2i.__version__,
         'operations': len(observed.operations), 'modules': len(architecture.nodes),
         'bindings': bindings, 'architecture': architecture.model_dump(mode='json'),
+        'observed': observed.model_dump(mode='json'),
+        'inspection': harness.inspection.as_dict(),
+        'configuration': harness.observed_configuration,
         'scope': 'Current fixed example configuration, with randomly initialized weights.'}

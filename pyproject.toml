@@ -24,7 +24,7 @@ p2i-kg = "p2i_kg.__main__:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-p2i_kg = ["catalog.json", "static/*"]
+p2i_kg = ["catalog.json", "static/*", "static/p2i/*", "static/p2i/assets/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

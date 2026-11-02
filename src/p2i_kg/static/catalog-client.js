@@ -2,7 +2,7 @@
 export const hosted=document.documentElement.dataset.mode==='static';
 let snapshot;
 export async function catalog(){
- if(!snapshot){const response=await fetch(new URL('./catalog.json',import.meta.url));if(!response.ok)throw Error('카탈로그를 불러오지 못했습니다.');snapshot=await response.json();}
+ if(!snapshot){const response=await fetch(new URL('./catalog.json?v='+(document.documentElement.dataset.build??document.documentElement.dataset.revision??'neon-v1'),import.meta.url));if(!response.ok)throw Error('카탈로그를 불러오지 못했습니다.');snapshot=await response.json();}
  return snapshot;
 }
 function effective(graph,id){
@@ -41,7 +41,7 @@ export async function read(url,options){
  }
  if(path.startsWith('/api/kg/inspect/')){
   const node=nodes.get(decodeURIComponent(path.split('/').at(-1)));if(!node?.runtime_id)throw Error('실행 예제가 없는 모델입니다.');
-  const response=await fetch(new URL('./snapshots/'+node.runtime_id+'.json',import.meta.url));if(!response.ok)throw Error('이 모델은 로컬 P2I에서 구조를 열어보세요.');return response.json();
+  const response=await fetch(new URL('./snapshots/'+node.runtime_id+'.json?v='+(document.documentElement.dataset.build??graph.revision),import.meta.url));if(!response.ok)throw Error('이 모델은 로컬 P2I에서 구조를 열어보세요.');return response.json();
  }
  throw Error('이 기능은 로컬 P2I에서 사용할 수 있습니다.');
 }

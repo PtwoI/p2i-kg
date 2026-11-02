@@ -3,7 +3,10 @@ import socket
 from threading import Lock, Thread
 import time
 
-RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr', 'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet')
+from .extended_registry import EXTENDED_IDS
+
+BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr', 'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet')
+RUNTIME_IDS = BASE_RUNTIME_IDS + EXTENDED_IDS
 
 
 def make_model(runtime_id):
@@ -57,6 +60,9 @@ def make_model(runtime_id):
                 n_head=2, resid_pdrop=0.0, embd_pdrop=0.0, attn_pdrop=0.0,
                 use_cache=False, return_dict=False, attn_implementation='eager')
             return GPT2LMHeadModel(config).eval(), (torch.randint(0, 32, (2, 6)),)
+        if runtime_id in EXTENDED_IDS:
+            from .extended_models import make_extended
+            return make_extended(runtime_id)
         return make_demo(runtime_id)
 
 

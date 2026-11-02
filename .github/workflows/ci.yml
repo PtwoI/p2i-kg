@@ -56,3 +56,14 @@ jobs:
         with:
           name: atlas-browser-proof
           path: artifacts/
+      - name: Build complete Pages map and P2I structures
+        run: python -m p2i_kg pages ./artifacts/p2imap --source-revision "${{ github.sha }}"
+        env:
+          OMP_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p2imap-${{ github.sha }}
+          path: artifacts/p2imap/
+          if-no-files-found: error
+          retention-days: 7

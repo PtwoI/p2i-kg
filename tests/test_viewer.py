@@ -32,7 +32,7 @@ def test_default_view_is_a_map_without_course_screens():
     source = (Path(__file__).parents[1]/'src/p2i_kg/static/index.html').read_text()
     assert 'id="map"' in source and 'id="detail"' in source
     assert 'data-route="learn"' not in source and 'id="lesson"' not in source
-    assert 'src="./app.js"' in source and 'href="./map.css"' in source
+    assert 'src="./app.js?v=neon-v1"' in source and 'href="./map.css"' in source
 
 
 def test_static_client_preserves_semantic_results(tmp_path):

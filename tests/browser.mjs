@@ -44,7 +44,7 @@ try{
  await page.getByRole('button',{name:'모델 비교 닫기',exact:true}).click();
  await page.locator('#map [data-node="model:lstm"]').click();
  await expect(page.locator('#detail h2')).toHaveText('LSTM');
- await page.getByRole('button',{name:'P2I로 열기 ↗',exact:true}).click();
+ await page.getByRole('button',{name:'실행·편집 세션 열기 ↗',exact:true}).click();
  await expect(page.locator('#runtime-status')).toContainText('세션이 준비되었습니다.',{timeout:60000});
  const popupEvent=page.waitForEvent('popup');
  await page.getByRole('link',{name:'P2I 모델 탐색기 열기 ↗',exact:true}).click();
@@ -75,9 +75,9 @@ try{
  if(JSON.parse(await readFile(path,'utf8'))['@graph'].length!==catalog.nodes.length+catalog.edges.length)throw Error('Incomplete JSON-LD export');
  await page.getByRole('button',{name:'지도 데이터 닫기',exact:true}).click();
  await page.getByLabel('모델 바로가기',{exact:true}).selectOption('model:transformer');
- await page.getByRole('button',{name:'온톨로지 ↔ 실제 모듈 연결',exact:true}).click();
+ await page.getByRole('button',{name:'모듈 연결 펼치기',exact:true}).click();
  await expect(page.locator('#bindings')).toContainText('decoder.0.multihead_attn',{timeout:60000});
- await page.getByRole('button',{name:'P2I로 열기 ↗',exact:true}).click();
+ await page.getByRole('button',{name:'실행·편집 세션 열기 ↗',exact:true}).click();
  await expect(page.locator('#runtime-status')).toContainText('세션이 준비되었습니다.',{timeout:60000});
  const seqPopup=page.waitForEvent('popup');
  await page.getByRole('link',{name:'P2I 모델 탐색기 열기 ↗',exact:true}).click();
