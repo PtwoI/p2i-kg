@@ -65,3 +65,16 @@ def test_ontology_module_bindings_are_real():
     assert bindings['component:cross_attention']['managed_by']
     assert bindings['component:decoder']['parameters']['dim_feedforward'] == 64
     assert result['operations'] > 0
+
+
+@pytest.mark.parametrize('name,expected', [('deepsets','component:set_sum_pool'),
+    ('pointnet','component:symmetric_max_pool')])
+def test_set_model_bindings_and_permutation_invariance(name, expected):
+    from p2i_kg.bindings import inspect_model
+    model, inputs = make_model(name)
+    permutation = (torch.tensor([4, 0, 6, 1, 3, 2, 5])
+        if name == 'deepsets' else torch.randperm(16))
+    torch.testing.assert_close(model(*inputs), model(inputs[0][:, permutation]))
+    result = inspect_model(name)
+    assert expected in {binding['ontology_id'] for binding in result['bindings']}
+    assert result['operations'] > 0
