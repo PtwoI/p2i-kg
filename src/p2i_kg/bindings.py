@@ -4,6 +4,11 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'deepsets': [('component:element_encoder', 'element_encoder'),
+        ('component:set_sum_pool', 'set_pool'), ('component:set_readout', 'set_head')],
+    'pointnet': [('component:shared_point_mlp', 'point_encoder'),
+        ('component:symmetric_max_pool', 'symmetric_pool'),
+        ('component:shape_classifier', 'shape_classifier')],
     'perceiver': [('component:perceiver_input_projection', 'input_projection'),
         ('component:latent_array', 'latent_array'),
         ('component:perceiver_cross_attention', 'cross_attention'),

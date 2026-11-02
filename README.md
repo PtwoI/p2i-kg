@@ -3,11 +3,12 @@
 A local educational knowledge graph connecting neural models, building-block
 concepts and representative papers, with live P2I model exploration.
 
-Version 0.2 contains **36 models, 201 nodes and 428 sourced relationships**.
+Version 0.2 contains **38 models, 222 nodes and 478 sourced relationships**.
 Alongside the original Perceptron/MLP/CNN/RNN/LSTM/GRU/ResNet/Transformer path,
 it includes VGG, Inception, DenseNet, MobileNet, EfficientNet, ConvNeXt, U-Net,
 BERT, GPT-2, T5, ViT, Swin, RoFormer, LLaMA (2023), VAE, GAN, DDPM, GCN, GAT,
-CLIP, Switch Transformer, Mamba, MLP-Mixer, MAE, DETR, NeRF, Perceiver and GraphSAGE. Reference years
+CLIP, Switch Transformer, Mamba, MLP-Mixer, MAE, DETR, NeRF, Perceiver,
+GraphSAGE, Deep Sets and PointNet. Reference years
 identify first-public-paper years, not universal invention dates. Each claim
 retains its evidence and its documented, structural or pedagogical interpretation.
 
@@ -52,6 +53,12 @@ compatible with your PyTorch installation. No pretrained weights are fetched.
 BERT/GPT-2 use small actual Hugging Face configurations (`pip install -e
 '.[language]'`); ViT uses a small TorchVision configuration. No model weights
 are downloaded. Only cards marked with a runtime have executable examples.
+
+Deep Sets and PointNet use compact, dependency-free teaching implementations.
+They expose shared per-element/point encoders and their distinct symmetric
+reductions (sum versus max) as actual P2I module bindings. The PointNet runtime
+focuses on its core classification path and omits the paper's optional T-Nets
+and segmentation branch; those structures remain represented in the ontology.
 
 The Perceptron example uses a real threshold and is not differentiable. Other
 bundled models are small educational examples, not full reproductions of every

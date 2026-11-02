@@ -82,7 +82,7 @@ then add a runtime where it improves understanding. If P2I cannot represent a
 necessary module, add a trusted reconstruction adapter and exercise tracing,
 editing, independent checkpoint restoration and backward before binding it.
 Upcoming useful branches include latent diffusion/DiT, Mamba-2,
-MLP-Mixer, self-supervised vision models and additional graph architectures.
+self-supervised vision models and additional graph architectures.
 
 The bundled Perceiver example fixes four latent queries while allowing the input
 length to vary; its input projection, latent array, cross-attention, latent
@@ -91,3 +91,9 @@ uses deterministic full-neighborhood means so structural comparisons are
 repeatable, while the catalog records the original sampled-neighborhood design.
 Its aggregator, self/neighbor projections and node classifier are also bound to
 the traced module paths.
+
+The bundled Deep Sets and PointNet examples make their contrasting symmetric
+reductions executable: Deep Sets applies sum pooling after a shared element
+encoder, whereas PointNet applies channel-wise max pooling after a shared point
+MLP. Both examples are permutation invariant and expose the encoder, reduction
+and readout as verified P2I module bindings.

@@ -194,3 +194,47 @@ class TinyGraphSAGE(nn.Module):
         hidden = __import__('torch').relu(
             self.self_projection(features) + self.neighbor_projection(neighbors))
         return self.node_classifier(hidden)
+
+
+class SumSetPool(nn.Module):
+    """Permutation-invariant sum over the elements of a set."""
+    def forward(self, features):
+        return features.sum(1)
+
+
+class SymmetricMaxPool(nn.Module):
+    """PointNet's channel-wise symmetric maximum over unordered points."""
+    def forward(self, features):
+        return features.max(1).values
+
+
+class TinyDeepSets(nn.Module):
+    """Small rho(sum(phi(x))) set classifier with shared element encoding."""
+    def __init__(self):
+        super().__init__()
+        self.element_encoder = nn.Sequential(
+            nn.Linear(6, 16), nn.ReLU(), nn.Linear(16, 16), nn.ReLU())
+        self.set_pool = SumSetPool()
+        self.set_head = nn.Sequential(nn.Linear(16, 12), nn.ReLU(), nn.Linear(12, 4))
+
+    def forward(self, elements):
+        return self.set_head(self.set_pool(self.element_encoder(elements)))
+
+
+class TinyPointNet(nn.Module):
+    """Small PointNet classifier exposing shared point MLP and max pooling.
+
+    This fixed example focuses on PointNet's core unordered-point path. The
+    paper's optional input/feature transformation networks are catalogued but
+    intentionally omitted from this compact runtime.
+    """
+    def __init__(self):
+        super().__init__()
+        self.point_encoder = nn.Sequential(
+            nn.Linear(3, 16), nn.ReLU(), nn.Linear(16, 32), nn.ReLU())
+        self.symmetric_pool = SymmetricMaxPool()
+        self.shape_classifier = nn.Sequential(
+            nn.Linear(32, 16), nn.ReLU(), nn.Linear(16, 5))
+
+    def forward(self, points):
+        return self.shape_classifier(self.symmetric_pool(self.point_encoder(points)))
