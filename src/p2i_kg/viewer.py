@@ -14,15 +14,15 @@ def export_viewer(store, output, *, runtime=False):
     destination.mkdir(parents=True, exist_ok=False)
     revision, graph = store.load_optional()
     for resource in files('p2i_kg').joinpath('static').iterdir():
-        if resource.is_file():
+        if resource.is_file() and resource.name not in {'study.js', 'study.css', 'study-math.js'}:
             (destination/resource.name).write_bytes(resource.read_bytes())
     index = destination/'index.html'
     html = index.read_text(encoding='utf-8').replace('<html lang="ko">', '<html lang="ko" data-mode="static">')
-    for old, new in [('/api/kg/export?format=turtle', '/exports/catalog.ttl'),
-                     ('/api/kg/export?format=jsonld', '/exports/catalog.jsonld'),
-                     ('/api/kg/export', '/exports/catalog.json'),
-                     ('/api/kg/ontology', '/exports/ontology.ttl'),
-                     ('/api/kg/shapes', '/exports/shapes.ttl')]:
+    for old, new in [('/api/kg/export?format=turtle', './exports/catalog.ttl'),
+                     ('/api/kg/export?format=jsonld', './exports/catalog.jsonld'),
+                     ('/api/kg/export', './exports/catalog.json'),
+                     ('/api/kg/ontology', './exports/ontology.ttl'),
+                     ('/api/kg/shapes', './exports/shapes.ttl')]:
         html = html.replace(old, new)
     index.write_text(html, encoding='utf-8')
 
