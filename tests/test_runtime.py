@@ -26,7 +26,9 @@ def test_model_factories_edit_checkpoint_backward(name):
         assert report.backward_valid is (name != 'perceptron')
         if name == 'perceptron':
             assert set(model(*inputs).flatten().tolist()) <= {0.,1.}
-        target = {'perceptron':'linear','mlp':'layers.0','cnn':'features.0','resnet18':'fc','vit':'heads.head','bert':'pooler.dense'}.get(name,'head')
+        target = {'perceptron':'linear','mlp':'layers.0','cnn':'features.0','resnet18':'fc',
+            'vit':'heads.head','bert':'pooler.dense','detr':'class_head',
+            'nerf':'density_head'}.get(name,'head')
         action = {'type':'set_parameter','target':target,'parameter':'bias','value':False}
         if name == 'gpt2':action = {'type':'set_parameter','target':'transformer.drop','parameter':'p','value':0.1}
         assert restored.apply(action).committed
