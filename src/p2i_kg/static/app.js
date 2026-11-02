@@ -1,3 +1,5 @@
+import './study.js';
+import {read,hosted} from './catalog-client.js';
 const $=selector=>document.querySelector(selector);
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let graph,nodes,selected='model:transformer',zoom=1,searchTimer;
@@ -6,8 +8,8 @@ let mapRequest=0;
 const relations={extends:'확장',alternative_to:'대안',documented_in:'대표 문헌',uses:'사용 개념',has_component:'구성 요소',subconcept_of:'상위 개념',trained_with:'학습 목적',applied_to:'적용 과제'};
 const kinds={model:'모델',concept:'개념',paper:'논문',component:'구성 요소',objective:'학습 목적',task:'과제'};
 const bases={documented:'문헌 관계',structural:'구조적 관계',pedagogical:'교육적 연결'};
-async function read(url,options){const response=await fetch(url,options);if(!response.ok){let body;try{body=await response.json()}catch{body={detail:`요청 실패 (${response.status})`}}throw Error(body.detail??'요청을 완료하지 못했습니다.')}return response.json()}
-function select(id){if(!nodes.has(id))return;selected=id;renderMap();renderDetail();}
+function select(id){if(!nodes.has(id))return;selected=id;if(nodes.get(id).kind==='model'&&[...$('#model-select').options].some(option=>option.value===id))$('#model-select').value=id;renderMap();renderDetail();}
+window.addEventListener('atlas:select',event=>{select(event.detail.id);if(event.detail.compare){$('#compare-left').value=event.detail.compare[0];$('#compare-right').value=event.detail.compare[1];compare();}});
 function chip(id){const node=nodes.get(id);return `<button class="chip" data-node="${esc(id)}">${esc(node?.label??id)}</button>`}
 async function renderMap(){
  const request=++mapRequest,id=selected;
@@ -55,6 +57,7 @@ function renderDetail(){
  if(!papers.length&&evidence.length)html+=`<h3>관계의 근거 문헌</h3><div class="chips">${evidence.map(chip).join('')}</div>`;
  if(papers.length)html+=`<h3>대표 문헌</h3>${papers.map(paper=>`<a class="reference" href="${esc(paper.url)}" target="_blank" rel="noopener noreferrer">${esc(paper.label)} ↗<small>${esc(paper.authors.join(', '))} · ${paper.reference_year}</small></a>`).join('')}`;
  if(node.runtime_id){html+=`<h3>실제 구조 살펴보기</h3><p>${esc(node.runtime_note)}</p><div class="runtime-actions"><button class="primary" id="launch">P2I로 열기 ↗</button><a class="secondary" href="/api/kg/models/${encodeURIComponent(node.id)}/checkpoint">예제 체크포인트 ↓</a></div><p class="muted">편집한 결과는 열린 P2I 세션에서 저장하세요.</p><button class="secondary" id="inspect-model">온톨로지 ↔ 실제 모듈 연결</button><div id="bindings"></div><div id="runtime-status" class="runtime-status" aria-live="polite"></div>`;}
+ if(hosted){html=html.replace('<button class="primary" id="launch">P2I로 열기 ↗</button>', '<a class="primary" href="http://127.0.0.1:8010/" target="_blank" rel="noopener noreferrer">로컬 P2I 열기 ↗</a>').replace(/<a class="secondary" href="[^"]+\/checkpoint">예제 체크포인트 ↓<\/a>/,'').replace('편집한 결과는 열린 P2I 세션에서 저장하세요.','실제 실행·편집은 PC에서 p2i-kg serve를 시작한 후 로컬 P2I로 연결하세요.');}
  $('#detail').innerHTML=html;
  if(node.runtime_id&&sessions.has(node.id))showSession(node.id,sessions.get(node.id));
 }
@@ -112,7 +115,7 @@ $('#search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer
  try{const result=await read(`/api/kg/search?q=${encodeURIComponent(q)}`);if($('#search').value!==q)return;$('#search-results').innerHTML=result.nodes.length?result.nodes.map(node=>`<button data-node="${esc(node.id)}">${esc(node.label)} <small>· ${esc(node.kind)}</small></button>`).join(''):'<span class="muted">검색 결과가 없습니다.</span>'}catch(error){$('#global-error').textContent=error.message}
 },160)});
 async function loadGraph(){
- graph=await read('/api/kg');nodes=new Map(graph.nodes.map(node=>[node.id,node]));
+ graph=await read('/api/kg');nodes=new Map(graph.nodes.map(node=>[node.id,node]));window.dispatchEvent(new CustomEvent('atlas:catalog',{detail:graph}));
  const models=graph.nodes.filter(node=>node.kind==='model');
  $('#stats').textContent=`${models.length}개 모델 · ${graph.nodes.length}개 노드 · ${graph.edges.length}개 관계`;
  $('#catalog-range').textContent=`01 — ${String(models.length).padStart(2,'0')}`;
