@@ -26,13 +26,16 @@ def test_model_factories_edit_checkpoint_backward(name):
         assert report.backward_valid is (name != 'perceptron')
         if name == 'perceptron':
             assert set(model(*inputs).flatten().tolist()) <= {0.,1.}
-        target = {'perceptron':'linear','mlp':'layers.0','cnn':'features.0','resnet18':'fc',
-            'vit':'heads.head','bert':'pooler.dense','detr':'class_head',
-            'nerf':'density_head','perceiver':'classifier',
-            'graphsage':'node_classifier'}.get(name,'head')
-        action = {'type':'set_parameter','target':target,'parameter':'bias','value':False}
-        if name == 'gpt2':action = {'type':'set_parameter','target':'transformer.drop','parameter':'p','value':0.1}
+        # Catalog factories have different head names. Exercise a real editable
+        # linear projection rather than assuming every model exposes `head`.
+        editable = {node.qualified_name for node in restored.architecture().nodes if node.editable}
+        target = next(path for path, module in reversed(list(model.named_modules()))
+                      if path in editable and isinstance(module, (torch.nn.Linear, torch.nn.Conv2d)))
+        action = {'type':'set_parameter','target':target,'parameter':'bias','value':model.get_submodule(target).bias is None}
         assert restored.apply(action).committed
+        assert restored.validate(backward=True).backward_valid is (name != 'perceptron')
+        rebuilt = p2i.Harness.load(checkpoint_bytes(restored), model=restored.build())
+        torch.testing.assert_close(rebuilt.build()(*inputs), restored.build()(*inputs), rtol=0, atol=0)
     finally:
         torch.set_num_threads(previous)
 
