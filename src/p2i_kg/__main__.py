@@ -16,6 +16,9 @@ def main():
     export = sub.add_parser('export')
     export.add_argument('file')
     export.add_argument('--format', choices=['json','jsonld','turtle','ontology','shapes'], default='json')
+    viewer = sub.add_parser('viewer')
+    viewer.add_argument('directory')
+    viewer.add_argument('--runtime', action='store_true')
     imported = sub.add_parser('import')
     imported.add_argument('file')
     extended = sub.add_parser('extend')
@@ -52,6 +55,9 @@ def main():
         else:
             value = graph.jsonld() if args.format == 'jsonld' else graph.model_dump(mode='json')
             Path(args.file).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    elif args.command == 'viewer':
+        from .viewer import export_viewer
+        print(json.dumps(export_viewer(store, args.directory, runtime=args.runtime)))
     elif args.command == 'import':
         value = KnowledgeGraph.model_validate_json(Path(args.file).read_text(encoding='utf-8'))
         print(json.dumps({'revision':store.replace(value)}))
