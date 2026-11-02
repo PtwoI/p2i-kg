@@ -260,7 +260,7 @@
       "label": "Transformer",
       "reference_year": 2017,
       "family": "attention",
-      "summary": "Self-Attention과 FFN, 잔차 연결로 시퀀스 표현을 갱신합니다. 실행 예제는 P2I의 작은 블록으로 원 논문의 전체 인코더-디코더 재현이 아닙니다.",
+      "summary": "Self-Attention과 FFN, 잔차 연결로 시퀀스 표현을 갱신합니다. 실행 예제는 위치 인코딩·인과적 마스크·교차 어텐션을 포함하는 작은 인코더–디코더이며, 논문의 학습된 전체 모델 재현은 아닙니다.",
       "runtime_id": "seq2seq",
       "runtime_note": "작은 인코더–디코더 예제: 정현파 위치 인코딩, 인과적 디코더 마스크, 교차 어텐션을 포함합니다. 임의 초기화와 teacher forcing을 사용하며 번역 학습이나 사전학습 가중치는 포함하지 않습니다."
     },
