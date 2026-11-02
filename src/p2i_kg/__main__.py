@@ -11,12 +11,20 @@ def main():
     sub = parser.add_subparsers(dest='command', required=True)
     serve = sub.add_parser('serve')
     serve.add_argument('--port', type=int, default=8010)
-    sub.add_parser('validate')
+    validation = sub.add_parser('validate')
+    validation.add_argument('--rdf', action='store_true')
     export = sub.add_parser('export')
     export.add_argument('file')
-    export.add_argument('--format', choices=['json','jsonld'], default='json')
+    export.add_argument('--format', choices=['json','jsonld','turtle','ontology','shapes'], default='json')
     imported = sub.add_parser('import')
     imported.add_argument('file')
+    extended = sub.add_parser('extend')
+    extended.add_argument('file')
+    extended.add_argument('--expected-revision')
+    sub.add_parser('upgrade')
+    queried = sub.add_parser('query')
+    for field in ('concept', 'objective', 'task', 'family'):
+        queried.add_argument('--' + field)
     opened = sub.add_parser('open')
     opened.add_argument('model_id')
     opened.add_argument('--port', type=int, default=8000)
@@ -29,13 +37,31 @@ def main():
     elif args.command == 'validate':
         graph = store.load()
         print(json.dumps({'valid':True,'nodes':len(graph.nodes),'edges':len(graph.edges)}))
+        if args.rdf:
+            from .ontology import validate_rdf
+            report = validate_rdf(graph)
+            print(json.dumps(report))
+            if not report['conforms']:
+                raise SystemExit(1)
     elif args.command == 'export':
         graph = store.load()
-        value = graph.jsonld() if args.format == 'jsonld' else graph.model_dump(mode='json')
-        Path(args.file).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        if args.format in ('turtle', 'ontology', 'shapes'):
+            from .ontology import data_graph, vocabulary, shapes
+            rdf = vocabulary() if args.format == 'ontology' else shapes() if args.format == 'shapes' else data_graph(graph) + vocabulary()
+            Path(args.file).write_text(rdf.serialize(format='turtle'), encoding='utf-8')
+        else:
+            value = graph.jsonld() if args.format == 'jsonld' else graph.model_dump(mode='json')
+            Path(args.file).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     elif args.command == 'import':
         value = KnowledgeGraph.model_validate_json(Path(args.file).read_text(encoding='utf-8'))
         print(json.dumps({'revision':store.replace(value)}))
+    elif args.command == 'extend':
+        print(json.dumps(store.extend(json.loads(Path(args.file).read_text(encoding='utf-8')), expected_revision=args.expected_revision)))
+    elif args.command == 'upgrade':
+        from .store import seed_graph
+        print(json.dumps(store.extend(seed_graph().model_dump(mode='json'), keep_existing=True)))
+    elif args.command == 'query':
+        print(json.dumps(store.load().query(**{field:getattr(args,field) for field in ('concept','objective','task','family')}), ensure_ascii=False, indent=2))
     else:
         from .runtime import make_model
         import p2i
