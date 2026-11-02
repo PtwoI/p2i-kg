@@ -238,3 +238,89 @@ class TinyPointNet(nn.Module):
 
     def forward(self, points):
         return self.shape_classifier(self.symmetric_pool(self.point_encoder(points)))
+
+
+class TinyViewEncoder(nn.Module):
+    """Small shared convolutional encoder used by two-view SSL examples."""
+    def __init__(self):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 8, 3, padding=1), nn.ReLU(),
+            nn.Conv2d(8, 16, 3, stride=2, padding=1), nn.ReLU(),
+            nn.AdaptiveAvgPool2d(1))
+
+    def forward(self, images):
+        return self.features(images).flatten(1)
+
+
+class TinySimCLR(nn.Module):
+    """Shared encoder and nonlinear projection head for a positive view pair."""
+    def __init__(self):
+        super().__init__()
+        self.encoder = TinyViewEncoder()
+        self.projector = nn.Sequential(
+            nn.Linear(16, 16), nn.ReLU(), nn.Linear(16, 8))
+
+    def forward(self, view_one, view_two):
+        import torch
+        first = torch.nn.functional.normalize(
+            self.projector(self.encoder(view_one)), dim=-1)
+        second = torch.nn.functional.normalize(
+            self.projector(self.encoder(view_two)), dim=-1)
+        return torch.stack((first, second), dim=1)
+
+    def nt_xent_loss(self, projections, temperature=.2):
+        """Symmetric in-batch normalized temperature-scaled cross entropy."""
+        import torch
+        count = projections.shape[0]
+        flat = torch.cat((projections[:, 0], projections[:, 1]), dim=0)
+        logits = flat @ flat.transpose(0, 1) / temperature
+        logits = logits.masked_fill(torch.eye(2 * count, dtype=torch.bool,
+            device=flat.device), -1e9)
+        positives = torch.cat((torch.arange(count, 2 * count,
+            device=flat.device), torch.arange(count, device=flat.device)))
+        return torch.nn.functional.cross_entropy(logits, positives)
+
+
+class TinyBYOL(nn.Module):
+    """Online/target encoders with an online-only predictor and stop-gradient."""
+    def __init__(self):
+        super().__init__()
+        import copy
+        self.online_encoder = TinyViewEncoder()
+        self.online_projector = nn.Sequential(
+            nn.Linear(16, 16), nn.ReLU(), nn.Linear(16, 8))
+        self.online_predictor = nn.Sequential(
+            nn.Linear(8, 16), nn.ReLU(), nn.Linear(16, 8))
+        self.target_encoder = copy.deepcopy(self.online_encoder)
+        self.target_projector = copy.deepcopy(self.online_projector)
+        for parameter in list(self.target_encoder.parameters()) + list(self.target_projector.parameters()):
+            parameter.requires_grad_(False)
+
+    def forward(self, view_one, view_two):
+        import torch
+        online_first = torch.nn.functional.normalize(self.online_predictor(
+            self.online_projector(self.online_encoder(view_one))), dim=-1)
+        online_second = torch.nn.functional.normalize(self.online_predictor(
+            self.online_projector(self.online_encoder(view_two))), dim=-1)
+        with torch.no_grad():
+            target_first = torch.nn.functional.normalize(
+                self.target_projector(self.target_encoder(view_one)), dim=-1)
+            target_second = torch.nn.functional.normalize(
+                self.target_projector(self.target_encoder(view_two)), dim=-1)
+        return torch.stack((online_first, online_second, target_first,
+                            target_second), dim=1)
+
+    def bootstrap_loss(self, outputs):
+        first = 2. - 2. * (outputs[:, 0] * outputs[:, 3].detach()).sum(-1)
+        second = 2. - 2. * (outputs[:, 1] * outputs[:, 2].detach()).sum(-1)
+        return (first + second).mean()
+
+    @__import__('torch').no_grad()
+    def update_target(self, momentum=.99):
+        for online, target in zip(self.online_encoder.parameters(),
+                                  self.target_encoder.parameters()):
+            target.mul_(momentum).add_(online, alpha=1. - momentum)
+        for online, target in zip(self.online_projector.parameters(),
+                                  self.target_projector.parameters()):
+            target.mul_(momentum).add_(online, alpha=1. - momentum)

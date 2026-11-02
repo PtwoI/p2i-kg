@@ -4,6 +4,13 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'simclr': [('component:ssl_encoder', 'encoder'),
+        ('component:contrastive_projector', 'projector')],
+    'byol': [('component:online_encoder', 'online_encoder'),
+        ('component:online_projector', 'online_projector'),
+        ('component:online_predictor', 'online_predictor'),
+        ('component:target_encoder', 'target_encoder'),
+        ('component:target_projector', 'target_projector')],
     'deepsets': [('component:element_encoder', 'element_encoder'),
         ('component:set_sum_pool', 'set_pool'), ('component:set_readout', 'set_head')],
     'pointnet': [('component:shared_point_mlp', 'point_encoder'),
@@ -40,6 +47,7 @@ BINDINGS = {
         ('component:positions', 'transformer.wpe')],
     'cnn': [('component:convolution', 'features.0')],
     'resnet18': [('component:convolution', 'layer1.0.conv1')],
+    **{key: [('component:recurrent', 'recurrent')] for key in ('rnn', 'lstm', 'gru')},
     'vgg': [('component:convolution', 'features')],
     'inception': [('component:convolution', 'inception3a')],
     'densenet': [('component:convolution', 'features.denseblock1')],
@@ -53,14 +61,16 @@ BINDINGS = {
     'gcn': [('component:graph_aggregation', 'aggregation')],
     'gat': [('component:graph_aggregation', 'attention')],
     't5': [('component:encoder', 'backbone.encoder'), ('component:decoder', 'backbone.decoder')],
-    'swin': [('component:patches', 'features.0'), ('component:self_attention', 'features.1.0.attn')],
+    'swin': [('component:patches', 'features.0'),
+        ('component:self_attention', 'features.1.0.attn')],
     'roformer': [('component:self_attention', 'encoder.layer.0.attention.self')],
-    'llama': [('component:self_attention', 'model.layers.0.self_attn'), ('component:ffn', 'model.layers.0.mlp')],
-    'clip': [('component:image_encoder', 'backbone.vision_model'), ('component:text_encoder', 'backbone.text_model')],
+    'llama': [('component:self_attention', 'model.layers.0.self_attn'),
+        ('component:ffn', 'model.layers.0.mlp')],
+    'clip': [('component:image_encoder', 'backbone.vision_model'),
+        ('component:text_encoder', 'backbone.text_model')],
     'mamba': [('component:state_space', 'layers.0.mixer')],
     'switch': [('component:router', 'backbone.encoder.block.0.layer.1.mlp.router'),
-               ('component:expert', 'backbone.encoder.block.0.layer.1.mlp.experts.expert_0')],
-    **{key: [('component:recurrent', 'recurrent')] for key in ('rnn', 'lstm', 'gru')},
+        ('component:expert', 'backbone.encoder.block.0.layer.1.mlp.experts.expert_0')],
 }
 
 

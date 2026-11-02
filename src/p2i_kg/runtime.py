@@ -5,7 +5,9 @@ import time
 
 from .extended_registry import EXTENDED_IDS
 
-BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr', 'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet')
+BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18',
+    'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr',
+    'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol')
 RUNTIME_IDS = BASE_RUNTIME_IDS + EXTENDED_IDS
 
 
@@ -47,6 +49,13 @@ def make_model(runtime_id):
             if runtime_id == 'deepsets':
                 return TinyDeepSets().eval(), (torch.randn(2, 7, 6),)
             return TinyPointNet().eval(), (torch.randn(2, 16, 3),)
+        if runtime_id in ('simclr', 'byol'):
+            from .models import TinySimCLR, TinyBYOL
+            model = TinySimCLR() if runtime_id == 'simclr' else TinyBYOL()
+            # The two tensors represent independently augmented views of the
+            # same batch; augmentation itself remains outside the fixed graph.
+            return model.eval(), (torch.randn(4, 3, 16, 16),
+                                  torch.randn(4, 3, 16, 16))
         if runtime_id == 'resnet18':
             from torchvision.models import resnet18
             return resnet18(weights=None, num_classes=4).eval(), (torch.randn(2, 3, 32, 32),)
