@@ -248,7 +248,7 @@
     {
       "source": "model:simclr",
       "relation": "applied_to",
-      "target": "task:visual_representation",
+      "target": "task:classification",
       "basis": "documented",
       "explanation": "선형 평가와 전이를 위한 시각 표현을 사전학습합니다.",
       "evidence": [
@@ -402,7 +402,7 @@
     {
       "source": "model:byol",
       "relation": "applied_to",
-      "target": "task:visual_representation",
+      "target": "task:classification",
       "basis": "documented",
       "explanation": "후속 비전 과제를 위한 표현을 자기지도 학습합니다.",
       "evidence": [
