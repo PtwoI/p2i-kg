@@ -46,7 +46,56 @@ def create_app(database=None):
         if kind:
             nodes = [node for node in nodes if node.kind == kind]
         q = q.casefold().strip()
-        return {'nodes': [node.model_dump(mode='json') for node in nodes if q in (node.label+' '+node.summary).casefold()]}
+        return {'nodes': [node.model_dump(mode='json') for node in nodes if q in (' '.join([node.label,node.summary,*node.aliases])).casefold()]}
+
+    @app.get('/api/kg/ontology')
+    def ontology():
+        from .ontology import vocabulary
+        return Response(vocabulary().serialize(format='turtle'), media_type='text/turtle')
+
+    @app.get('/api/kg/shapes')
+    def ontology_shapes():
+        from .ontology import shapes
+        return Response(shapes().serialize(format='turtle'), media_type='text/turtle')
+
+    @app.get('/api/kg/query')
+    def query(concept: str | None = None, objective: str | None = None, task: str | None = None, family: str | None = None):
+        graph = store.load()
+        try:
+            return {'matches': graph.query(concept=concept, objective=objective, task=task, family=family)}
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
+
+    @app.get('/api/kg/neighborhood/{node_id}')
+    def neighborhood(node_id: str, hops: int = Query(1, ge=1, le=3), limit: int = Query(100, ge=1, le=200), relations: str | None = None):
+        try:
+            return store.load().neighborhood(node_id, hops=hops, limit=limit, relations=relations.split(',') if relations else None)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
+
+    @app.post('/api/kg/extend')
+    async def extend(request: Request):
+        local_request(request)
+        if 'application/json' not in request.headers.get('content-type', ''):
+            raise HTTPException(415, 'Use application/json')
+        try:
+            payload = await request.json()
+            if not isinstance(payload, dict) or set(payload) != {'expected_revision', 'patch'} or not isinstance(payload['expected_revision'], str):
+                raise ValueError('Provide expected_revision and patch')
+            return await asyncio.to_thread(store.extend, payload['patch'], expected_revision=payload['expected_revision'])
+        except (ValueError, TypeError) as exc:
+            raise HTTPException(409 if 'Stale' in str(exc) or 'Conflicting' in str(exc) else 422, str(exc))
+
+    @app.get('/api/kg/inspect/{model_id}')
+    async def inspect(model_id: str):
+        node = model_node(model_id)
+        if not node.runtime_id:
+            raise HTTPException(422, '실행 예제가 없는 모델입니다.')
+        try:
+            from .bindings import inspect_model
+            return await asyncio.to_thread(inspect_model, node.runtime_id)
+        except ImportError:
+            raise HTTPException(503, 'P2I와 해당 모델의 실행 의존성을 설치하세요.')
 
     @app.get('/api/kg/compare')
     def compare(left: str, right: str):
@@ -58,8 +107,12 @@ def create_app(database=None):
     @app.get('/api/kg/export')
     def export(format: str = 'json'):
         graph = store.load()
-        if format not in ('json', 'jsonld'):
-            raise HTTPException(422, 'format must be json or jsonld')
+        if format not in ('json', 'jsonld', 'turtle'):
+            raise HTTPException(422, 'format must be json, jsonld or turtle')
+        if format == 'turtle':
+            from .ontology import data_graph, vocabulary
+            return Response((data_graph(graph) + vocabulary()).serialize(format='turtle'), media_type='text/turtle',
+                headers={'Content-Disposition': 'attachment; filename="p2i-architecture.ttl"'})
         return JSONResponse(graph.jsonld() if format == 'jsonld' else graph.model_dump(mode='json'),
             headers={'Content-Disposition': f'attachment; filename="p2i-architecture.{format}"'})
 
