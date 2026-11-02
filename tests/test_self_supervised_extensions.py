@@ -83,5 +83,5 @@ def test_simclr_nt_xent_and_byol_gradient_boundary():
 def test_every_model_has_runtime_and_scope():
     graph = seed_graph()
     models = [node for node in graph.nodes if node.kind == 'model']
-    assert len(models) == 40
+    assert len(models) == 42
     assert all(node.runtime_id and node.runtime_note for node in models)
