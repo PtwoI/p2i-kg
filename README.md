@@ -3,13 +3,13 @@
 A local educational knowledge graph connecting neural models, building-block
 concepts and representative papers, with live P2I model exploration.
 
-Version 0.2 contains **30 models, 139 nodes and 287 sourced relationships**.
+Version 0.2 contains **34 models, 179 nodes and 378 sourced relationships**.
 Alongside the original Perceptron/MLP/CNN/RNN/LSTM/GRU/ResNet/Transformer path,
 it includes VGG, Inception, DenseNet, MobileNet, EfficientNet, ConvNeXt, U-Net,
 BERT, GPT-2, T5, ViT, Swin, RoFormer, LLaMA (2023), VAE, GAN, DDPM, GCN, GAT,
-CLIP, Switch Transformer and Mamba. Reference years identify first-public-paper
-years, not universal invention dates. Each claim retains its evidence and its
-documented, structural or pedagogical interpretation.
+CLIP, Switch Transformer, Mamba, MLP-Mixer, MAE, DETR and NeRF. Reference years
+identify first-public-paper years, not universal invention dates. Each claim
+retains its evidence and its documented, structural or pedagogical interpretation.
 
 The ontology distinguishes **models, concepts, components, training objectives,
 tasks and papers**. Explore one/two-hop neighborhoods, compare models across
@@ -116,7 +116,7 @@ See [extending the ontology](docs/ontology.md#incremental-extension).
 python -m pytest -q
 ```
 
-Core tests run without P2I. Runtime tests additionally exercise all eight model
+Core tests run without P2I. Runtime tests additionally exercise all bundled model
 factories when compatible P2I/TorchVision packages are installed. The browser
 acceptance script uses the Playwright installation from `p2i-gui/frontend`:
 
