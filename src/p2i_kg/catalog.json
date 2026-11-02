@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "title": "P2I Architecture Atlas",
   "nodes": [
     {
@@ -261,8 +261,1009 @@
       "reference_year": 2017,
       "family": "attention",
       "summary": "Self-Attention과 FFN, 잔차 연결로 시퀀스 표현을 갱신합니다. 실행 예제는 P2I의 작은 블록으로 원 논문의 전체 인코더-디코더 재현이 아닙니다.",
-      "runtime_id": "transformer",
-      "runtime_note": "P2I TinyTransformer의 Attention·FFN 블록을 실행합니다. 이 작은 실행 예제에는 위치 인코딩이나 전체 인코더-디코더가 없습니다."
+      "runtime_id": "seq2seq",
+      "runtime_note": "작은 인코더–디코더 예제: 정현파 위치 인코딩, 인과적 디코더 마스크, 교차 어텐션을 포함합니다. 임의 초기화와 teacher forcing을 사용하며 번역 학습이나 사전학습 가중치는 포함하지 않습니다."
+    },
+    {
+      "id": "concept:attention",
+      "kind": "concept",
+      "label": "어텐션",
+      "summary": "질의와 문맥에 따라 정보의 결합 가중치를 정하는 메커니즘."
+    },
+    {
+      "id": "concept:multihead",
+      "kind": "concept",
+      "label": "Multi-Head Attention",
+      "summary": "서로 다른 표현 부분 공간의 어텐션 출력을 결합합니다."
+    },
+    {
+      "id": "concept:cross_attention",
+      "kind": "concept",
+      "label": "Cross-Attention",
+      "summary": "질의와 key/value가 서로 다른 시퀀스에서 주어지는 어텐션."
+    },
+    {
+      "id": "concept:causal_mask",
+      "kind": "concept",
+      "label": "인과적 마스킹",
+      "summary": "현재 위치에서 미래 위치의 토큰 정보를 가리는 제약."
+    },
+    {
+      "id": "concept:encoder_decoder",
+      "kind": "concept",
+      "label": "Encoder–Decoder",
+      "summary": "입력을 표현하는 인코더와 조건부 출력을 생성하는 디코더의 구성."
+    },
+    {
+      "id": "concept:bidirectional_context",
+      "kind": "concept",
+      "label": "양방향 문맥",
+      "summary": "한 위치의 표현에 양쪽 문맥을 함께 반영합니다."
+    },
+    {
+      "id": "concept:patch_embedding",
+      "kind": "concept",
+      "label": "패치 임베딩",
+      "summary": "영상의 패치를 토큰 표현으로 변환합니다."
+    },
+    {
+      "id": "concept:window_attention",
+      "kind": "concept",
+      "label": "윈도 어텐션",
+      "summary": "제한된 지역 창 안에서 계산하는 self-attention."
+    },
+    {
+      "id": "concept:shifted_windows",
+      "kind": "concept",
+      "label": "이동 윈도",
+      "summary": "인접한 블록의 윈도 배치를 이동시켜 창 사이 정보를 연결합니다."
+    },
+    {
+      "id": "concept:rotary_position",
+      "kind": "concept",
+      "label": "RoPE",
+      "summary": "벡터 회전을 이용해 위치에 따른 관계를 어텐션에 반영합니다."
+    },
+    {
+      "id": "concept:relative_position",
+      "kind": "concept",
+      "label": "상대 위치 표현",
+      "summary": "토큰 간 거리와 상대 위치를 표현하는 방법."
+    },
+    {
+      "id": "concept:rms_norm",
+      "kind": "concept",
+      "label": "RMSNorm",
+      "summary": "평균 제곱근 크기를 이용하는 정규화."
+    },
+    {
+      "id": "concept:swiglu",
+      "kind": "concept",
+      "label": "SwiGLU",
+      "summary": "SiLU를 이용한 게이트가 있는 feed-forward 활성화."
+    },
+    {
+      "id": "concept:depthwise",
+      "kind": "concept",
+      "label": "Depthwise 합성곱",
+      "summary": "입력 채널별로 분리하여 수행하는 공간 합성곱."
+    },
+    {
+      "id": "concept:separable_convolution",
+      "kind": "concept",
+      "label": "Depthwise-Separable 합성곱",
+      "summary": "채널별 공간 합성곱과 pointwise 채널 결합을 분리합니다."
+    },
+    {
+      "id": "concept:compound_scaling",
+      "kind": "concept",
+      "label": "복합 스케일링",
+      "summary": "모델 깊이·너비·입력 해상도를 함께 조절합니다."
+    },
+    {
+      "id": "concept:dense_connections",
+      "kind": "concept",
+      "label": "Dense 연결",
+      "summary": "이전 층들의 특징을 이어 붙여 후속 층 입력으로 사용합니다."
+    },
+    {
+      "id": "concept:multiscale",
+      "kind": "concept",
+      "label": "다중 스케일 처리",
+      "summary": "서로 다른 수용 영역과 해상도의 특징을 결합합니다."
+    },
+    {
+      "id": "concept:skip_connections",
+      "kind": "concept",
+      "label": "Skip 연결",
+      "summary": "중간 경로를 건너뛰어 특징을 전달하는 연결의 상위 개념."
+    },
+    {
+      "id": "concept:latent_variable",
+      "kind": "concept",
+      "label": "잠재 변수",
+      "summary": "관측 자료의 생성을 설명하는 관측되지 않은 변수."
+    },
+    {
+      "id": "concept:reparameterization",
+      "kind": "concept",
+      "label": "재매개화",
+      "summary": "확률 표본을 매개변수와 외부 잡음의 미분 가능한 함수로 표현합니다."
+    },
+    {
+      "id": "concept:adversarial",
+      "kind": "concept",
+      "label": "적대적 학습",
+      "summary": "생성자와 판별자의 경쟁을 이용해 분포를 학습합니다."
+    },
+    {
+      "id": "concept:denoising",
+      "kind": "concept",
+      "label": "노이즈 제거",
+      "summary": "손상된 자료에서 잡음이나 깨끗한 신호를 추정합니다."
+    },
+    {
+      "id": "concept:diffusion",
+      "kind": "concept",
+      "label": "확산 생성",
+      "summary": "점진적인 잡음 주입 과정과 학습한 역과정을 연결합니다."
+    },
+    {
+      "id": "concept:message_passing",
+      "kind": "concept",
+      "label": "그래프 메시지 전달",
+      "summary": "그래프 이웃의 표현을 모아 노드 표현을 갱신합니다."
+    },
+    {
+      "id": "concept:graph_attention",
+      "kind": "concept",
+      "label": "그래프 어텐션",
+      "summary": "이웃 노드의 특징에 따라 집계 가중치를 정합니다."
+    },
+    {
+      "id": "concept:contrastive",
+      "kind": "concept",
+      "label": "대조 학습",
+      "summary": "관련된 표본의 표현을 가깝게, 비교 대상의 표현은 구별되게 학습합니다."
+    },
+    {
+      "id": "concept:sparse_experts",
+      "kind": "concept",
+      "label": "희소 전문가",
+      "summary": "입력에 따라 일부 전문가만 활성화하는 구성."
+    },
+    {
+      "id": "concept:routing",
+      "kind": "concept",
+      "label": "전문가 라우팅",
+      "summary": "토큰을 처리할 전문가를 선택합니다."
+    },
+    {
+      "id": "concept:state_space",
+      "kind": "concept",
+      "label": "상태 공간 모델",
+      "summary": "내부 상태의 변화를 이용해 시퀀스 입출력 관계를 표현합니다."
+    },
+    {
+      "id": "concept:selective_state_space",
+      "kind": "concept",
+      "label": "선택적 상태 공간",
+      "summary": "상태 전이의 매개변수가 입력에 따라 달라지는 시퀀스 모델."
+    },
+    {
+      "id": "task:classification",
+      "kind": "task",
+      "label": "영상 분류",
+      "summary": "영상 입력에 범주를 할당합니다."
+    },
+    {
+      "id": "task:segmentation",
+      "kind": "task",
+      "label": "영상 분할",
+      "summary": "영상의 위치별 범주를 예측합니다."
+    },
+    {
+      "id": "task:language_modeling",
+      "kind": "task",
+      "label": "언어 모델링",
+      "summary": "토큰 시퀀스의 확률이나 다음 토큰을 예측합니다."
+    },
+    {
+      "id": "task:understanding",
+      "kind": "task",
+      "label": "언어 이해",
+      "summary": "텍스트 문맥에 기반한 분류·추론·질의응답 과제."
+    },
+    {
+      "id": "task:translation",
+      "kind": "task",
+      "label": "기계 번역",
+      "summary": "입력 언어 시퀀스를 다른 언어 시퀀스로 변환합니다."
+    },
+    {
+      "id": "task:generation",
+      "kind": "task",
+      "label": "자료 생성",
+      "summary": "학습한 분포로부터 새로운 표본을 생성합니다."
+    },
+    {
+      "id": "task:node_classification",
+      "kind": "task",
+      "label": "노드 분류",
+      "summary": "그래프의 노드에 범주를 할당합니다."
+    },
+    {
+      "id": "task:image_text",
+      "kind": "task",
+      "label": "영상–텍스트 연결",
+      "summary": "영상과 자연어 표현의 의미적 대응을 학습합니다."
+    },
+    {
+      "id": "objective:supervised",
+      "kind": "objective",
+      "label": "지도 분류 목적",
+      "summary": "표지된 자료의 분류 오차를 최적화합니다."
+    },
+    {
+      "id": "objective:autoregressive",
+      "kind": "objective",
+      "label": "자기회귀 예측",
+      "summary": "이전 토큰을 조건으로 다음 토큰의 우도를 최적화합니다."
+    },
+    {
+      "id": "objective:masked_lm",
+      "kind": "objective",
+      "label": "Masked LM",
+      "summary": "가려진 토큰을 양방향 문맥으로 복원합니다."
+    },
+    {
+      "id": "objective:span_corruption",
+      "kind": "objective",
+      "label": "Span corruption",
+      "summary": "손상된 연속 토큰 구간을 복원합니다."
+    },
+    {
+      "id": "objective:elbo",
+      "kind": "objective",
+      "label": "변분 하한",
+      "summary": "잠재 변수 모델의 증거 하한을 최적화합니다."
+    },
+    {
+      "id": "objective:adversarial",
+      "kind": "objective",
+      "label": "적대적 목적",
+      "summary": "생성자와 판별자의 경쟁 목적을 최적화합니다."
+    },
+    {
+      "id": "objective:denoising",
+      "kind": "objective",
+      "label": "확산 노이즈 예측",
+      "summary": "잡음 수준에 조건부인 노이즈 예측 목적."
+    },
+    {
+      "id": "objective:contrastive",
+      "kind": "objective",
+      "label": "영상–텍스트 대조 목적",
+      "summary": "배치 내 영상과 텍스트의 대응을 학습합니다."
+    },
+    {
+      "id": "component:self_attention",
+      "kind": "component",
+      "label": "Self-Attention 블록",
+      "summary": "동일 시퀀스 내부의 문맥 결합."
+    },
+    {
+      "id": "component:cross_attention",
+      "kind": "component",
+      "label": "Cross-Attention 블록",
+      "summary": "디코더 질의를 인코더 메모리와 결합."
+    },
+    {
+      "id": "component:ffn",
+      "kind": "component",
+      "label": "Feed-forward 블록",
+      "summary": "각 위치의 채널 표현을 변환."
+    },
+    {
+      "id": "component:positions",
+      "kind": "component",
+      "label": "위치 표현 모듈",
+      "summary": "토큰 위치 정보를 구조에 제공."
+    },
+    {
+      "id": "component:encoder",
+      "kind": "component",
+      "label": "Transformer 인코더 블록",
+      "summary": "Self-Attention과 FFN으로 입력 표현을 구성."
+    },
+    {
+      "id": "component:decoder",
+      "kind": "component",
+      "label": "Transformer 디코더 블록",
+      "summary": "인과적 Self-Attention, Cross-Attention, FFN을 결합."
+    },
+    {
+      "id": "component:convolution",
+      "kind": "component",
+      "label": "합성곱 특징 블록",
+      "summary": "국소 커널의 가중치를 공간에서 공유."
+    },
+    {
+      "id": "component:recurrent",
+      "kind": "component",
+      "label": "순환 셀",
+      "summary": "이전 상태와 현재 입력으로 상태를 갱신."
+    },
+    {
+      "id": "component:patches",
+      "kind": "component",
+      "label": "패치 투영",
+      "summary": "영상 패치를 토큰으로 투영."
+    },
+    {
+      "id": "component:generator",
+      "kind": "component",
+      "label": "Generator",
+      "summary": "잠재 입력을 자료 공간으로 변환."
+    },
+    {
+      "id": "component:discriminator",
+      "kind": "component",
+      "label": "Discriminator",
+      "summary": "자료와 생성 표본을 구별."
+    },
+    {
+      "id": "component:latent_encoder",
+      "kind": "component",
+      "label": "잠재 분포 인코더",
+      "summary": "자료를 조건부 잠재 분포로 변환."
+    },
+    {
+      "id": "component:latent_decoder",
+      "kind": "component",
+      "label": "잠재 디코더",
+      "summary": "잠재 변수로부터 자료를 복원."
+    },
+    {
+      "id": "component:denoiser",
+      "kind": "component",
+      "label": "Denoising 네트워크",
+      "summary": "잡음 수준과 손상된 입력에 조건부인 예측기."
+    },
+    {
+      "id": "component:graph_aggregation",
+      "kind": "component",
+      "label": "이웃 집계",
+      "summary": "그래프 이웃의 표현을 결합."
+    },
+    {
+      "id": "component:expert",
+      "kind": "component",
+      "label": "Feed-forward 전문가",
+      "summary": "일부 입력에 선택되어 활성화되는 FFN."
+    },
+    {
+      "id": "component:router",
+      "kind": "component",
+      "label": "Router",
+      "summary": "입력 토큰별 전문가를 선택."
+    },
+    {
+      "id": "component:state_space",
+      "kind": "component",
+      "label": "선택적 SSM 블록",
+      "summary": "입력 의존 상태 갱신을 수행."
+    },
+    {
+      "id": "component:image_encoder",
+      "kind": "component",
+      "label": "영상 인코더",
+      "summary": "영상을 비교 가능한 표현 공간으로 변환."
+    },
+    {
+      "id": "component:text_encoder",
+      "kind": "component",
+      "label": "텍스트 인코더",
+      "summary": "텍스트를 비교 가능한 표현 공간으로 변환."
+    },
+    {
+      "id": "paper:vgg",
+      "kind": "paper",
+      "label": "Very Deep Convolutional Networks for Large-Scale Image Recognition",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2014,
+      "url": "https://arxiv.org/abs/1409.1556",
+      "authors": [
+        "Karen Simonyan",
+        "Andrew Zisserman"
+      ]
+    },
+    {
+      "id": "model:vgg",
+      "kind": "model",
+      "label": "VGG",
+      "summary": "작은 합성곱 커널을 반복하여 깊은 영상 특징을 학습합니다.",
+      "reference_year": 2014,
+      "family": "vision",
+      "aliases": [
+        "VGG"
+      ]
+    },
+    {
+      "id": "paper:inception",
+      "kind": "paper",
+      "label": "Going Deeper with Convolutions",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2014,
+      "url": "https://arxiv.org/abs/1409.4842",
+      "authors": [
+        "Christian Szegedy",
+        "Wei Liu",
+        "Yangqing Jia",
+        "Pierre Sermanet",
+        "Scott Reed",
+        "Dragomir Anguelov",
+        "Dumitru Erhan",
+        "Vincent Vanhoucke",
+        "Andrew Rabinovich"
+      ]
+    },
+    {
+      "id": "model:inception",
+      "kind": "model",
+      "label": "Inception · GoogLeNet",
+      "summary": "서로 다른 크기의 특징 경로를 결합하는 다중 스케일 합성곱 구조.",
+      "reference_year": 2014,
+      "family": "vision",
+      "aliases": [
+        "INCEPTION"
+      ]
+    },
+    {
+      "id": "paper:densenet",
+      "kind": "paper",
+      "label": "Densely Connected Convolutional Networks",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2016,
+      "url": "https://arxiv.org/abs/1608.06993",
+      "authors": [
+        "Gao Huang",
+        "Zhuang Liu",
+        "Laurens van der Maaten",
+        "Kilian Q. Weinberger"
+      ]
+    },
+    {
+      "id": "model:densenet",
+      "kind": "model",
+      "label": "DenseNet",
+      "summary": "이전 층의 특징을 연결하여 재사용하는 합성곱 네트워크.",
+      "reference_year": 2016,
+      "family": "vision",
+      "aliases": [
+        "DENSENET"
+      ]
+    },
+    {
+      "id": "paper:mobilenet",
+      "kind": "paper",
+      "label": "MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2017,
+      "url": "https://arxiv.org/abs/1704.04861",
+      "authors": [
+        "Andrew G. Howard",
+        "Menglong Zhu",
+        "Bo Chen",
+        "Dmitry Kalenichenko",
+        "Weijun Wang",
+        "Tobias Weyand",
+        "Marco Andreetto",
+        "Hartwig Adam"
+      ]
+    },
+    {
+      "id": "model:mobilenet",
+      "kind": "model",
+      "label": "MobileNet",
+      "summary": "Depthwise와 pointwise 연산을 분리한 경량 합성곱 구조.",
+      "reference_year": 2017,
+      "family": "vision",
+      "aliases": [
+        "MOBILENET"
+      ]
+    },
+    {
+      "id": "paper:efficientnet",
+      "kind": "paper",
+      "label": "EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2019,
+      "url": "https://arxiv.org/abs/1905.11946",
+      "authors": [
+        "Mingxing Tan",
+        "Quoc V. Le"
+      ]
+    },
+    {
+      "id": "model:efficientnet",
+      "kind": "model",
+      "label": "EfficientNet",
+      "summary": "깊이·너비·해상도의 균형을 맞춰 합성곱 모델을 확장합니다.",
+      "reference_year": 2019,
+      "family": "vision",
+      "aliases": [
+        "EFFICIENTNET"
+      ]
+    },
+    {
+      "id": "paper:convnext",
+      "kind": "paper",
+      "label": "A ConvNet for the 2020s",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2022,
+      "url": "https://arxiv.org/abs/2201.03545",
+      "authors": [
+        "Zhuang Liu",
+        "Hanzi Mao",
+        "Chao-Yuan Wu",
+        "Christoph Feichtenhofer",
+        "Trevor Darrell",
+        "Saining Xie"
+      ]
+    },
+    {
+      "id": "model:convnext",
+      "kind": "model",
+      "label": "ConvNeXt",
+      "summary": "ResNet을 현대화하는 설계 실험에서 얻은 순수 합성곱 모델 계열.",
+      "reference_year": 2022,
+      "family": "vision",
+      "aliases": [
+        "CONVNEXT"
+      ]
+    },
+    {
+      "id": "paper:unet",
+      "kind": "paper",
+      "label": "U-Net: Convolutional Networks for Biomedical Image Segmentation",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2015,
+      "url": "https://arxiv.org/abs/1505.04597",
+      "authors": [
+        "Olaf Ronneberger",
+        "Philipp Fischer",
+        "Thomas Brox"
+      ]
+    },
+    {
+      "id": "model:unet",
+      "kind": "model",
+      "label": "U-Net",
+      "summary": "축소 경로와 확장 경로 사이 특징 연결을 이용한 영상 분할 모델.",
+      "reference_year": 2015,
+      "family": "vision",
+      "aliases": [
+        "UNET"
+      ]
+    },
+    {
+      "id": "paper:bert",
+      "kind": "paper",
+      "label": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2018,
+      "url": "https://arxiv.org/abs/1810.04805",
+      "authors": [
+        "Jacob Devlin",
+        "Ming-Wei Chang",
+        "Kenton Lee",
+        "Kristina Toutanova"
+      ]
+    },
+    {
+      "id": "model:bert",
+      "kind": "model",
+      "label": "BERT",
+      "summary": "마스킹된 토큰 예측 등으로 양방향 Transformer 인코더를 사전 학습합니다.",
+      "reference_year": 2018,
+      "family": "attention",
+      "aliases": [
+        "BERT"
+      ],
+      "runtime_id": "bert",
+      "runtime_note": "작은 실제 Hugging Face BERT 구성. 임의 초기화이며 사전학습은 수행하지 않습니다."
+    },
+    {
+      "id": "paper:gpt2",
+      "kind": "paper",
+      "label": "Language Models are Unsupervised Multitask Learners",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2019,
+      "url": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
+      "authors": [
+        "Alec Radford",
+        "Jeffrey Wu",
+        "Rewon Child",
+        "David Luan",
+        "Dario Amodei",
+        "Ilya Sutskever"
+      ]
+    },
+    {
+      "id": "model:gpt2",
+      "kind": "model",
+      "label": "GPT-2",
+      "summary": "인과적으로 마스킹된 Transformer 블록을 이용하는 자기회귀 언어 모델.",
+      "reference_year": 2019,
+      "family": "attention",
+      "aliases": [
+        "GPT2"
+      ],
+      "runtime_id": "gpt2",
+      "runtime_note": "작은 실제 Hugging Face GPT-2 구성. 인과적 어텐션과 학습 가능한 위치 임베딩을 포함하며 임의 초기화입니다."
+    },
+    {
+      "id": "paper:t5",
+      "kind": "paper",
+      "label": "Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2019,
+      "url": "https://arxiv.org/abs/1910.10683",
+      "authors": [
+        "Colin Raffel",
+        "Noam Shazeer",
+        "Adam Roberts",
+        "Katherine Lee",
+        "Sharan Narang",
+        "Michael Matena",
+        "Yanqi Zhou",
+        "Wei Li",
+        "Peter J. Liu"
+      ]
+    },
+    {
+      "id": "model:t5",
+      "kind": "model",
+      "label": "T5",
+      "summary": "다양한 언어 과제를 text-to-text 형식으로 통합한 인코더–디코더 모델.",
+      "reference_year": 2019,
+      "family": "attention",
+      "aliases": [
+        "T5"
+      ]
+    },
+    {
+      "id": "paper:vit",
+      "kind": "paper",
+      "label": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2020,
+      "url": "https://arxiv.org/abs/2010.11929",
+      "authors": [
+        "Alexey Dosovitskiy",
+        "Lucas Beyer",
+        "Alexander Kolesnikov",
+        "Dirk Weissenborn",
+        "Xiaohua Zhai",
+        "Thomas Unterthiner",
+        "Mostafa Dehghani",
+        "Matthias Minderer",
+        "Georg Heigold",
+        "Sylvain Gelly",
+        "Jakob Uszkoreit",
+        "Neil Houlsby"
+      ]
+    },
+    {
+      "id": "model:vit",
+      "kind": "model",
+      "label": "Vision Transformer",
+      "summary": "영상 패치를 토큰으로 변환하여 Transformer 인코더로 처리합니다.",
+      "reference_year": 2020,
+      "family": "vision",
+      "aliases": [
+        "VIT"
+      ],
+      "runtime_id": "vit",
+      "runtime_note": "작은 실제 TorchVision ViT 구성. 패치·위치 임베딩을 포함하며 임의 초기화입니다."
+    },
+    {
+      "id": "paper:swin",
+      "kind": "paper",
+      "label": "Swin Transformer: Hierarchical Vision Transformer using Shifted Windows",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2021,
+      "url": "https://arxiv.org/abs/2103.14030",
+      "authors": [
+        "Ze Liu",
+        "Yutong Lin",
+        "Yue Cao",
+        "Han Hu",
+        "Yixuan Wei",
+        "Zheng Zhang",
+        "Stephen Lin",
+        "Baining Guo"
+      ]
+    },
+    {
+      "id": "model:swin",
+      "kind": "model",
+      "label": "Swin Transformer",
+      "summary": "이동 윈도 어텐션과 계층적 해상도로 지역·광역 정보를 결합합니다.",
+      "reference_year": 2021,
+      "family": "vision",
+      "aliases": [
+        "SWIN"
+      ]
+    },
+    {
+      "id": "paper:roformer",
+      "kind": "paper",
+      "label": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2021,
+      "url": "https://arxiv.org/abs/2104.09864",
+      "authors": [
+        "Jianlin Su",
+        "Yu Lu",
+        "Shengfeng Pan",
+        "Ahmed Murtadha",
+        "Bo Wen",
+        "Yunfeng Liu"
+      ]
+    },
+    {
+      "id": "model:roformer",
+      "kind": "model",
+      "label": "RoFormer",
+      "summary": "회전 위치 임베딩을 어텐션에 결합한 Transformer 계열.",
+      "reference_year": 2021,
+      "family": "attention",
+      "aliases": [
+        "ROFORMER"
+      ]
+    },
+    {
+      "id": "paper:llama",
+      "kind": "paper",
+      "label": "LLaMA: Open and Efficient Foundation Language Models",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2023,
+      "url": "https://arxiv.org/abs/2302.13971",
+      "authors": [
+        "Hugo Touvron",
+        "Thibaut Lavril",
+        "Gautier Izacard",
+        "Xavier Martinet",
+        "Marie-Anne Lachaux",
+        "Timothée Lacroix",
+        "Baptiste Rozière",
+        "Naman Goyal",
+        "Eric Hambro",
+        "Faisal Azhar",
+        "Aurelien Rodriguez",
+        "Armand Joulin",
+        "Edouard Grave",
+        "Guillaume Lample"
+      ]
+    },
+    {
+      "id": "model:llama",
+      "kind": "model",
+      "label": "LLaMA · 2023",
+      "summary": "RoPE·RMSNorm·SwiGLU를 결합한 초기 LLaMA 자기회귀 구조.",
+      "reference_year": 2023,
+      "family": "attention",
+      "aliases": [
+        "LLAMA"
+      ]
+    },
+    {
+      "id": "paper:vae",
+      "kind": "paper",
+      "label": "Auto-Encoding Variational Bayes",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2013,
+      "url": "https://arxiv.org/abs/1312.6114",
+      "authors": [
+        "Diederik P. Kingma",
+        "Max Welling"
+      ]
+    },
+    {
+      "id": "model:vae",
+      "kind": "model",
+      "label": "Variational Autoencoder",
+      "summary": "잠재 분포의 변분 추론과 재매개화를 이용하는 생성 모델.",
+      "reference_year": 2013,
+      "family": "generative",
+      "aliases": [
+        "VAE"
+      ]
+    },
+    {
+      "id": "paper:gan",
+      "kind": "paper",
+      "label": "Generative Adversarial Networks",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2014,
+      "url": "https://arxiv.org/abs/1406.2661",
+      "authors": [
+        "Ian J. Goodfellow",
+        "Jean Pouget-Abadie",
+        "Mehdi Mirza",
+        "Bing Xu",
+        "David Warde-Farley",
+        "Sherjil Ozair",
+        "Aaron Courville",
+        "Yoshua Bengio"
+      ]
+    },
+    {
+      "id": "model:gan",
+      "kind": "model",
+      "label": "GAN",
+      "summary": "생성자와 판별자를 함께 학습시키는 적대적 생성 프레임워크.",
+      "reference_year": 2014,
+      "family": "generative",
+      "aliases": [
+        "GAN"
+      ]
+    },
+    {
+      "id": "paper:ddpm",
+      "kind": "paper",
+      "label": "Denoising Diffusion Probabilistic Models",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2020,
+      "url": "https://arxiv.org/abs/2006.11239",
+      "authors": [
+        "Jonathan Ho",
+        "Ajay Jain",
+        "Pieter Abbeel"
+      ]
+    },
+    {
+      "id": "model:ddpm",
+      "kind": "model",
+      "label": "DDPM",
+      "summary": "잡음을 점진적으로 제거하는 역과정을 학습하는 확산 생성 모델.",
+      "reference_year": 2020,
+      "family": "generative",
+      "aliases": [
+        "DDPM"
+      ]
+    },
+    {
+      "id": "paper:gcn",
+      "kind": "paper",
+      "label": "Semi-Supervised Classification with Graph Convolutional Networks",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2016,
+      "url": "https://arxiv.org/abs/1609.02907",
+      "authors": [
+        "Thomas N. Kipf",
+        "Max Welling"
+      ]
+    },
+    {
+      "id": "model:gcn",
+      "kind": "model",
+      "label": "Graph Convolutional Network",
+      "summary": "그래프 구조와 노드 특징을 이웃 집계로 함께 학습합니다.",
+      "reference_year": 2016,
+      "family": "graph",
+      "aliases": [
+        "GCN"
+      ]
+    },
+    {
+      "id": "paper:gat",
+      "kind": "paper",
+      "label": "Graph Attention Networks",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2017,
+      "url": "https://arxiv.org/abs/1710.10903",
+      "authors": [
+        "Petar Veličković",
+        "Guillem Cucurull",
+        "Arantxa Casanova",
+        "Adriana Romero",
+        "Pietro Liò",
+        "Yoshua Bengio"
+      ]
+    },
+    {
+      "id": "model:gat",
+      "kind": "model",
+      "label": "Graph Attention Network",
+      "summary": "어텐션 가중치로 그래프 이웃의 표현을 집계합니다.",
+      "reference_year": 2017,
+      "family": "graph",
+      "aliases": [
+        "GAT"
+      ]
+    },
+    {
+      "id": "paper:clip",
+      "kind": "paper",
+      "label": "Learning Transferable Visual Models From Natural Language Supervision",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2021,
+      "url": "https://arxiv.org/abs/2103.00020",
+      "authors": [
+        "Alec Radford",
+        "Jong Wook Kim",
+        "Chris Hallacy",
+        "Aditya Ramesh",
+        "Gabriel Goh",
+        "Sandhini Agarwal",
+        "Girish Sastry",
+        "Amanda Askell",
+        "Pamela Mishkin",
+        "Jack Clark",
+        "Gretchen Krueger",
+        "Ilya Sutskever"
+      ]
+    },
+    {
+      "id": "model:clip",
+      "kind": "model",
+      "label": "CLIP",
+      "summary": "영상과 텍스트 인코더를 대조 목적을 이용해 공동 표현 공간으로 연결합니다.",
+      "reference_year": 2021,
+      "family": "multimodal",
+      "aliases": [
+        "CLIP"
+      ]
+    },
+    {
+      "id": "paper:mamba",
+      "kind": "paper",
+      "label": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2023,
+      "url": "https://arxiv.org/abs/2312.00752",
+      "authors": [
+        "Albert Gu",
+        "Tri Dao"
+      ]
+    },
+    {
+      "id": "model:mamba",
+      "kind": "model",
+      "label": "Mamba",
+      "summary": "입력에 의존하는 상태 공간 갱신으로 긴 시퀀스를 처리합니다.",
+      "reference_year": 2023,
+      "family": "sequence",
+      "aliases": [
+        "MAMBA"
+      ]
+    },
+    {
+      "id": "paper:switch",
+      "kind": "paper",
+      "label": "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity",
+      "summary": "이 모델의 구조와 학습 구성을 설명하는 대표 원문.",
+      "reference_year": 2021,
+      "url": "https://arxiv.org/abs/2101.03961",
+      "authors": [
+        "William Fedus",
+        "Barret Zoph",
+        "Noam Shazeer"
+      ]
+    },
+    {
+      "id": "model:switch",
+      "kind": "model",
+      "label": "Switch Transformer",
+      "summary": "T5의 FFN 일부를 희소 전문가와 토큰별 라우팅으로 확장합니다.",
+      "reference_year": 2021,
+      "family": "attention",
+      "aliases": [
+        "SWITCH"
+      ]
     }
   ],
   "edges": [
@@ -674,6 +1675,2654 @@
       "explanation": "원 논문은 시퀀스 변환에서 순환·합성곱을 쓰지 않는 Attention 기반 구조를 제안합니다.",
       "evidence": [
         "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:vgg",
+      "relation": "documented_in",
+      "target": "paper:vgg",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:vgg"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:vgg",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "documented",
+      "explanation": "VGG: 합성곱.",
+      "evidence": [
+        "paper:vgg"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vgg",
+      "relation": "uses",
+      "target": "concept:weight_sharing",
+      "basis": "documented",
+      "explanation": "VGG: 가중치 공유.",
+      "evidence": [
+        "paper:vgg"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vgg",
+      "relation": "uses",
+      "target": "concept:activation",
+      "basis": "documented",
+      "explanation": "VGG: 비선형 활성화.",
+      "evidence": [
+        "paper:vgg"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vgg",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "documented",
+      "explanation": "VGG: 합성곱 특징 블록.",
+      "evidence": [
+        "paper:vgg"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vgg",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "VGG: 영상 분류.",
+      "evidence": [
+        "paper:vgg"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vgg",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "VGG: 지도 분류 목적.",
+      "evidence": [
+        "paper:vgg"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:inception",
+      "relation": "documented_in",
+      "target": "paper:inception",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:inception"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:inception",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "documented",
+      "explanation": "Inception · GoogLeNet: 합성곱.",
+      "evidence": [
+        "paper:inception"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:inception",
+      "relation": "uses",
+      "target": "concept:multiscale",
+      "basis": "documented",
+      "explanation": "Inception · GoogLeNet: 다중 스케일 처리.",
+      "evidence": [
+        "paper:inception"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:inception",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "documented",
+      "explanation": "Inception · GoogLeNet: 합성곱 특징 블록.",
+      "evidence": [
+        "paper:inception"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:inception",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "Inception · GoogLeNet: 영상 분류.",
+      "evidence": [
+        "paper:inception"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:inception",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "Inception · GoogLeNet: 지도 분류 목적.",
+      "evidence": [
+        "paper:inception"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:densenet",
+      "relation": "documented_in",
+      "target": "paper:densenet",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:densenet"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:densenet",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "documented",
+      "explanation": "DenseNet: 합성곱.",
+      "evidence": [
+        "paper:densenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:densenet",
+      "relation": "uses",
+      "target": "concept:dense_connections",
+      "basis": "documented",
+      "explanation": "DenseNet: Dense 연결.",
+      "evidence": [
+        "paper:densenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:densenet",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "documented",
+      "explanation": "DenseNet: 합성곱 특징 블록.",
+      "evidence": [
+        "paper:densenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:densenet",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "DenseNet: 영상 분류.",
+      "evidence": [
+        "paper:densenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:densenet",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "DenseNet: 지도 분류 목적.",
+      "evidence": [
+        "paper:densenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mobilenet",
+      "relation": "documented_in",
+      "target": "paper:mobilenet",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:mobilenet"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:mobilenet",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "documented",
+      "explanation": "MobileNet: 합성곱.",
+      "evidence": [
+        "paper:mobilenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mobilenet",
+      "relation": "uses",
+      "target": "concept:depthwise",
+      "basis": "documented",
+      "explanation": "MobileNet: Depthwise 합성곱.",
+      "evidence": [
+        "paper:mobilenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mobilenet",
+      "relation": "uses",
+      "target": "concept:separable_convolution",
+      "basis": "documented",
+      "explanation": "MobileNet: Depthwise-Separable 합성곱.",
+      "evidence": [
+        "paper:mobilenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mobilenet",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "documented",
+      "explanation": "MobileNet: 합성곱 특징 블록.",
+      "evidence": [
+        "paper:mobilenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mobilenet",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "MobileNet: 영상 분류.",
+      "evidence": [
+        "paper:mobilenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mobilenet",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "MobileNet: 지도 분류 목적.",
+      "evidence": [
+        "paper:mobilenet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:efficientnet",
+      "relation": "documented_in",
+      "target": "paper:efficientnet",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:efficientnet"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:efficientnet",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "documented",
+      "explanation": "EfficientNet: 합성곱.",
+      "evidence": [
+        "paper:efficientnet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:efficientnet",
+      "relation": "uses",
+      "target": "concept:compound_scaling",
+      "basis": "documented",
+      "explanation": "EfficientNet: 복합 스케일링.",
+      "evidence": [
+        "paper:efficientnet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:efficientnet",
+      "relation": "uses",
+      "target": "concept:depthwise",
+      "basis": "documented",
+      "explanation": "EfficientNet: Depthwise 합성곱.",
+      "evidence": [
+        "paper:efficientnet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:efficientnet",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "documented",
+      "explanation": "EfficientNet: 합성곱 특징 블록.",
+      "evidence": [
+        "paper:efficientnet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:efficientnet",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "EfficientNet: 영상 분류.",
+      "evidence": [
+        "paper:efficientnet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:efficientnet",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "EfficientNet: 지도 분류 목적.",
+      "evidence": [
+        "paper:efficientnet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:convnext",
+      "relation": "documented_in",
+      "target": "paper:convnext",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:convnext"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:convnext",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "documented",
+      "explanation": "ConvNeXt: 합성곱.",
+      "evidence": [
+        "paper:convnext"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:convnext",
+      "relation": "uses",
+      "target": "concept:depthwise",
+      "basis": "documented",
+      "explanation": "ConvNeXt: Depthwise 합성곱.",
+      "evidence": [
+        "paper:convnext"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:convnext",
+      "relation": "uses",
+      "target": "concept:residual",
+      "basis": "documented",
+      "explanation": "ConvNeXt: 잔차 연결.",
+      "evidence": [
+        "paper:convnext"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:convnext",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "documented",
+      "explanation": "ConvNeXt: 합성곱 특징 블록.",
+      "evidence": [
+        "paper:convnext"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:convnext",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "ConvNeXt: 영상 분류.",
+      "evidence": [
+        "paper:convnext"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:convnext",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "ConvNeXt: 지도 분류 목적.",
+      "evidence": [
+        "paper:convnext"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:unet",
+      "relation": "documented_in",
+      "target": "paper:unet",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:unet"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:unet",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "documented",
+      "explanation": "U-Net: 합성곱.",
+      "evidence": [
+        "paper:unet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:unet",
+      "relation": "uses",
+      "target": "concept:skip_connections",
+      "basis": "documented",
+      "explanation": "U-Net: Skip 연결.",
+      "evidence": [
+        "paper:unet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:unet",
+      "relation": "uses",
+      "target": "concept:encoder_decoder",
+      "basis": "documented",
+      "explanation": "U-Net: Encoder–Decoder.",
+      "evidence": [
+        "paper:unet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:unet",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "documented",
+      "explanation": "U-Net: 합성곱 특징 블록.",
+      "evidence": [
+        "paper:unet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:unet",
+      "relation": "applied_to",
+      "target": "task:segmentation",
+      "basis": "documented",
+      "explanation": "U-Net: 영상 분할.",
+      "evidence": [
+        "paper:unet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:unet",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "U-Net: 지도 분류 목적.",
+      "evidence": [
+        "paper:unet"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "documented_in",
+      "target": "paper:bert",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:bert",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "BERT: Self-Attention.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "uses",
+      "target": "concept:multihead",
+      "basis": "documented",
+      "explanation": "BERT: Multi-Head Attention.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "documented",
+      "explanation": "BERT: 위치별 FFN.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "uses",
+      "target": "concept:position",
+      "basis": "documented",
+      "explanation": "BERT: 위치 정보.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "uses",
+      "target": "concept:bidirectional_context",
+      "basis": "documented",
+      "explanation": "BERT: 양방향 문맥.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "uses",
+      "target": "concept:residual",
+      "basis": "documented",
+      "explanation": "BERT: 잔차 연결.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "has_component",
+      "target": "component:encoder",
+      "basis": "documented",
+      "explanation": "BERT: Transformer 인코더 블록.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "has_component",
+      "target": "component:positions",
+      "basis": "documented",
+      "explanation": "BERT: 위치 표현 모듈.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "applied_to",
+      "target": "task:understanding",
+      "basis": "documented",
+      "explanation": "BERT: 언어 이해.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:bert",
+      "relation": "trained_with",
+      "target": "objective:masked_lm",
+      "basis": "documented",
+      "explanation": "BERT: Masked LM.",
+      "evidence": [
+        "paper:bert"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "documented_in",
+      "target": "paper:gpt2",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "GPT-2: Self-Attention.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "uses",
+      "target": "concept:multihead",
+      "basis": "documented",
+      "explanation": "GPT-2: Multi-Head Attention.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "uses",
+      "target": "concept:causal_mask",
+      "basis": "documented",
+      "explanation": "GPT-2: 인과적 마스킹.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "uses",
+      "target": "concept:position",
+      "basis": "documented",
+      "explanation": "GPT-2: 위치 정보.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "documented",
+      "explanation": "GPT-2: 위치별 FFN.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "uses",
+      "target": "concept:residual",
+      "basis": "documented",
+      "explanation": "GPT-2: 잔차 연결.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "has_component",
+      "target": "component:self_attention",
+      "basis": "documented",
+      "explanation": "GPT-2: Self-Attention 블록.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "has_component",
+      "target": "component:ffn",
+      "basis": "documented",
+      "explanation": "GPT-2: Feed-forward 블록.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "has_component",
+      "target": "component:positions",
+      "basis": "documented",
+      "explanation": "GPT-2: 위치 표현 모듈.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "applied_to",
+      "target": "task:language_modeling",
+      "basis": "documented",
+      "explanation": "GPT-2: 언어 모델링.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "trained_with",
+      "target": "objective:autoregressive",
+      "basis": "documented",
+      "explanation": "GPT-2: 자기회귀 예측.",
+      "evidence": [
+        "paper:gpt2"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "documented_in",
+      "target": "paper:t5",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:t5",
+      "relation": "uses",
+      "target": "concept:encoder_decoder",
+      "basis": "documented",
+      "explanation": "T5: Encoder–Decoder.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "T5: Self-Attention.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "uses",
+      "target": "concept:cross_attention",
+      "basis": "documented",
+      "explanation": "T5: Cross-Attention.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "uses",
+      "target": "concept:relative_position",
+      "basis": "documented",
+      "explanation": "T5: 상대 위치 표현.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "documented",
+      "explanation": "T5: 위치별 FFN.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "has_component",
+      "target": "component:encoder",
+      "basis": "documented",
+      "explanation": "T5: Transformer 인코더 블록.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "has_component",
+      "target": "component:decoder",
+      "basis": "documented",
+      "explanation": "T5: Transformer 디코더 블록.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "applied_to",
+      "target": "task:understanding",
+      "basis": "documented",
+      "explanation": "T5: 언어 이해.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "applied_to",
+      "target": "task:translation",
+      "basis": "documented",
+      "explanation": "T5: 기계 번역.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:t5",
+      "relation": "trained_with",
+      "target": "objective:span_corruption",
+      "basis": "documented",
+      "explanation": "T5: Span corruption.",
+      "evidence": [
+        "paper:t5"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "documented_in",
+      "target": "paper:vit",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:vit",
+      "relation": "uses",
+      "target": "concept:patch_embedding",
+      "basis": "documented",
+      "explanation": "Vision Transformer: 패치 임베딩.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "Vision Transformer: Self-Attention.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "uses",
+      "target": "concept:multihead",
+      "basis": "documented",
+      "explanation": "Vision Transformer: Multi-Head Attention.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "uses",
+      "target": "concept:position",
+      "basis": "documented",
+      "explanation": "Vision Transformer: 위치 정보.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "documented",
+      "explanation": "Vision Transformer: 위치별 FFN.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "has_component",
+      "target": "component:patches",
+      "basis": "documented",
+      "explanation": "Vision Transformer: 패치 투영.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "has_component",
+      "target": "component:encoder",
+      "basis": "documented",
+      "explanation": "Vision Transformer: Transformer 인코더 블록.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "has_component",
+      "target": "component:positions",
+      "basis": "documented",
+      "explanation": "Vision Transformer: 위치 표현 모듈.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "Vision Transformer: 영상 분류.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vit",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "Vision Transformer: 지도 분류 목적.",
+      "evidence": [
+        "paper:vit"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "documented_in",
+      "target": "paper:swin",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:swin",
+      "relation": "uses",
+      "target": "concept:patch_embedding",
+      "basis": "documented",
+      "explanation": "Swin Transformer: 패치 임베딩.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "Swin Transformer: Self-Attention.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "uses",
+      "target": "concept:window_attention",
+      "basis": "documented",
+      "explanation": "Swin Transformer: 윈도 어텐션.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "uses",
+      "target": "concept:shifted_windows",
+      "basis": "documented",
+      "explanation": "Swin Transformer: 이동 윈도.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "uses",
+      "target": "concept:relative_position",
+      "basis": "documented",
+      "explanation": "Swin Transformer: 상대 위치 표현.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "has_component",
+      "target": "component:patches",
+      "basis": "documented",
+      "explanation": "Swin Transformer: 패치 투영.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "has_component",
+      "target": "component:self_attention",
+      "basis": "documented",
+      "explanation": "Swin Transformer: Self-Attention 블록.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "Swin Transformer: 영상 분류.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "applied_to",
+      "target": "task:segmentation",
+      "basis": "documented",
+      "explanation": "Swin Transformer: 영상 분할.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:swin",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "Swin Transformer: 지도 분류 목적.",
+      "evidence": [
+        "paper:swin"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:roformer",
+      "relation": "documented_in",
+      "target": "paper:roformer",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:roformer"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:roformer",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "RoFormer: Self-Attention.",
+      "evidence": [
+        "paper:roformer"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:roformer",
+      "relation": "uses",
+      "target": "concept:rotary_position",
+      "basis": "documented",
+      "explanation": "RoFormer: RoPE.",
+      "evidence": [
+        "paper:roformer"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:roformer",
+      "relation": "uses",
+      "target": "concept:relative_position",
+      "basis": "documented",
+      "explanation": "RoFormer: 상대 위치 표현.",
+      "evidence": [
+        "paper:roformer"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:roformer",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "documented",
+      "explanation": "RoFormer: 위치별 FFN.",
+      "evidence": [
+        "paper:roformer"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:roformer",
+      "relation": "has_component",
+      "target": "component:self_attention",
+      "basis": "documented",
+      "explanation": "RoFormer: Self-Attention 블록.",
+      "evidence": [
+        "paper:roformer"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:roformer",
+      "relation": "has_component",
+      "target": "component:ffn",
+      "basis": "documented",
+      "explanation": "RoFormer: Feed-forward 블록.",
+      "evidence": [
+        "paper:roformer"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:roformer",
+      "relation": "applied_to",
+      "target": "task:understanding",
+      "basis": "documented",
+      "explanation": "RoFormer: 언어 이해.",
+      "evidence": [
+        "paper:roformer"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "documented_in",
+      "target": "paper:llama",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:llama",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: Self-Attention.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "uses",
+      "target": "concept:causal_mask",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: 인과적 마스킹.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "uses",
+      "target": "concept:rotary_position",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: RoPE.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "uses",
+      "target": "concept:rms_norm",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: RMSNorm.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "uses",
+      "target": "concept:swiglu",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: SwiGLU.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: 위치별 FFN.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "has_component",
+      "target": "component:self_attention",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: Self-Attention 블록.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "has_component",
+      "target": "component:ffn",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: Feed-forward 블록.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "applied_to",
+      "target": "task:language_modeling",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: 언어 모델링.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:llama",
+      "relation": "trained_with",
+      "target": "objective:autoregressive",
+      "basis": "documented",
+      "explanation": "LLaMA · 2023: 자기회귀 예측.",
+      "evidence": [
+        "paper:llama"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vae",
+      "relation": "documented_in",
+      "target": "paper:vae",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:vae"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:vae",
+      "relation": "uses",
+      "target": "concept:latent_variable",
+      "basis": "documented",
+      "explanation": "Variational Autoencoder: 잠재 변수.",
+      "evidence": [
+        "paper:vae"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vae",
+      "relation": "uses",
+      "target": "concept:reparameterization",
+      "basis": "documented",
+      "explanation": "Variational Autoencoder: 재매개화.",
+      "evidence": [
+        "paper:vae"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vae",
+      "relation": "uses",
+      "target": "concept:encoder_decoder",
+      "basis": "documented",
+      "explanation": "Variational Autoencoder: Encoder–Decoder.",
+      "evidence": [
+        "paper:vae"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vae",
+      "relation": "has_component",
+      "target": "component:latent_encoder",
+      "basis": "documented",
+      "explanation": "Variational Autoencoder: 잠재 분포 인코더.",
+      "evidence": [
+        "paper:vae"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vae",
+      "relation": "has_component",
+      "target": "component:latent_decoder",
+      "basis": "documented",
+      "explanation": "Variational Autoencoder: 잠재 디코더.",
+      "evidence": [
+        "paper:vae"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vae",
+      "relation": "applied_to",
+      "target": "task:generation",
+      "basis": "documented",
+      "explanation": "Variational Autoencoder: 자료 생성.",
+      "evidence": [
+        "paper:vae"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:vae",
+      "relation": "trained_with",
+      "target": "objective:elbo",
+      "basis": "documented",
+      "explanation": "Variational Autoencoder: 변분 하한.",
+      "evidence": [
+        "paper:vae"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gan",
+      "relation": "documented_in",
+      "target": "paper:gan",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:gan"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:gan",
+      "relation": "uses",
+      "target": "concept:latent_variable",
+      "basis": "documented",
+      "explanation": "GAN: 잠재 변수.",
+      "evidence": [
+        "paper:gan"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gan",
+      "relation": "uses",
+      "target": "concept:adversarial",
+      "basis": "documented",
+      "explanation": "GAN: 적대적 학습.",
+      "evidence": [
+        "paper:gan"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gan",
+      "relation": "has_component",
+      "target": "component:generator",
+      "basis": "documented",
+      "explanation": "GAN: Generator.",
+      "evidence": [
+        "paper:gan"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gan",
+      "relation": "has_component",
+      "target": "component:discriminator",
+      "basis": "documented",
+      "explanation": "GAN: Discriminator.",
+      "evidence": [
+        "paper:gan"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gan",
+      "relation": "applied_to",
+      "target": "task:generation",
+      "basis": "documented",
+      "explanation": "GAN: 자료 생성.",
+      "evidence": [
+        "paper:gan"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gan",
+      "relation": "trained_with",
+      "target": "objective:adversarial",
+      "basis": "documented",
+      "explanation": "GAN: 적대적 목적.",
+      "evidence": [
+        "paper:gan"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:ddpm",
+      "relation": "documented_in",
+      "target": "paper:ddpm",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:ddpm"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:ddpm",
+      "relation": "uses",
+      "target": "concept:diffusion",
+      "basis": "documented",
+      "explanation": "DDPM: 확산 생성.",
+      "evidence": [
+        "paper:ddpm"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:ddpm",
+      "relation": "uses",
+      "target": "concept:denoising",
+      "basis": "documented",
+      "explanation": "DDPM: 노이즈 제거.",
+      "evidence": [
+        "paper:ddpm"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:ddpm",
+      "relation": "uses",
+      "target": "concept:latent_variable",
+      "basis": "documented",
+      "explanation": "DDPM: 잠재 변수.",
+      "evidence": [
+        "paper:ddpm"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:ddpm",
+      "relation": "has_component",
+      "target": "component:denoiser",
+      "basis": "documented",
+      "explanation": "DDPM: Denoising 네트워크.",
+      "evidence": [
+        "paper:ddpm"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:ddpm",
+      "relation": "applied_to",
+      "target": "task:generation",
+      "basis": "documented",
+      "explanation": "DDPM: 자료 생성.",
+      "evidence": [
+        "paper:ddpm"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:ddpm",
+      "relation": "trained_with",
+      "target": "objective:denoising",
+      "basis": "documented",
+      "explanation": "DDPM: 확산 노이즈 예측.",
+      "evidence": [
+        "paper:ddpm"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gcn",
+      "relation": "documented_in",
+      "target": "paper:gcn",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:gcn"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:gcn",
+      "relation": "uses",
+      "target": "concept:message_passing",
+      "basis": "documented",
+      "explanation": "Graph Convolutional Network: 그래프 메시지 전달.",
+      "evidence": [
+        "paper:gcn"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gcn",
+      "relation": "has_component",
+      "target": "component:graph_aggregation",
+      "basis": "documented",
+      "explanation": "Graph Convolutional Network: 이웃 집계.",
+      "evidence": [
+        "paper:gcn"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gcn",
+      "relation": "applied_to",
+      "target": "task:node_classification",
+      "basis": "documented",
+      "explanation": "Graph Convolutional Network: 노드 분류.",
+      "evidence": [
+        "paper:gcn"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gcn",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "Graph Convolutional Network: 지도 분류 목적.",
+      "evidence": [
+        "paper:gcn"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gat",
+      "relation": "documented_in",
+      "target": "paper:gat",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:gat"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:gat",
+      "relation": "uses",
+      "target": "concept:message_passing",
+      "basis": "documented",
+      "explanation": "Graph Attention Network: 그래프 메시지 전달.",
+      "evidence": [
+        "paper:gat"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gat",
+      "relation": "uses",
+      "target": "concept:graph_attention",
+      "basis": "documented",
+      "explanation": "Graph Attention Network: 그래프 어텐션.",
+      "evidence": [
+        "paper:gat"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gat",
+      "relation": "uses",
+      "target": "concept:attention",
+      "basis": "documented",
+      "explanation": "Graph Attention Network: 어텐션.",
+      "evidence": [
+        "paper:gat"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gat",
+      "relation": "has_component",
+      "target": "component:graph_aggregation",
+      "basis": "documented",
+      "explanation": "Graph Attention Network: 이웃 집계.",
+      "evidence": [
+        "paper:gat"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gat",
+      "relation": "applied_to",
+      "target": "task:node_classification",
+      "basis": "documented",
+      "explanation": "Graph Attention Network: 노드 분류.",
+      "evidence": [
+        "paper:gat"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:gat",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "Graph Attention Network: 지도 분류 목적.",
+      "evidence": [
+        "paper:gat"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:clip",
+      "relation": "documented_in",
+      "target": "paper:clip",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:clip"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:clip",
+      "relation": "uses",
+      "target": "concept:contrastive",
+      "basis": "documented",
+      "explanation": "CLIP: 대조 학습.",
+      "evidence": [
+        "paper:clip"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:clip",
+      "relation": "has_component",
+      "target": "component:image_encoder",
+      "basis": "documented",
+      "explanation": "CLIP: 영상 인코더.",
+      "evidence": [
+        "paper:clip"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:clip",
+      "relation": "has_component",
+      "target": "component:text_encoder",
+      "basis": "documented",
+      "explanation": "CLIP: 텍스트 인코더.",
+      "evidence": [
+        "paper:clip"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:clip",
+      "relation": "applied_to",
+      "target": "task:image_text",
+      "basis": "documented",
+      "explanation": "CLIP: 영상–텍스트 연결.",
+      "evidence": [
+        "paper:clip"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:clip",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "CLIP: 영상 분류.",
+      "evidence": [
+        "paper:clip"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:clip",
+      "relation": "trained_with",
+      "target": "objective:contrastive",
+      "basis": "documented",
+      "explanation": "CLIP: 영상–텍스트 대조 목적.",
+      "evidence": [
+        "paper:clip"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mamba",
+      "relation": "documented_in",
+      "target": "paper:mamba",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:mamba"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:mamba",
+      "relation": "uses",
+      "target": "concept:state_space",
+      "basis": "documented",
+      "explanation": "Mamba: 상태 공간 모델.",
+      "evidence": [
+        "paper:mamba"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mamba",
+      "relation": "uses",
+      "target": "concept:selective_state_space",
+      "basis": "documented",
+      "explanation": "Mamba: 선택적 상태 공간.",
+      "evidence": [
+        "paper:mamba"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mamba",
+      "relation": "uses",
+      "target": "concept:recurrence",
+      "basis": "documented",
+      "explanation": "Mamba: 순환 상태.",
+      "evidence": [
+        "paper:mamba"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mamba",
+      "relation": "has_component",
+      "target": "component:state_space",
+      "basis": "documented",
+      "explanation": "Mamba: 선택적 SSM 블록.",
+      "evidence": [
+        "paper:mamba"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mamba",
+      "relation": "applied_to",
+      "target": "task:language_modeling",
+      "basis": "documented",
+      "explanation": "Mamba: 언어 모델링.",
+      "evidence": [
+        "paper:mamba"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:mamba",
+      "relation": "trained_with",
+      "target": "objective:autoregressive",
+      "basis": "documented",
+      "explanation": "Mamba: 자기회귀 예측.",
+      "evidence": [
+        "paper:mamba"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "documented_in",
+      "target": "paper:switch",
+      "basis": "documented",
+      "explanation": "모델의 대표 문헌.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Title / architecture description"
+    },
+    {
+      "source": "model:switch",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "Switch Transformer: Self-Attention.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "uses",
+      "target": "concept:cross_attention",
+      "basis": "documented",
+      "explanation": "Switch Transformer: Cross-Attention.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "uses",
+      "target": "concept:sparse_experts",
+      "basis": "documented",
+      "explanation": "Switch Transformer: 희소 전문가.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "uses",
+      "target": "concept:routing",
+      "basis": "documented",
+      "explanation": "Switch Transformer: 전문가 라우팅.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "documented",
+      "explanation": "Switch Transformer: 위치별 FFN.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "has_component",
+      "target": "component:encoder",
+      "basis": "documented",
+      "explanation": "Switch Transformer: Transformer 인코더 블록.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "has_component",
+      "target": "component:decoder",
+      "basis": "documented",
+      "explanation": "Switch Transformer: Transformer 디코더 블록.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "has_component",
+      "target": "component:expert",
+      "basis": "documented",
+      "explanation": "Switch Transformer: Feed-forward 전문가.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "has_component",
+      "target": "component:router",
+      "basis": "documented",
+      "explanation": "Switch Transformer: Router.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "applied_to",
+      "target": "task:understanding",
+      "basis": "documented",
+      "explanation": "Switch Transformer: 언어 이해.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "applied_to",
+      "target": "task:translation",
+      "basis": "documented",
+      "explanation": "Switch Transformer: 기계 번역.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "model:switch",
+      "relation": "trained_with",
+      "target": "objective:span_corruption",
+      "basis": "documented",
+      "explanation": "Switch Transformer: Span corruption.",
+      "evidence": [
+        "paper:switch"
+      ],
+      "locator": "Model architecture / training / experiments"
+    },
+    {
+      "source": "component:self_attention",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "component:cross_attention",
+      "relation": "uses",
+      "target": "concept:cross_attention",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "component:ffn",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "component:positions",
+      "relation": "uses",
+      "target": "concept:position",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "component:encoder",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "component:decoder",
+      "relation": "uses",
+      "target": "concept:causal_mask",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "component:convolution",
+      "relation": "uses",
+      "target": "concept:convolution",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:lenet"
+      ]
+    },
+    {
+      "source": "component:recurrent",
+      "relation": "uses",
+      "target": "concept:recurrence",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:elman"
+      ]
+    },
+    {
+      "source": "component:patches",
+      "relation": "uses",
+      "target": "concept:patch_embedding",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:vit"
+      ]
+    },
+    {
+      "source": "component:generator",
+      "relation": "uses",
+      "target": "concept:latent_variable",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:gan"
+      ]
+    },
+    {
+      "source": "component:discriminator",
+      "relation": "uses",
+      "target": "concept:adversarial",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:gan"
+      ]
+    },
+    {
+      "source": "component:latent_encoder",
+      "relation": "uses",
+      "target": "concept:latent_variable",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:vae"
+      ]
+    },
+    {
+      "source": "component:latent_decoder",
+      "relation": "uses",
+      "target": "concept:latent_variable",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:vae"
+      ]
+    },
+    {
+      "source": "component:denoiser",
+      "relation": "uses",
+      "target": "concept:denoising",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:ddpm"
+      ]
+    },
+    {
+      "source": "component:graph_aggregation",
+      "relation": "uses",
+      "target": "concept:message_passing",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:gcn"
+      ]
+    },
+    {
+      "source": "component:expert",
+      "relation": "uses",
+      "target": "concept:ffn",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:switch"
+      ]
+    },
+    {
+      "source": "component:router",
+      "relation": "uses",
+      "target": "concept:routing",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:switch"
+      ]
+    },
+    {
+      "source": "component:state_space",
+      "relation": "uses",
+      "target": "concept:selective_state_space",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:mamba"
+      ]
+    },
+    {
+      "source": "component:image_encoder",
+      "relation": "uses",
+      "target": "concept:contrastive",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:clip"
+      ]
+    },
+    {
+      "source": "component:text_encoder",
+      "relation": "uses",
+      "target": "concept:contrastive",
+      "basis": "structural",
+      "explanation": "구성 요소의 연산 개념.",
+      "evidence": [
+        "paper:clip"
+      ]
+    },
+    {
+      "source": "component:encoder",
+      "relation": "has_component",
+      "target": "component:self_attention",
+      "basis": "documented",
+      "explanation": "원 논문의 인코더/디코더 블록 구성.",
+      "evidence": [
+        "paper:transformer"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "component:encoder",
+      "relation": "has_component",
+      "target": "component:ffn",
+      "basis": "documented",
+      "explanation": "원 논문의 인코더/디코더 블록 구성.",
+      "evidence": [
+        "paper:transformer"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "component:decoder",
+      "relation": "has_component",
+      "target": "component:self_attention",
+      "basis": "documented",
+      "explanation": "원 논문의 인코더/디코더 블록 구성.",
+      "evidence": [
+        "paper:transformer"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "component:decoder",
+      "relation": "has_component",
+      "target": "component:cross_attention",
+      "basis": "documented",
+      "explanation": "원 논문의 인코더/디코더 블록 구성.",
+      "evidence": [
+        "paper:transformer"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "component:decoder",
+      "relation": "has_component",
+      "target": "component:ffn",
+      "basis": "documented",
+      "explanation": "원 논문의 인코더/디코더 블록 구성.",
+      "evidence": [
+        "paper:transformer"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "concept:self_attention",
+      "relation": "subconcept_of",
+      "target": "concept:attention",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "concept:cross_attention",
+      "relation": "subconcept_of",
+      "target": "concept:attention",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "concept:multihead",
+      "relation": "subconcept_of",
+      "target": "concept:attention",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "concept:window_attention",
+      "relation": "subconcept_of",
+      "target": "concept:self_attention",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:swin"
+      ]
+    },
+    {
+      "source": "concept:shifted_windows",
+      "relation": "subconcept_of",
+      "target": "concept:window_attention",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:swin"
+      ]
+    },
+    {
+      "source": "concept:rotary_position",
+      "relation": "subconcept_of",
+      "target": "concept:position",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:roformer"
+      ]
+    },
+    {
+      "source": "concept:relative_position",
+      "relation": "subconcept_of",
+      "target": "concept:position",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:roformer"
+      ]
+    },
+    {
+      "source": "concept:residual",
+      "relation": "subconcept_of",
+      "target": "concept:skip_connections",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:resnet"
+      ]
+    },
+    {
+      "source": "concept:dense_connections",
+      "relation": "subconcept_of",
+      "target": "concept:skip_connections",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:densenet"
+      ]
+    },
+    {
+      "source": "concept:depthwise",
+      "relation": "subconcept_of",
+      "target": "concept:convolution",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:mobilenet"
+      ]
+    },
+    {
+      "source": "concept:separable_convolution",
+      "relation": "subconcept_of",
+      "target": "concept:convolution",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:mobilenet"
+      ]
+    },
+    {
+      "source": "concept:graph_attention",
+      "relation": "subconcept_of",
+      "target": "concept:attention",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:gat"
+      ]
+    },
+    {
+      "source": "concept:selective_state_space",
+      "relation": "subconcept_of",
+      "target": "concept:state_space",
+      "basis": "structural",
+      "explanation": "개념 범위의 상하위 관계.",
+      "evidence": [
+        "paper:mamba"
+      ]
+    },
+    {
+      "source": "model:vgg",
+      "relation": "extends",
+      "target": "model:cnn",
+      "basis": "structural",
+      "explanation": "합성곱 모델 계열의 구체적인 구성.",
+      "evidence": [
+        "paper:vgg"
+      ]
+    },
+    {
+      "source": "model:inception",
+      "relation": "extends",
+      "target": "model:cnn",
+      "basis": "structural",
+      "explanation": "합성곱 모델 계열의 구체적인 구성.",
+      "evidence": [
+        "paper:inception"
+      ]
+    },
+    {
+      "source": "model:densenet",
+      "relation": "extends",
+      "target": "model:cnn",
+      "basis": "structural",
+      "explanation": "합성곱 모델 계열의 구체적인 구성.",
+      "evidence": [
+        "paper:densenet"
+      ]
+    },
+    {
+      "source": "model:mobilenet",
+      "relation": "extends",
+      "target": "model:cnn",
+      "basis": "structural",
+      "explanation": "합성곱 모델 계열의 구체적인 구성.",
+      "evidence": [
+        "paper:mobilenet"
+      ]
+    },
+    {
+      "source": "model:efficientnet",
+      "relation": "extends",
+      "target": "model:cnn",
+      "basis": "structural",
+      "explanation": "합성곱 모델 계열의 구체적인 구성.",
+      "evidence": [
+        "paper:efficientnet"
+      ]
+    },
+    {
+      "source": "model:unet",
+      "relation": "extends",
+      "target": "model:cnn",
+      "basis": "structural",
+      "explanation": "합성곱 모델 계열의 구체적인 구성.",
+      "evidence": [
+        "paper:unet"
+      ]
+    },
+    {
+      "source": "model:bert",
+      "relation": "extends",
+      "target": "model:transformer",
+      "basis": "structural",
+      "explanation": "Transformer 구성 요소를 채택하고 입력·마스킹·학습 구성을 변경.",
+      "evidence": [
+        "paper:bert"
+      ]
+    },
+    {
+      "source": "model:gpt2",
+      "relation": "extends",
+      "target": "model:transformer",
+      "basis": "structural",
+      "explanation": "Transformer 구성 요소를 채택하고 입력·마스킹·학습 구성을 변경.",
+      "evidence": [
+        "paper:gpt2"
+      ]
+    },
+    {
+      "source": "model:t5",
+      "relation": "extends",
+      "target": "model:transformer",
+      "basis": "structural",
+      "explanation": "Transformer 구성 요소를 채택하고 입력·마스킹·학습 구성을 변경.",
+      "evidence": [
+        "paper:t5"
+      ]
+    },
+    {
+      "source": "model:vit",
+      "relation": "extends",
+      "target": "model:transformer",
+      "basis": "structural",
+      "explanation": "Transformer 구성 요소를 채택하고 입력·마스킹·학습 구성을 변경.",
+      "evidence": [
+        "paper:vit"
+      ]
+    },
+    {
+      "source": "model:roformer",
+      "relation": "extends",
+      "target": "model:transformer",
+      "basis": "structural",
+      "explanation": "Transformer 구성 요소를 채택하고 입력·마스킹·학습 구성을 변경.",
+      "evidence": [
+        "paper:roformer"
+      ]
+    },
+    {
+      "source": "model:llama",
+      "relation": "extends",
+      "target": "model:transformer",
+      "basis": "structural",
+      "explanation": "Transformer 구성 요소를 채택하고 입력·마스킹·학습 구성을 변경.",
+      "evidence": [
+        "paper:llama"
+      ]
+    },
+    {
+      "source": "model:convnext",
+      "relation": "extends",
+      "target": "model:resnet",
+      "basis": "documented",
+      "explanation": "ResNet 설계를 단계적으로 현대화하는 실험에서 출발.",
+      "evidence": [
+        "paper:convnext"
+      ]
+    },
+    {
+      "source": "model:swin",
+      "relation": "extends",
+      "target": "model:vit",
+      "basis": "documented",
+      "explanation": "계층적 표현과 이동 윈도로 영상 Transformer 설계를 확장.",
+      "evidence": [
+        "paper:swin"
+      ]
+    },
+    {
+      "source": "model:switch",
+      "relation": "extends",
+      "target": "model:t5",
+      "basis": "documented",
+      "explanation": "T5 기반 모델의 FFN을 희소 전문가로 확장.",
+      "evidence": [
+        "paper:switch"
+      ]
+    },
+    {
+      "source": "model:mamba",
+      "relation": "alternative_to",
+      "target": "model:transformer",
+      "basis": "documented",
+      "explanation": "선택적 상태 공간 갱신을 어텐션 기반 시퀀스 처리의 대안으로 제시.",
+      "evidence": [
+        "paper:mamba"
+      ]
+    },
+    {
+      "source": "model:gat",
+      "relation": "alternative_to",
+      "target": "model:gcn",
+      "basis": "documented",
+      "explanation": "이웃 집계에 특징 의존 어텐션 가중치를 사용.",
+      "evidence": [
+        "paper:gat"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "has_component",
+      "target": "component:encoder",
+      "basis": "structural",
+      "explanation": "구조를 이루는 주요 구성 요소.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "has_component",
+      "target": "component:decoder",
+      "basis": "structural",
+      "explanation": "구조를 이루는 주요 구성 요소.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:transformer",
+      "relation": "has_component",
+      "target": "component:positions",
+      "basis": "structural",
+      "explanation": "구조를 이루는 주요 구성 요소.",
+      "evidence": [
+        "paper:transformer"
+      ]
+    },
+    {
+      "source": "model:cnn",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "structural",
+      "explanation": "구조를 이루는 주요 구성 요소.",
+      "evidence": [
+        "paper:lenet"
+      ]
+    },
+    {
+      "source": "model:resnet",
+      "relation": "has_component",
+      "target": "component:convolution",
+      "basis": "structural",
+      "explanation": "구조를 이루는 주요 구성 요소.",
+      "evidence": [
+        "paper:resnet"
+      ]
+    },
+    {
+      "source": "model:rnn",
+      "relation": "has_component",
+      "target": "component:recurrent",
+      "basis": "structural",
+      "explanation": "구조를 이루는 주요 구성 요소.",
+      "evidence": [
+        "paper:elman"
+      ]
+    },
+    {
+      "source": "model:lstm",
+      "relation": "has_component",
+      "target": "component:recurrent",
+      "basis": "structural",
+      "explanation": "구조를 이루는 주요 구성 요소.",
+      "evidence": [
+        "paper:lstm"
+      ]
+    },
+    {
+      "source": "model:gru",
+      "relation": "has_component",
+      "target": "component:recurrent",
+      "basis": "structural",
+      "explanation": "구조를 이루는 주요 구성 요소.",
+      "evidence": [
+        "paper:gru"
       ]
     }
   ]

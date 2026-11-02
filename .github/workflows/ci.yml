@@ -14,9 +14,9 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e '.[test]' build
-      - run: python -m pytest -q tests/test_graph.py
+      - run: python -m pytest -q tests/test_graph.py tests/test_ontology.py
       - run: python -c "import sys; import p2i_kg.app; assert 'torch' not in sys.modules"
-      - run: python -m p2i_kg --database /tmp/atlas.sqlite3 validate
+      - run: python -m p2i_kg --database /tmp/atlas.sqlite3 validate --rdf
       - run: python -m build
   runtime:
     runs-on: ubuntu-24.04
@@ -34,7 +34,7 @@ jobs:
           repository: PtwoI/p2i-gui
           path: deps/gui
       - run: python -m pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cpu
-      - run: python -m pip install -e ./deps/core -e ./deps/gui -e '.[runtime,test]'
+      - run: python -m pip install -e ./deps/core -e ./deps/gui -e '.[runtime,language,test]'
       - run: python -m pytest -q
         env:
           OMP_NUM_THREADS: '1'
