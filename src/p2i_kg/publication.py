@@ -56,7 +56,10 @@ def build_pages(output, *, source_revision):
     version = sha256((manifest['catalog_revision'] + source_revision).encode()).hexdigest()[:16]
     for path in root.rglob('*'):
         if path.suffix in ('.html', '.js', '.css'):
-            path.write_text(path.read_text().replace('neon-v1', version), encoding='utf-8')
+            text = path.read_text().replace('neon-v1', version)
+            if path == root / 'index.html':
+                text = text.replace('data-mode="static"', f'data-mode="static" data-build="{version}"')
+            path.write_text(text, encoding='utf-8')
     manifest['build_version'] = version
     manifest['files'] = {str(path.relative_to(root)): sha256(path.read_bytes()).hexdigest()
                          for path in sorted(root.rglob('*')) if path.is_file() and path.name != 'viewer-manifest.json'}
