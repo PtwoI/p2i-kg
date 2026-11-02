@@ -128,3 +128,19 @@ P2I_KG_URL=http://127.0.0.1:8010 node tests/browser.mjs
 CI separately checks the graph-only installation, P2I runtime integration and
 the interactive explorer. This repository extends P2I rather than replacing its
 core, GUI, SDK or CLI packages.
+
+## Study viewer (0.3)
+
+The default WebUI is a free-form learning reader: five suggested reading paths, a searchable model collection, source papers, concept links, model comparisons, and expandable actual PyTorch module structures. There is no progress tracking, account, or note storage. Reading order is pedagogical, not a claim of direct historical descent.
+
+The calculation lab includes a small attention heatmap with a causal mask and temperature, an editable 5×5 cross-correlation example with stride, and a scalar recurrent-state walkthrough. Values are transparent toy calculations, not trained-model visualizations.
+
+```sh
+p2i-kg serve                       # live local catalog + P2I execution
+p2i-kg viewer ./viewer             # new directory; read-only static export
+p2i-kg viewer ./viewer --runtime   # also trace installed runtime examples
+```
+
+Serve the exported directory using a static host. Its catalog, RDF exports, and optional module snapshots work without Python in the browser. Python execution, graph extension, and model editing require the local server; a hosted snapshot does not update itself when the repository changes. The viewer manifest records the exact catalog revision and available runtime snapshots.
+
+`node --test tests/study_math.test.mjs` checks the playground arithmetic. `tests/test_viewer.py` checks portable exports without importing torch.
