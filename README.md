@@ -3,11 +3,11 @@
 A local educational knowledge graph connecting neural models, building-block
 concepts and representative papers, with live P2I model exploration.
 
-Version 0.2 contains **34 models, 179 nodes and 378 sourced relationships**.
+Version 0.2 contains **36 models, 201 nodes and 428 sourced relationships**.
 Alongside the original Perceptron/MLP/CNN/RNN/LSTM/GRU/ResNet/Transformer path,
 it includes VGG, Inception, DenseNet, MobileNet, EfficientNet, ConvNeXt, U-Net,
 BERT, GPT-2, T5, ViT, Swin, RoFormer, LLaMA (2023), VAE, GAN, DDPM, GCN, GAT,
-CLIP, Switch Transformer, Mamba, MLP-Mixer, MAE, DETR and NeRF. Reference years
+CLIP, Switch Transformer, Mamba, MLP-Mixer, MAE, DETR, NeRF, Perceiver and GraphSAGE. Reference years
 identify first-public-paper years, not universal invention dates. Each claim
 retains its evidence and its documented, structural or pedagogical interpretation.
 

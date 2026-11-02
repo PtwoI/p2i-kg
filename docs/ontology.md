@@ -81,5 +81,13 @@ its metadata, connect the model to precise concepts/components/objectives/tasks,
 then add a runtime where it improves understanding. If P2I cannot represent a
 necessary module, add a trusted reconstruction adapter and exercise tracing,
 editing, independent checkpoint restoration and backward before binding it.
-Upcoming useful branches include latent diffusion/DiT, Mamba-2, Perceiver,
+Upcoming useful branches include latent diffusion/DiT, Mamba-2,
 MLP-Mixer, self-supervised vision models and additional graph architectures.
+
+The bundled Perceiver example fixes four latent queries while allowing the input
+length to vary; its input projection, latent array, cross-attention, latent
+processor and classifier are real P2I-bound modules. The GraphSAGE-mean example
+uses deterministic full-neighborhood means so structural comparisons are
+repeatable, while the catalog records the original sampled-neighborhood design.
+Its aggregator, self/neighbor projections and node classifier are also bound to
+the traced module paths.

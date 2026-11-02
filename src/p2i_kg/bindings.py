@@ -4,6 +4,15 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'perceiver': [('component:perceiver_input_projection', 'input_projection'),
+        ('component:latent_array', 'latent_array'),
+        ('component:perceiver_cross_attention', 'cross_attention'),
+        ('component:latent_processor', 'latent_processor'),
+        ('component:perceiver_classifier', 'classifier')],
+    'graphsage': [('component:neighbor_aggregator', 'aggregator'),
+        ('component:self_projection', 'self_projection'),
+        ('component:neighbor_projection', 'neighbor_projection'),
+        ('component:node_classifier', 'node_classifier')],
     'detr': [('component:detr_backbone', 'backbone'), ('component:detr_encoder', 'encoder'),
         ('component:detr_decoder', 'decoder'), ('component:object_queries', 'query_embed'),
         ('component:detection_heads', 'class_head'), ('component:detection_heads', 'box_head')],

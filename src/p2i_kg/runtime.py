@@ -3,7 +3,7 @@ import socket
 from threading import Lock, Thread
 import time
 
-RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr', 'nerf')
+RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr', 'nerf', 'perceiver', 'graphsage')
 
 
 def make_model(runtime_id):
@@ -30,6 +30,15 @@ def make_model(runtime_id):
             from .models import TinyNeRF
             # Two rays with six ordered samples and unit-length intervals.
             return TinyNeRF().eval(), (torch.randn(2, 6, 3), torch.randn(2, 6, 3), torch.ones(2, 6))
+        if runtime_id == 'perceiver':
+            from .models import TinyPerceiver
+            return TinyPerceiver().eval(), (torch.randn(2, 12, 8),)
+        if runtime_id == 'graphsage':
+            from .models import TinyGraphSAGE
+            adjacency = torch.tensor([[[0., 1., 1., 0., 0.],
+                [1., 0., 1., 0., 0.], [1., 1., 0., 1., 0.],
+                [0., 0., 1., 0., 1.], [0., 0., 0., 1., 0.]]]).expand(2, -1, -1)
+            return TinyGraphSAGE().eval(), (torch.randn(2, 5, 8), adjacency)
         if runtime_id == 'resnet18':
             from torchvision.models import resnet18
             return resnet18(weights=None, num_classes=4).eval(), (torch.randn(2, 3, 32, 32),)

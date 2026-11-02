@@ -152,3 +152,45 @@ class TinyNeRF(nn.Module):
         view_input = __import__('torch').cat((self.feature_head(features), self.direction_encoder(directions)), -1)
         rgb = self.view_head(view_input)
         return self.volume_renderer(rgb, density, deltas)
+
+
+class TinyPerceiver(nn.Module):
+    """Input-length-independent latent bottleneck followed by latent processing."""
+    def __init__(self):
+        super().__init__()
+        self.input_projection = nn.Linear(8, 16)
+        self.latent_array = nn.Embedding(4, 16)
+        self.cross_attention = nn.MultiheadAttention(16, 2, dropout=0., batch_first=True)
+        self.latent_processor = nn.TransformerEncoderLayer(
+            16, 2, 32, dropout=0., batch_first=True)
+        self.classifier = nn.Linear(16, 4)
+
+    def forward(self, inputs):
+        projected = self.input_projection(inputs)
+        latents = self.latent_array.weight.unsqueeze(0).expand(inputs.shape[0], -1, -1)
+        distilled, _ = self.cross_attention(latents, projected, projected, need_weights=False)
+        processed = self.latent_processor(latents + distilled)
+        return self.classifier(processed.mean(1))
+
+
+class MeanNeighborAggregator(nn.Module):
+    """Deterministic full-neighborhood mean used to expose GraphSAGE aggregation."""
+    def forward(self, features, adjacency):
+        degrees = adjacency.sum(-1, keepdim=True).clamp_min(1.)
+        return adjacency @ features / degrees
+
+
+class TinyGraphSAGE(nn.Module):
+    """One GraphSAGE-mean layer with separate self and neighbor transforms."""
+    def __init__(self):
+        super().__init__()
+        self.aggregator = MeanNeighborAggregator()
+        self.self_projection = nn.Linear(8, 12)
+        self.neighbor_projection = nn.Linear(8, 12)
+        self.node_classifier = nn.Linear(12, 3)
+
+    def forward(self, features, adjacency):
+        neighbors = self.aggregator(features, adjacency)
+        hidden = __import__('torch').relu(
+            self.self_projection(features) + self.neighbor_projection(neighbors))
+        return self.node_classifier(hidden)
