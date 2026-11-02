@@ -1264,6 +1264,136 @@
       "aliases": [
         "SWITCH"
       ]
+    },
+    {
+      "id": "paper:mixer",
+      "kind": "paper",
+      "label": "MLP-Mixer: An all-MLP Architecture for Vision",
+      "summary": "토큰 혼합과 채널 혼합 MLP를 교대로 적용하는 비전 모델.",
+      "reference_year": 2021,
+      "url": "https://arxiv.org/abs/2105.01601",
+      "authors": [
+        "Ilya Tolstikhin",
+        "Neil Houlsby",
+        "Alexander Kolesnikov",
+        "Lucas Beyer",
+        "Xiaohua Zhai",
+        "Thomas Unterthiner",
+        "Jessica Yung",
+        "Andreas Steiner",
+        "Daniel Keysers",
+        "Jakob Uszkoreit",
+        "Mario Lucic",
+        "Alexey Dosovitskiy"
+      ]
+    },
+    {
+      "id": "paper:mae",
+      "kind": "paper",
+      "label": "Masked Autoencoders Are Scalable Vision Learners",
+      "summary": "보이는 패치 인코더와 가벼운 복원 디코더를 사용하는 마스킹 기반 사전학습.",
+      "reference_year": 2021,
+      "url": "https://arxiv.org/abs/2111.06377",
+      "authors": [
+        "Kaiming He",
+        "Xinlei Chen",
+        "Saining Xie",
+        "Yanghao Li",
+        "Piotr Dollár",
+        "Ross Girshick"
+      ]
+    },
+    {
+      "id": "model:mixer",
+      "kind": "model",
+      "label": "MLP-Mixer",
+      "summary": "패치 축과 채널 축을 별도 MLP로 혼합하는 이미지 분류 구조.",
+      "reference_year": 2021,
+      "family": "vision",
+      "runtime_id": "mixer",
+      "runtime_note": "16×16 이미지, 4×4 패치, 한 Mixer 블록. 무작위 초기화이며 공식 JAX 구현의 작은 PyTorch 구조 예제입니다.",
+      "aliases": [
+        "MLP Mixer"
+      ]
+    },
+    {
+      "id": "model:mae",
+      "kind": "model",
+      "label": "Masked Autoencoder (MAE)",
+      "summary": "마스킹된 패치를 인코더에서 제외하고 디코더에서 원래 순서로 복원합니다.",
+      "reference_year": 2021,
+      "family": "vision",
+      "runtime_id": "mae",
+      "runtime_note": "16개 패치 중 4개만 인코딩, 한 층 인코더/디코더. 고정 75% 마스크와 위치 버퍼, masked-pixel MSE를 쓰는 작은 예제. CLS 토큰과 공식 sin-cos 위치값은 생략합니다.",
+      "aliases": [
+        "Masked Autoencoders"
+      ]
+    },
+    {
+      "id": "concept:token_mixing",
+      "kind": "concept",
+      "label": "Token mixing MLP",
+      "summary": "각 채널에 같은 MLP를 적용하여 패치 위치 간 정보를 혼합합니다."
+    },
+    {
+      "id": "concept:channel_mixing",
+      "kind": "concept",
+      "label": "Channel mixing MLP",
+      "summary": "각 패치에 같은 MLP를 적용하여 채널 정보를 혼합합니다."
+    },
+    {
+      "id": "concept:visible_patch_encoding",
+      "kind": "concept",
+      "label": "Visible-patch encoding",
+      "summary": "마스크 토큰 없이 보이는 패치만 인코더에 전달합니다."
+    },
+    {
+      "id": "concept:masked_pixel_reconstruction",
+      "kind": "concept",
+      "label": "Masked-pixel reconstruction",
+      "summary": "가려진 패치의 픽셀만 복원 손실에 포함합니다."
+    },
+    {
+      "id": "component:token_mixer",
+      "kind": "component",
+      "label": "Token-mixing MLP",
+      "summary": "패치 축에 적용되는 두 Linear와 GELU."
+    },
+    {
+      "id": "component:channel_mixer",
+      "kind": "component",
+      "label": "Channel-mixing MLP",
+      "summary": "채널 축에 적용되는 두 Linear와 GELU."
+    },
+    {
+      "id": "component:mae_encoder",
+      "kind": "component",
+      "label": "MAE visible encoder",
+      "summary": "전체 중 보이는 패치의 Transformer 인코더."
+    },
+    {
+      "id": "component:mae_decoder",
+      "kind": "component",
+      "label": "MAE reconstruction decoder",
+      "summary": "복원된 위치 순서의 잠재값과 마스크 토큰을 처리하는 가벼운 Transformer."
+    },
+    {
+      "id": "component:pixel_predictor",
+      "kind": "component",
+      "label": "Pixel predictor",
+      "summary": "각 디코더 토큰에서 패치 픽셀을 예측합니다."
+    },
+    {
+      "id": "objective:masked_pixel_mse",
+      "kind": "objective",
+      "label": "Masked-pixel MSE",
+      "summary": "가려진 패치에 대해서만 계산하는 픽셀 평균 제곱 오차."
+    },
+    {
+      "id": "task:visual_representation",
+      "kind": "task",
+      "label": "Visual representation learning",
+      "summary": "후속 비전 과제를 위한 이미지 표현 사전학습."
     }
   ],
   "edges": [
@@ -4324,6 +4454,380 @@
       "evidence": [
         "paper:gru"
       ]
+    },
+    {
+      "source": "model:mixer",
+      "relation": "documented_in",
+      "target": "paper:mixer",
+      "basis": "documented",
+      "explanation": "모델의 원논문과 공식 구현.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "documented_in",
+      "target": "paper:mae",
+      "basis": "documented",
+      "explanation": "모델의 원논문과 공식 구현.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mixer",
+      "relation": "uses",
+      "target": "concept:patch_embedding",
+      "basis": "documented",
+      "explanation": "패치 기반 분류에서 어텐션 대신 토큰·채널 MLP 혼합을 사용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "model:mixer",
+      "relation": "uses",
+      "target": "concept:residual",
+      "basis": "documented",
+      "explanation": "패치 기반 분류에서 어텐션 대신 토큰·채널 MLP 혼합을 사용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "model:mixer",
+      "relation": "has_component",
+      "target": "component:token_mixer",
+      "basis": "documented",
+      "explanation": "패치 기반 분류에서 어텐션 대신 토큰·채널 MLP 혼합을 사용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "model:mixer",
+      "relation": "has_component",
+      "target": "component:channel_mixer",
+      "basis": "documented",
+      "explanation": "패치 기반 분류에서 어텐션 대신 토큰·채널 MLP 혼합을 사용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "model:mixer",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "패치 기반 분류에서 어텐션 대신 토큰·채널 MLP 혼합을 사용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "model:mixer",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "패치 기반 분류에서 어텐션 대신 토큰·채널 MLP 혼합을 사용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "model:mixer",
+      "relation": "alternative_to",
+      "target": "model:vit",
+      "basis": "documented",
+      "explanation": "패치 기반 분류에서 어텐션 대신 토큰·채널 MLP 혼합을 사용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "component:token_mixer",
+      "relation": "uses",
+      "target": "concept:token_mixing",
+      "basis": "documented",
+      "explanation": "공식 MixerBlock에서 해당 축의 MLP를 적용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "component:channel_mixer",
+      "relation": "uses",
+      "target": "concept:channel_mixing",
+      "basis": "documented",
+      "explanation": "공식 MixerBlock에서 해당 축의 MLP를 적용합니다.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "uses",
+      "target": "concept:patch_embedding",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "uses",
+      "target": "concept:visible_patch_encoding",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "uses",
+      "target": "concept:masked_pixel_reconstruction",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "uses",
+      "target": "concept:encoder_decoder",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "has_component",
+      "target": "component:mae_encoder",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "has_component",
+      "target": "component:mae_decoder",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "has_component",
+      "target": "component:pixel_predictor",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "trained_with",
+      "target": "objective:masked_pixel_mse",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "applied_to",
+      "target": "task:visual_representation",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "model:mae",
+      "relation": "extends",
+      "target": "model:vit",
+      "basis": "documented",
+      "explanation": "ViT 기반 인코더를 가시 패치에 적용하고 별도 디코더로 가려진 픽셀을 복원합니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "component:mae_encoder",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "두 경로는 교차 어텐션 없이 각각 자기 어텐션 블록으로 구성됩니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "component:mae_decoder",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "두 경로는 교차 어텐션 없이 각각 자기 어텐션 블록으로 구성됩니다.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "concept:token_mixing",
+      "relation": "documented_in",
+      "target": "paper:mixer",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "concept:channel_mixing",
+      "relation": "documented_in",
+      "target": "paper:mixer",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "concept:visible_patch_encoding",
+      "relation": "documented_in",
+      "target": "paper:mae",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "concept:masked_pixel_reconstruction",
+      "relation": "documented_in",
+      "target": "paper:mae",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "component:token_mixer",
+      "relation": "documented_in",
+      "target": "paper:mixer",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "component:channel_mixer",
+      "relation": "documented_in",
+      "target": "paper:mixer",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mixer"
+      ],
+      "locator": "Paper §2, Fig.1; https://github.com/google-research/vision_transformer/blob/main/vit_jax/models_mixer.py (MixerBlock, MlpMixer)"
+    },
+    {
+      "source": "component:mae_encoder",
+      "relation": "documented_in",
+      "target": "paper:mae",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "component:mae_decoder",
+      "relation": "documented_in",
+      "target": "paper:mae",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "component:pixel_predictor",
+      "relation": "documented_in",
+      "target": "paper:mae",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "objective:masked_pixel_mse",
+      "relation": "documented_in",
+      "target": "paper:mae",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
+    },
+    {
+      "source": "task:visual_representation",
+      "relation": "documented_in",
+      "target": "paper:mae",
+      "basis": "documented",
+      "explanation": "정의와 구조의 원문 근거.",
+      "evidence": [
+        "paper:mae"
+      ],
+      "locator": "Paper §3, Fig.1; https://github.com/facebookresearch/mae/blob/main/models_mae.py (forward_encoder, forward_decoder, forward_loss)"
     }
   ]
 }
