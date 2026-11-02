@@ -4,6 +4,12 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'detr': [('component:detr_backbone', 'backbone'), ('component:detr_encoder', 'encoder'),
+        ('component:detr_decoder', 'decoder'), ('component:object_queries', 'query_embed'),
+        ('component:detection_heads', 'class_head'), ('component:detection_heads', 'box_head')],
+    'nerf': [('component:coordinate_encoder', 'position_encoder'), ('component:radiance_mlp', 'point_mlp'),
+        ('component:density_head', 'density_head'), ('component:view_color_head', 'view_head'),
+        ('component:volume_renderer', 'volume_renderer')],
     'mixer': [('component:patches', 'patch_embed'), ('component:token_mixer', 'token_mixer'),
         ('component:channel_mixer', 'channel_mixer')],
     'mae': [('component:patches', 'patch_embed'), ('component:mae_encoder', 'encoder'),

@@ -3,7 +3,7 @@ import socket
 from threading import Lock, Thread
 import time
 
-RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae')
+RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18', 'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr', 'nerf')
 
 
 def make_model(runtime_id):
@@ -23,6 +23,13 @@ def make_model(runtime_id):
             from .models import TinyMixer, TinyMAE
             model = TinyMixer() if runtime_id == 'mixer' else TinyMAE()
             return model.eval(), (torch.randn(2, 3, 16, 16),)
+        if runtime_id == 'detr':
+            from .models import TinyDETR
+            return TinyDETR().eval(), (torch.randn(2, 3, 16, 16),)
+        if runtime_id == 'nerf':
+            from .models import TinyNeRF
+            # Two rays with six ordered samples and unit-length intervals.
+            return TinyNeRF().eval(), (torch.randn(2, 6, 3), torch.randn(2, 6, 3), torch.ones(2, 6))
         if runtime_id == 'resnet18':
             from torchvision.models import resnet18
             return resnet18(weights=None, num_classes=4).eval(), (torch.randn(2, 3, 32, 32),)
