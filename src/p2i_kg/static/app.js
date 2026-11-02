@@ -1,13 +1,14 @@
-import {read,hosted} from './catalog-client.js';
+import {read,hosted} from './catalog-client.js?v=neon-v1';
 const $=selector=>document.querySelector(selector);
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let graph,nodes,selected='model:transformer',zoom=1,searchTimer,mode='overview',world={width:1400,height:720},camera={x:0,y:0,width:1400,height:720},pan=null;
 const sessions=new Map();
+const initialModel=new URLSearchParams(location.search).get('model');if(initialModel)selected=initialModel.startsWith('model:')?initialModel:'model:'+initialModel;
 let mapRequest=0;
 const relations={extends:'확장',alternative_to:'대안',documented_in:'대표 문헌',uses:'사용 개념',has_component:'구성 요소',subconcept_of:'상위 개념',trained_with:'학습 목적',applied_to:'적용 과제'};
 const kinds={model:'모델',concept:'개념',paper:'논문',component:'구성 요소',objective:'학습 목적',task:'과제'};
 const bases={documented:'문헌 관계',structural:'구조적 관계',pedagogical:'교육적 연결'};
-const families={feedforward:['Feedforward','#8b6b46'],sequence:['Sequence','#85619a'],vision:['Vision','#317d98'],attention:['Attention','#18745f'],generative:['Generative','#bf8554'],graph:['Graph','#79883a'],multimodal:['Multimodal','#a76078']};
+const families={feedforward:['Feedforward','#c6ff6b'],sequence:['Sequence','#b99aff'],vision:['Vision','#5ccfff'],attention:['Attention','#39f6cf'],generative:['Generative','#ffba69'],graph:['Graph','#d8ec6a'],multimodal:['Multimodal','#ff87ca']};
 function select(id,{closePanels=true}={}){
  if(!nodes.has(id))return;selected=id;
  const previousMode=mode;if(nodes.get(id).kind!=='model')mode='neighborhood';
@@ -70,6 +71,11 @@ function renderDetail(){
  const connections=[...outgoing,...incoming].filter(edge=>['extends','alternative_to'].includes(edge.relation));
  let html=`<span class="detail-type">${esc(node.kind)} / ${esc(node.family??'KNOWLEDGE')}</span><h2>${esc(node.label)}</h2>${node.reference_year?`<div class="detail-year">${node.reference_year}</div>`:''}<p>${esc(node.summary)}</p>`;
  html+=`<div class="detail-graph-actions"><button class="primary" id="expand-connections">연결 펼치기</button>${node.kind==='model'?'<button class="secondary" id="compare-selected">이 모델 비교</button>':''}</div>`;
+ if(node.kind==='model'){
+  html+=`<section class="p2i-entry"><span class="eyebrow">MODEL / P2I</span><h3>P2I 구조 탐색</h3><p>${esc(node.runtime_note??'실행 예제의 모듈과 관측 연산을 탐색합니다.')}</p><button class="primary p2i-open" id="open-p2i">P2I로 보기 <span>↗</span></button><button class="secondary" id="inspect-model">모듈 연결 펼치기</button><div id="bindings"></div>`;
+  if(!hosted)html+=`<div class="runtime-actions"><button class="secondary" id="launch">실행·편집 세션 열기 ↗</button><a class="secondary" href="/api/kg/models/${encodeURIComponent(node.id)}/checkpoint">체크포인트 ↓</a></div><div id="runtime-status" aria-live="polite"></div>`;
+  html+='</section>';
+ }
  if(concepts.length)html+=`<h3>구성 개념</h3><div class="chips">${concepts.map(edge=>chip(edge.target)).join('')}</div>`;
  if(node.kind==='concept')html+=`<button class="secondary" id="find-models">이 개념을 사용하는 모델 찾기</button><div id="reasoned-models"></div>`;
  if(node.kind==='concept')html+=`<h3>이 개념을 사용하는 모델</h3><div class="chips">${incoming.filter(edge=>edge.relation==='uses').map(edge=>chip(edge.source)).join('')}</div>`;
@@ -82,10 +88,8 @@ function renderDetail(){
  const evidence=[...new Set([...outgoing,...incoming].flatMap(edge=>edge.evidence))];
  if(!papers.length&&evidence.length)html+=`<h3>관계의 근거 문헌</h3><div class="chips">${evidence.map(chip).join('')}</div>`;
  if(papers.length)html+=`<h3>대표 문헌</h3>${papers.map(paper=>`<a class="reference" href="${esc(paper.url)}" target="_blank" rel="noopener noreferrer">${esc(paper.label)} ↗<small>${esc(paper.authors.join(', '))} · ${paper.reference_year}</small></a>`).join('')}`;
- if(node.runtime_id){html+=`<h3>실제 구조 살펴보기</h3><p>${esc(node.runtime_note)}</p><div class="runtime-actions"><button class="primary" id="launch">P2I로 열기 ↗</button><a class="secondary" href="/api/kg/models/${encodeURIComponent(node.id)}/checkpoint">예제 체크포인트 ↓</a></div><p class="muted">편집한 결과는 열린 P2I 세션에서 저장하세요.</p><button class="secondary" id="inspect-model">온톨로지 ↔ 실제 모듈 연결</button><div id="bindings"></div><div id="runtime-status" class="runtime-status" aria-live="polite"></div>`;}
- if(hosted){html=html.replace('<button class="primary" id="launch">P2I로 열기 ↗</button>', '<a class="primary" href="http://127.0.0.1:8010/" target="_blank" rel="noopener noreferrer">로컬 P2I 열기 ↗</a>').replace(/<a class="secondary" href="[^"]+\/checkpoint">예제 체크포인트 ↓<\/a>/,'').replace('편집한 결과는 열린 P2I 세션에서 저장하세요.','실제 실행·편집은 PC에서 p2i-kg serve를 시작한 후 로컬 P2I로 연결하세요.');}
  $('#detail').innerHTML=html;$('#detail').scrollTop=0;
- if(node.runtime_id&&sessions.has(node.id))showSession(node.id,sessions.get(node.id));
+ if(!hosted&&node.runtime_id&&sessions.has(node.id))showSession(node.id,sessions.get(node.id));
 }
 function showSession(id,session){
  if(selected!==id)return;
@@ -112,6 +116,7 @@ document.addEventListener('click',async event=>{
  const pair=event.target.closest('[data-compare-pair]');if(pair){const [left,right]=pair.dataset.comparePair.split(',');$('#compare-left').value=left;$('#compare-right').value=right;await compare();$('#compare-panel').showModal();return}
  if(event.target.id==='expand-connections'){mode='neighborhood';renderMap();return}
  if(event.target.id==='compare-selected'){$('#compare-left').value=selected;await compare();$('#compare-panel').showModal();return}
+ if(event.target.closest('#open-p2i')){const node=nodes.get(selected),url=new URL('./p2i/?model='+encodeURIComponent(node.runtime_id)+'&v='+(document.documentElement.dataset.build??graph.revision),import.meta.url);$('#p2i-title').textContent=node.label;$('#p2i-scope').textContent=node.runtime_note??'';$('#p2i-tab').href=url.href;$('#p2i-frame').src=url.href;$('#p2i-panel').showModal();return}
  if(event.target.id==='launch')launch();
  if(event.target.id==='find-models'){
   const id=selected;try{const result=await read(`/api/kg/query?concept=${encodeURIComponent(id)}`);if(selected===id)$('#reasoned-models').innerHTML=result.matches.map(match=>`<div>${chip(match.node.id)} <details><summary>${match.proof.length}단계 연결 보기</summary>${match.proof_edges.map(edge=>`<p>${esc(nodes.get(edge.source)?.label)} → ${esc(relations[edge.relation])} → ${esc(nodes.get(edge.target)?.label)}</p><div class="chips">${edge.evidence.map(chip).join('')}</div>`).join('')}</details></div>`).join('')||'<p>연결된 모델이 없습니다.</p>'}catch(error){$('#global-error').textContent=error.message}
@@ -167,6 +172,8 @@ async function loadGraph(){
  for(const selector of ['#compare-left','#compare-right','#model-select'])$(selector).innerHTML=models.map(node=>`<option value="${esc(node.id)}">${esc(node.label)}</option>`).join('');
  $('#compare-left').value='model:bert';$('#compare-right').value='model:gpt2';
  if(!nodes.has(selected))selected=models[0]?.id;$('#model-select').value=selected;
- if(hosted){$('.extend-card').hidden=true;$('.snapshot-note').textContent='현재 카탈로그의 스냅샷입니다. 실제 실행·편집은 로컬 P2I에서 연결합니다.'}renderLibrary();select(selected,{closePanels:false});await compare();
+ if(hosted){$('.extend-card').hidden=true;$('.snapshot-note').textContent='현재 카탈로그의 스냅샷입니다. 모든 모델은 P2I에서 모듈·연산·텐서 연결을 탐색할 수 있습니다. 무작위 초기화 예제의 관측 결과입니다.'}renderLibrary();select(selected,{closePanels:false});await compare();
 }
 try{await loadGraph()}catch(error){$('#global-error').textContent=error.message}
+
+$('#p2i-panel').addEventListener('close',()=>{$('#p2i-frame').removeAttribute('src')});
