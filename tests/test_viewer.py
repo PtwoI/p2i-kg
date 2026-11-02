@@ -18,7 +18,7 @@ def test_portable_viewer_has_catalog_exports_and_no_python_dependency(tmp_path):
     assert len(json.loads((target/'exports/catalog.jsonld').read_text())['@graph']) == len(graph.nodes)+len(graph.edges)
     html = (target/'index.html').read_text()
     assert 'data-mode="static"' in html and '/api/kg/export' not in html
-    for asset in ('app.js', 'catalog-client.js', 'study.js', 'study-math.js', 'study.css'):
+    for asset in ('app.js', 'catalog-client.js', 'map.css'):
         assert (target/asset).stat().st_size > 0
     for export in ('catalog.ttl', 'ontology.ttl', 'shapes.ttl'):
         assert (target/'exports'/export).stat().st_size > 0
@@ -28,15 +28,11 @@ def test_portable_viewer_has_catalog_exports_and_no_python_dependency(tmp_path):
         'import sys; from p2i_kg.viewer import export_viewer; assert "torch" not in sys.modules'], check=True)
 
 
-def test_reading_paths_reference_existing_models():
-    import re
-    from p2i_kg.store import seed_graph
-    source = (Path(__file__).parents[1]/'src/p2i_kg/static/study.js').read_text()
-    paths = re.findall(r"models:\[([^\]]+)\]", source)
-    models = {node.id for node in seed_graph().nodes if node.kind == 'model'}
-    assert len(paths) == 5
-    for path in paths:
-        assert {'model:'+key for key in re.findall(r"'([^']+)'", path)} <= models
+def test_default_view_is_a_map_without_course_screens():
+    source = (Path(__file__).parents[1]/'src/p2i_kg/static/index.html').read_text()
+    assert 'id="map"' in source and 'id="detail"' in source
+    assert 'data-route="learn"' not in source and 'id="lesson"' not in source
+    assert 'src="./app.js"' in source and 'href="./map.css"' in source
 
 
 def test_static_client_preserves_semantic_results(tmp_path):
