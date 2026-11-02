@@ -1578,6 +1578,170 @@
       "kind": "task",
       "label": "Novel-view synthesis",
       "summary": "알려진 카메라 영상으로 학습한 장면의 새 시점을 렌더링합니다."
+    },
+    {
+      "id": "paper:perceiver",
+      "kind": "paper",
+      "label": "Perceiver: General Perception with Iterative Attention",
+      "summary": "비대칭 어텐션으로 대규모 입력을 작은 잠재 배열에 증류하는 일반 지각 아키텍처의 원논문.",
+      "reference_year": 2021,
+      "url": "https://proceedings.mlr.press/v139/jaegle21a.html",
+      "authors": [
+        "Andrew Jaegle",
+        "Felix Gimeno",
+        "Andrew Brock",
+        "Andrew Zisserman",
+        "Oriol Vinyals",
+        "João Carreira"
+      ]
+    },
+    {
+      "id": "paper:graphsage",
+      "kind": "paper",
+      "label": "Inductive Representation Learning on Large Graphs",
+      "summary": "이웃 특징을 표본화하고 집계하는 함수로 보지 못한 노드의 표현을 생성하는 GraphSAGE 원논문.",
+      "reference_year": 2017,
+      "url": "https://arxiv.org/abs/1706.02216",
+      "authors": [
+        "William L. Hamilton",
+        "Rex Ying",
+        "Jure Leskovec"
+      ]
+    },
+    {
+      "id": "model:perceiver",
+      "kind": "model",
+      "label": "Perceiver",
+      "summary": "입력 크기와 독립적인 작은 잠재 배열이 비대칭 교차 어텐션으로 다양한 모달리티를 처리합니다.",
+      "reference_year": 2021,
+      "family": "multimodal",
+      "runtime_id": "perceiver",
+      "runtime_note": "12개의 8차원 입력을 4개의 학습 잠재 벡터로 증류한 뒤 잠재 self-attention과 분류기를 실행합니다. 길이를 바꿔도 잠재 병목 크기는 고정되는 무작위 초기화 구조 예제입니다.",
+      "aliases": [
+        "Perceiver"
+      ]
+    },
+    {
+      "id": "model:graphsage",
+      "kind": "model",
+      "label": "GraphSAGE",
+      "summary": "노드 자체 특징과 표본화한 이웃 특징의 학습 가능한 집계 함수로 보지 못한 노드의 표현을 생성합니다.",
+      "reference_year": 2017,
+      "family": "graph",
+      "runtime_id": "graphsage",
+      "runtime_note": "5개 노드의 전체 이웃 평균을 사용해 표본화 변동을 없앤 GraphSAGE-mean 한 층 예제입니다. 자체·이웃 변환과 노드 분류기를 별도 P2I 모듈로 노출합니다.",
+      "aliases": [
+        "Graph SAGE",
+        "Sample and Aggregate"
+      ]
+    },
+    {
+      "id": "concept:latent_bottleneck",
+      "kind": "concept",
+      "label": "Latent bottleneck",
+      "summary": "입력 크기보다 작은 고정 크기 잠재 배열에서 대부분의 처리를 수행합니다."
+    },
+    {
+      "id": "concept:asymmetric_attention",
+      "kind": "concept",
+      "label": "Asymmetric attention",
+      "summary": "작은 잠재 질의가 큰 입력을 key/value로 조회해 계산량을 입력 크기에 선형으로 제한합니다."
+    },
+    {
+      "id": "concept:modality_agnostic_input",
+      "kind": "concept",
+      "label": "Modality-agnostic input",
+      "summary": "격자 등 특정 입력 구조를 가정하지 않고 바이트나 좌표화된 입력 특징을 처리합니다."
+    },
+    {
+      "id": "concept:inductive_graph_learning",
+      "kind": "concept",
+      "label": "Inductive graph learning",
+      "summary": "훈련에 없던 노드나 그래프에도 공유 집계 함수를 적용해 표현을 생성합니다."
+    },
+    {
+      "id": "concept:neighborhood_sampling",
+      "kind": "concept",
+      "label": "Neighborhood sampling",
+      "summary": "각 계층에서 고정 수의 이웃을 표본화해 계산 범위를 제한합니다."
+    },
+    {
+      "id": "concept:mean_aggregation",
+      "kind": "concept",
+      "label": "Mean neighborhood aggregation",
+      "summary": "이웃 특징을 순서 불변 평균으로 결합합니다."
+    },
+    {
+      "id": "concept:sample_and_aggregate",
+      "kind": "concept",
+      "label": "Sample and aggregate",
+      "summary": "이웃 표본화와 집계를 반복해 중심 노드의 표현을 갱신합니다."
+    },
+    {
+      "id": "component:perceiver_input_projection",
+      "kind": "component",
+      "label": "Perceiver input projection",
+      "summary": "입력 특징을 잠재 배열과 같은 채널 폭으로 투영합니다."
+    },
+    {
+      "id": "component:latent_array",
+      "kind": "component",
+      "label": "Learned latent array",
+      "summary": "입력 길이와 무관한 학습 가능한 고정 개수 잠재 질의입니다."
+    },
+    {
+      "id": "component:perceiver_cross_attention",
+      "kind": "component",
+      "label": "Input-to-latent cross-attention",
+      "summary": "잠재 배열이 큰 입력 배열에서 정보를 읽어옵니다."
+    },
+    {
+      "id": "component:latent_processor",
+      "kind": "component",
+      "label": "Latent Transformer processor",
+      "summary": "입력 크기와 무관한 잠재 배열 안에서 self-attention을 수행합니다."
+    },
+    {
+      "id": "component:perceiver_classifier",
+      "kind": "component",
+      "label": "Perceiver classifier",
+      "summary": "처리된 잠재 표현을 모아 분류 점수를 냅니다."
+    },
+    {
+      "id": "component:neighbor_aggregator",
+      "kind": "component",
+      "label": "Neighborhood aggregator",
+      "summary": "노드마다 이웃 특징을 순서 불변 함수로 결합합니다."
+    },
+    {
+      "id": "component:self_projection",
+      "kind": "component",
+      "label": "GraphSAGE self projection",
+      "summary": "중심 노드 자체 특징을 공유 가중치로 변환합니다."
+    },
+    {
+      "id": "component:neighbor_projection",
+      "kind": "component",
+      "label": "GraphSAGE neighbor projection",
+      "summary": "집계한 이웃 특징을 공유 가중치로 변환합니다."
+    },
+    {
+      "id": "component:node_classifier",
+      "kind": "component",
+      "label": "Node classifier",
+      "summary": "각 노드의 GraphSAGE 표현에서 범주 점수를 예측합니다."
+    },
+    {
+      "id": "objective:graph_context_prediction",
+      "kind": "objective",
+      "label": "Graph context prediction",
+      "summary": "관측된 이웃 쌍의 유사도를 높이고 음성 표본의 유사도를 낮추는 비지도 목적입니다."
+    },
+    {
+      "id": "task:unseen_node_representation",
+      "kind": "task",
+      "label": "Unseen-node representation",
+      "summary": "훈련 중 보지 못한 노드나 새 그래프의 특징에서 표현을 생성합니다."
     }
   ],
   "edges": [
@@ -5639,6 +5803,556 @@
         "paper:nerf"
       ],
       "locator": "Paper Abstract, §6"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "모델의 원문과 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Title; official deepmind-research/perceiver/perceiver.py"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "uses",
+      "target": "concept:latent_bottleneck",
+      "basis": "documented",
+      "explanation": "Perceiver의 입력 증류와 일반 입력 처리 구조입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Abstract; §2.1, Fig.2"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "uses",
+      "target": "concept:asymmetric_attention",
+      "basis": "documented",
+      "explanation": "Perceiver의 입력 증류와 일반 입력 처리 구조입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§2.1, Fig.2"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "uses",
+      "target": "concept:modality_agnostic_input",
+      "basis": "documented",
+      "explanation": "Perceiver의 입력 증류와 일반 입력 처리 구조입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Abstract; §1"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "has_component",
+      "target": "component:perceiver_input_projection",
+      "basis": "documented",
+      "explanation": "원논문과 공식 구현에 대응하는 구성 요소입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§2.1; official perceiver.py InputPreprocessor"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "has_component",
+      "target": "component:latent_array",
+      "basis": "documented",
+      "explanation": "원논문과 공식 구현에 대응하는 구성 요소입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§2.1; official perceiver.py PerceiverEncoder"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "has_component",
+      "target": "component:perceiver_cross_attention",
+      "basis": "documented",
+      "explanation": "원논문과 공식 구현에 대응하는 구성 요소입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§2.1, Fig.2; official perceiver.py CrossAttention"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "has_component",
+      "target": "component:latent_processor",
+      "basis": "documented",
+      "explanation": "원논문과 공식 구현에 대응하는 구성 요소입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§2.1, Fig.2; official perceiver.py SelfAttention"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "has_component",
+      "target": "component:perceiver_classifier",
+      "basis": "documented",
+      "explanation": "원논문과 공식 구현에 대응하는 구성 요소입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§3; official perceiver.py classification decoder"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "분류 실험은 지도 분류 손실로 학습합니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§3.1–3.4"
+    },
+    {
+      "source": "model:perceiver",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "영상·음성·점군 등 여러 입력의 분류에 적용됩니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Abstract; §3"
+    },
+    {
+      "source": "component:perceiver_cross_attention",
+      "relation": "uses",
+      "target": "concept:asymmetric_attention",
+      "basis": "documented",
+      "explanation": "잠재 질의와 입력 key/value의 크기가 다른 비대칭 어텐션입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§2.1, Fig.2"
+    },
+    {
+      "source": "component:latent_processor",
+      "relation": "uses",
+      "target": "concept:self_attention",
+      "basis": "documented",
+      "explanation": "작은 잠재 배열 안에서 self-attention을 반복합니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§2.1, Fig.2"
+    },
+    {
+      "source": "concept:asymmetric_attention",
+      "relation": "subconcept_of",
+      "target": "concept:cross_attention",
+      "basis": "documented",
+      "explanation": "잠재 질의와 입력 key/value 사이의 교차 어텐션입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "§2.1"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "모델의 원문과 저자 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Title; official williamleif/GraphSAGE models.py and aggregators.py"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "uses",
+      "target": "concept:inductive_graph_learning",
+      "basis": "documented",
+      "explanation": "공유 함수로 이웃을 표본화·집계하는 귀납 구조입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Abstract; §1"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "uses",
+      "target": "concept:neighborhood_sampling",
+      "basis": "documented",
+      "explanation": "공유 함수로 이웃을 표본화·집계하는 귀납 구조입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§2, Algorithm 1"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "uses",
+      "target": "concept:mean_aggregation",
+      "basis": "documented",
+      "explanation": "공유 함수로 이웃을 표본화·집계하는 귀납 구조입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "uses",
+      "target": "concept:sample_and_aggregate",
+      "basis": "documented",
+      "explanation": "공유 함수로 이웃을 표본화·집계하는 귀납 구조입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§2, Algorithm 1"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "uses",
+      "target": "concept:message_passing",
+      "basis": "documented",
+      "explanation": "공유 함수로 이웃을 표본화·집계하는 귀납 구조입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§2, Algorithm 1"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "has_component",
+      "target": "component:neighbor_aggregator",
+      "basis": "documented",
+      "explanation": "GraphSAGE-mean 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§2–3; official graphsage/aggregators.py"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "has_component",
+      "target": "component:self_projection",
+      "basis": "documented",
+      "explanation": "GraphSAGE-mean 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§2, Eq.1; official graphsage/models.py"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "has_component",
+      "target": "component:neighbor_projection",
+      "basis": "documented",
+      "explanation": "GraphSAGE-mean 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§2, Eq.1; official graphsage/aggregators.py MeanAggregator"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "has_component",
+      "target": "component:node_classifier",
+      "basis": "documented",
+      "explanation": "GraphSAGE-mean 실행 경로의 실제 구성 요소입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§4; official graphsage/supervised_models.py"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "지도 노드 분류 목적을 지원합니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§3.2, §4"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "trained_with",
+      "target": "objective:graph_context_prediction",
+      "basis": "documented",
+      "explanation": "음성 표본을 사용하는 그래프 문맥 예측 목적을 제시합니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§3.2, Eq.2"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "applied_to",
+      "target": "task:node_classification",
+      "basis": "documented",
+      "explanation": "보지 못한 노드의 분류 벤치마크에서 평가합니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Abstract; §4"
+    },
+    {
+      "source": "model:graphsage",
+      "relation": "applied_to",
+      "target": "task:unseen_node_representation",
+      "basis": "documented",
+      "explanation": "새 노드와 완전히 새 그래프에 표현 함수를 적용합니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Abstract; §1"
+    },
+    {
+      "source": "component:neighbor_aggregator",
+      "relation": "uses",
+      "target": "concept:mean_aggregation",
+      "basis": "documented",
+      "explanation": "실행 예제는 논문의 mean aggregator 변형을 사용합니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§3.1; official aggregators.py MeanAggregator"
+    },
+    {
+      "source": "component:neighbor_aggregator",
+      "relation": "uses",
+      "target": "concept:neighborhood_sampling",
+      "basis": "documented",
+      "explanation": "원 아키텍처는 계층별 고정 크기 이웃 표본을 집계합니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§2, Algorithm 1"
+    },
+    {
+      "source": "concept:mean_aggregation",
+      "relation": "subconcept_of",
+      "target": "concept:sample_and_aggregate",
+      "basis": "documented",
+      "explanation": "평균은 sample-and-aggregate의 구체적 집계 함수입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "concept:sample_and_aggregate",
+      "relation": "subconcept_of",
+      "target": "concept:message_passing",
+      "basis": "documented",
+      "explanation": "표본 이웃의 정보를 반복 전달해 노드 표현을 갱신합니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "§2, Algorithm 1"
+    },
+    {
+      "source": "concept:latent_bottleneck",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Paper §2–3; official implementation modules"
+    },
+    {
+      "source": "concept:asymmetric_attention",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Paper §2–3; official implementation modules"
+    },
+    {
+      "source": "concept:modality_agnostic_input",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Paper §2–3; official implementation modules"
+    },
+    {
+      "source": "concept:inductive_graph_learning",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "concept:neighborhood_sampling",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "concept:mean_aggregation",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "concept:sample_and_aggregate",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "component:perceiver_input_projection",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Paper §2–3; official implementation modules"
+    },
+    {
+      "source": "component:latent_array",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Paper §2–3; official implementation modules"
+    },
+    {
+      "source": "component:perceiver_cross_attention",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Paper §2–3; official implementation modules"
+    },
+    {
+      "source": "component:latent_processor",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Paper §2–3; official implementation modules"
+    },
+    {
+      "source": "component:perceiver_classifier",
+      "relation": "documented_in",
+      "target": "paper:perceiver",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:perceiver"
+      ],
+      "locator": "Paper §2–3; official implementation modules"
+    },
+    {
+      "source": "component:neighbor_aggregator",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "component:self_projection",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "component:neighbor_projection",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "component:node_classifier",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "objective:graph_context_prediction",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
+    },
+    {
+      "source": "task:unseen_node_representation",
+      "relation": "documented_in",
+      "target": "paper:graphsage",
+      "basis": "documented",
+      "explanation": "정의와 역할의 원문 및 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:graphsage"
+      ],
+      "locator": "Paper §2–4; official GraphSAGE modules"
     }
   ]
 }
