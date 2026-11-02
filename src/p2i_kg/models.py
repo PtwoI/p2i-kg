@@ -321,6 +321,95 @@ class TinyBYOL(nn.Module):
         for online, target in zip(self.online_encoder.parameters(),
                                   self.target_encoder.parameters()):
             target.mul_(momentum).add_(online, alpha=1. - momentum)
+
+
+class TinyLatentDiffusion(nn.Module):
+    """Compact LDM path: first-stage compression, conditioned latent denoising.
+
+    The fixed example exposes the architectural boundary between the image
+    autoencoder and diffusion model. It predicts one latent noise field; it is
+    not a multi-step sampler or a reproduction of a trained text-to-image LDM.
+    """
+    def __init__(self):
+        super().__init__()
+        import torch
+        from .extended_models import TinyUNet
+        self.first_stage_encoder = nn.Sequential(
+            nn.Conv2d(3, 8, 3, stride=2, padding=1), nn.SiLU(),
+            nn.Conv2d(8, 8, 3, padding=1))
+        self.first_stage_decoder = nn.Sequential(
+            nn.Conv2d(8, 8, 3, padding=1), nn.SiLU(),
+            nn.ConvTranspose2d(8, 3, 4, stride=2, padding=1))
+        self.condition_encoder = nn.Sequential(
+            nn.Linear(8, 16), nn.SiLU(), nn.Linear(16, 8))
+        self.time_embedding = nn.Sequential(
+            nn.Embedding(10, 8), nn.Linear(8, 8), nn.SiLU())
+        self.latent_denoiser = TinyUNet(8, 8)
+        self.register_buffer('alpha_bar',
+            torch.cumprod(1 - torch.linspace(.0001, .02, 10), 0))
+
+    def forward(self, images, condition_tokens, noise, timestep):
+        latent = self.first_stage_encoder(images)
+        alpha = self.alpha_bar[timestep].reshape(-1, 1, 1, 1)
+        noisy = alpha.sqrt() * latent + (1 - alpha).sqrt() * noise
+        condition = self.condition_encoder(condition_tokens).mean(1)
+        context = condition + self.time_embedding(timestep)
+        predicted_noise = self.latent_denoiser(
+            noisy + context.unsqueeze(-1).unsqueeze(-1))
+        return predicted_noise, self.first_stage_decoder(predicted_noise)
+
+    @staticmethod
+    def denoising_loss(predicted_noise, noise):
+        return (predicted_noise - noise).square().mean()
+
+
+class AdaLNDiTBlock(nn.Module):
+    """DiT transformer block with timestep/class adaptive normalization."""
+    def __init__(self, width=16):
+        super().__init__()
+        self.norm1 = nn.LayerNorm(width, elementwise_affine=False)
+        self.attention = nn.MultiheadAttention(width, 2, dropout=0., batch_first=True)
+        self.norm2 = nn.LayerNorm(width, elementwise_affine=False)
+        self.mlp = nn.Sequential(
+            nn.Linear(width, 32), nn.GELU(), nn.Linear(32, width))
+        self.modulation = nn.Sequential(nn.SiLU(), nn.Linear(width, 6 * width))
+
+    def forward(self, tokens, condition):
+        shift_a, scale_a, gate_a, shift_m, scale_m, gate_m = (
+            self.modulation(condition).chunk(6, dim=-1))
+        attention_input = self.norm1(tokens) * (1 + scale_a[:, None]) + shift_a[:, None]
+        attended, _ = self.attention(attention_input, attention_input,
+                                     attention_input, need_weights=False)
+        tokens = tokens + gate_a[:, None] * attended
+        mlp_input = self.norm2(tokens) * (1 + scale_m[:, None]) + shift_m[:, None]
+        return tokens + gate_m[:, None] * self.mlp(mlp_input)
+
+
+class TinyDiT(nn.Module):
+    """Small class-conditional latent Diffusion Transformer noise predictor."""
+    def __init__(self):
+        super().__init__()
+        import torch
+        self.patch_embed = nn.Conv2d(4, 16, kernel_size=2, stride=2)
+        self.time_embed = nn.Sequential(
+            nn.Embedding(10, 16), nn.Linear(16, 16), nn.SiLU())
+        self.label_embed = nn.Embedding(5, 16)
+        self.blocks = nn.ModuleList([AdaLNDiTBlock(16), AdaLNDiTBlock(16)])
+        self.final_norm = nn.LayerNorm(16)
+        self.final_layer = nn.Linear(16, 16)
+        self.register_buffer('position',
+            torch.arange(256).reshape(1, 16, 16).float() / 256)
+
+    def forward(self, latent, timestep, label):
+        tokens = self.patch_embed(latent).flatten(2).transpose(1, 2) + self.position
+        condition = self.time_embed(timestep) + self.label_embed(label)
+        for block in self.blocks:
+            tokens = block(tokens, condition)
+        patches = self.final_layer(self.final_norm(tokens))
+        batch = latent.shape[0]
+        # Inverse of 2x2 patchification: (B, 16 tokens, 4*2*2) -> (B, 4, 8, 8).
+        return patches.reshape(batch, 4, 4, 4, 2, 2).permute(
+            0, 1, 2, 4, 3, 5).reshape(batch, 4, 8, 8)
         for online, target in zip(self.online_projector.parameters(),
                                   self.target_projector.parameters()):
             target.mul_(momentum).add_(online, alpha=1. - momentum)
