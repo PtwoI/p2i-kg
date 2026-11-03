@@ -4,6 +4,19 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'senet': [('component:convolution', 'stem.0'),
+        ('component:se_residual_block', 'block'),
+        ('component:squeeze_pool', 'block.se.squeeze'),
+        ('component:excitation_mlp', 'block.se.excitation'),
+        ('component:channel_scale', 'block.se')],
+    's4': [('component:s4_input_projection', 'input_projection'),
+        ('component:s4_state_kernel', 'state_kernel'),
+        ('component:s4_normalization', 'normalization')],
+    'retnet': [('component:retention_qkv', 'retention.qkv'),
+        ('component:retention_core', 'retention'),
+        ('component:retention_output_projection', 'retention.output'),
+        ('component:retention_gate', 'output_gate'),
+        ('component:retention_output_projection', 'output_projection')],
     'moco': [('component:query_encoder', 'query_encoder'),
         ('component:key_encoder', 'key_encoder'),
         ('component:query_projector', 'query_projector'),

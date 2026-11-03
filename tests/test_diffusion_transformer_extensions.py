@@ -83,5 +83,5 @@ def test_ldm_and_dit_outputs_and_gradient_paths():
 
 def test_every_model_has_runtime_and_scope():
     models = [node for node in seed_graph().nodes if node.kind == 'model']
-    assert len(models) == 46
+    assert len(models) == 49
     assert all(node.runtime_id and node.runtime_note for node in models)

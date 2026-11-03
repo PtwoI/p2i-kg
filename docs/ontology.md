@@ -81,8 +81,8 @@ its metadata, connect the model to precise concepts/components/objectives/tasks,
 then add a runtime where it improves understanding. If P2I cannot represent a
 necessary module, add a trusted reconstruction adapter and exercise tracing,
 editing, independent checkpoint restoration and backward before binding it.
-Upcoming useful branches include latent diffusion/DiT, Mamba-2,
-self-supervised vision models and additional graph architectures.
+Useful future branches should continue to add architectural differences rather
+than near-duplicate scale variants, while preserving executable coverage.
 
 The bundled Perceiver example fixes four latent queries while allowing the input
 length to vary; its input projection, latent array, cross-attention, latent
@@ -112,6 +112,13 @@ example exposes learnable-epsilon sum aggregation and graph-level sum readout.
 The Mamba-2 example isolates the input split, a small SSD recurrence, output
 gate and projection; it documents, but does not pretend to reproduce, the
 official CUDA chunk-scan kernel.
+
+The SENet example binds the residual block, global squeeze and excitation MLP
+that produce input-dependent channel scales. The S4 example exposes a compact
+diagonal S4D-style state kernel, residual normalization and projections while
+the catalog retains the original S4 DPLR/Cauchy-kernel contribution. The RetNet
+example executes parallel causal retention with two decay scales and binds its
+QKV projection, retention core, gate and output projections.
 
 The bundled LDM and DiT examples connect two successive diffusion changes. LDM
 separates first-stage image compression from conditioned latent denoising; DiT

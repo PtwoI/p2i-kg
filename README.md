@@ -3,13 +3,13 @@
 A local educational knowledge graph connecting neural models, building-block
 concepts and representative papers, with live P2I model exploration.
 
-Version 0.2 contains **46 models, 299 nodes and 632 sourced relationships**.
+Version 0.2 contains **49 models, 325 nodes and 680 sourced relationships**.
 Alongside the original Perceptron/MLP/CNN/RNN/LSTM/GRU/ResNet/Transformer path,
 it includes VGG, Inception, DenseNet, MobileNet, EfficientNet, ConvNeXt, U-Net,
 BERT, GPT-2, T5, ViT, Swin, RoFormer, LLaMA (2023), VAE, GAN, DDPM, GCN, GAT,
 CLIP, Switch Transformer, Mamba, MLP-Mixer, MAE, DETR, NeRF, Perceiver,
 GraphSAGE, Deep Sets, PointNet, SimCLR, BYOL, Latent Diffusion, DiT, MoCo, DINO,
-GIN and Mamba-2. Reference years
+GIN, Mamba-2, SENet, S4 and RetNet. Reference years
 identify first-public-paper years, not universal invention dates. Each claim
 retains its evidence and its documented, structural or pedagogical interpretation.
 
@@ -60,6 +60,11 @@ They expose shared per-element/point encoders and their distinct symmetric
 reductions (sum versus max) as actual P2I module bindings. The PointNet runtime
 focuses on its core classification path and omits the paper's optional T-Nets
 and segmentation branch; those structures remain represented in the ontology.
+
+SENet, S4 and RetNet add three complementary executable paths: channel-wise
+squeeze/excitation in a residual CNN, a compact diagonal S4D-style state-space
+recurrence, and parallel causal multi-scale retention. Their runtime notes keep
+these small structural examples distinct from paper-scale implementations.
 
 The Perceptron example uses a real threshold and is not differentiable. Other
 bundled models are small educational examples, not full reproductions of every

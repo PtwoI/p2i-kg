@@ -19,7 +19,7 @@ NEW = ('moco', 'dino', 'gin', 'mamba2')
 def test_extension_is_additive_and_all_models_remain_executable():
     graph = seed_graph()
     models = [node for node in graph.nodes if node.kind == 'model']
-    assert len(models) == 46
+    assert len(models) == 49
     assert {f'model:{name}' for name in NEW} <= {node.id for node in models}
     assert all(node.runtime_id and node.runtime_note for node in models)
     fragment = json.loads((Path(__file__).parents[1] /
