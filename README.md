@@ -3,13 +3,13 @@
 A local educational knowledge graph connecting neural models, building-block
 concepts and representative papers, with live P2I model exploration.
 
-Version 0.2 contains **49 models, 325 nodes and 680 sourced relationships**.
+Version 0.2 contains **52 models, 353 nodes and 726 sourced relationships**.
 Alongside the original Perceptron/MLP/CNN/RNN/LSTM/GRU/ResNet/Transformer path,
 it includes VGG, Inception, DenseNet, MobileNet, EfficientNet, ConvNeXt, U-Net,
 BERT, GPT-2, T5, ViT, Swin, RoFormer, LLaMA (2023), VAE, GAN, DDPM, GCN, GAT,
 CLIP, Switch Transformer, Mamba, MLP-Mixer, MAE, DETR, NeRF, Perceiver,
 GraphSAGE, Deep Sets, PointNet, SimCLR, BYOL, Latent Diffusion, DiT, MoCo, DINO,
-GIN, Mamba-2, SENet, S4 and RetNet. Reference years
+GIN, Mamba-2, SENet, S4, RetNet, Neural ODE, Fourier Neural Operator and RWKV. Reference years
 identify first-public-paper years, not universal invention dates. Each claim
 retains its evidence and its documented, structural or pedagogical interpretation.
 
@@ -65,6 +65,11 @@ SENet, S4 and RetNet add three complementary executable paths: channel-wise
 squeeze/excitation in a residual CNN, a compact diagonal S4D-style state-space
 recurrence, and parallel causal multi-scale retention. Their runtime notes keep
 these small structural examples distinct from paper-scale implementations.
+
+Neural ODE, FNO and RWKV add continuous-depth integration, Fourier-domain
+operator learning and attention-free recurrent language modeling. Their fixed
+examples expose real vector-field/solver, spectral/local and time/channel-mix
+module boundaries while runtime notes delimit omitted production features.
 
 The Perceptron example uses a real threshold and is not differentiable. Other
 bundled models are small educational examples, not full reproductions of every
