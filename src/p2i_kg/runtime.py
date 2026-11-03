@@ -10,6 +10,7 @@ BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18'
     'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
     'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet',
     'neuralode', 'fno', 'rwkv')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('tcn', 'nbeats', 'tabnet')
 RUNTIME_IDS = BASE_RUNTIME_IDS + EXTENDED_IDS
 
 
@@ -90,6 +91,15 @@ def make_model(runtime_id):
         if runtime_id == 'rwkv':
             from .models import TinyRWKV
             return TinyRWKV().eval(), (torch.randint(0, 32, (2, 10)),)
+        if runtime_id == 'tcn':
+            from .models import TinyTCN
+            return TinyTCN().eval(), (torch.randn(2, 16, 4),)
+        if runtime_id == 'nbeats':
+            from .models import TinyNBEATS
+            return TinyNBEATS().eval(), (torch.randn(2, 12),)
+        if runtime_id == 'tabnet':
+            from .models import TinyTabNet
+            return TinyTabNet().eval(), (torch.randn(4, 10),)
         if runtime_id == 'ldm':
             from .models import TinyLatentDiffusion
             return TinyLatentDiffusion().eval(), (

@@ -725,6 +725,124 @@ class TinyRWKV(nn.Module):
         return self.lm_head(hidden)
 
 
+class CausalConv1d(nn.Module):
+    """Left-padded one-dimensional convolution with no future leakage."""
+    def __init__(self, in_channels, out_channels, kernel_size=3, dilation=1):
+        super().__init__()
+        self.left_padding = (kernel_size - 1) * dilation
+        self.convolution = nn.Conv1d(
+            in_channels, out_channels, kernel_size, dilation=dilation,
+            padding=self.left_padding)
+
+    def forward(self, sequence):
+        convolved = self.convolution(sequence)
+        return convolved[..., :sequence.shape[-1]]
+
+
+class TemporalResidualBlock(nn.Module):
+    """Two dilated causal convolutions and a residual projection."""
+    def __init__(self, in_channels, out_channels, dilation):
+        super().__init__()
+        self.causal_one = CausalConv1d(in_channels, out_channels, 3, dilation)
+        self.causal_two = CausalConv1d(out_channels, out_channels, 3, dilation)
+        self.activation = nn.ReLU()
+        self.residual = (nn.Conv1d(in_channels, out_channels, 1)
+                         if in_channels != out_channels else nn.Identity())
+
+    def forward(self, sequence):
+        hidden = self.activation(self.causal_one(sequence))
+        hidden = self.causal_two(hidden)
+        return self.activation(hidden + self.residual(sequence))
+
+
+class TinyTCN(nn.Module):
+    """Compact TCN with exponentially dilated causal residual blocks."""
+    def __init__(self):
+        super().__init__()
+        self.temporal_blocks = nn.Sequential(
+            TemporalResidualBlock(4, 8, 1),
+            TemporalResidualBlock(8, 8, 2),
+            TemporalResidualBlock(8, 8, 4))
+        self.sequence_head = nn.Linear(8, 3)
+
+    def forward(self, sequence):
+        hidden = self.temporal_blocks(sequence.transpose(1, 2))
+        return self.sequence_head(hidden[:, :, -1])
+
+
+class NBeatsBlock(nn.Module):
+    """Fully connected block producing backward and forward basis coefficients."""
+    def __init__(self, backcast_length=12, forecast_length=4, width=32):
+        super().__init__()
+        self.block_mlp = nn.Sequential(
+            nn.Linear(backcast_length, width), nn.ReLU(),
+            nn.Linear(width, width), nn.ReLU())
+        self.backcast_head = nn.Linear(width, backcast_length)
+        self.forecast_head = nn.Linear(width, forecast_length)
+
+    def forward(self, backcast):
+        hidden = self.block_mlp(backcast)
+        return self.backcast_head(hidden), self.forecast_head(hidden)
+
+
+class TinyNBEATS(nn.Module):
+    """Two-block N-BEATS forecaster with doubly residual stacking."""
+    def __init__(self):
+        super().__init__()
+        self.blocks = nn.ModuleList([NBeatsBlock(), NBeatsBlock()])
+
+    def forward(self, history):
+        import torch
+        residual = history
+        forecast = torch.zeros(history.shape[0], 4, device=history.device,
+                               dtype=history.dtype)
+        for block in self.blocks:
+            backcast, block_forecast = block(residual)
+            residual = residual - backcast
+            forecast = forecast + block_forecast
+        return forecast
+
+
+class TabNetFeatureTransformer(nn.Module):
+    """Small gated feature transform used at one TabNet decision step."""
+    def __init__(self, features=10, width=16):
+        super().__init__()
+        self.projection = nn.Linear(features, 2 * width)
+        self.normalization = nn.LayerNorm(2 * width)
+
+    def forward(self, features):
+        import torch
+        value, gate = self.normalization(self.projection(features)).chunk(2, -1)
+        return value * torch.sigmoid(gate)
+
+
+class TinyTabNet(nn.Module):
+    """Two-step attentive tabular network exposing masks and decision aggregation."""
+    def __init__(self):
+        super().__init__()
+        self.input_normalization = nn.BatchNorm1d(10)
+        self.attentive_transformers = nn.ModuleList([
+            nn.Linear(16, 10), nn.Linear(16, 10)])
+        self.feature_transformers = nn.ModuleList([
+            TabNetFeatureTransformer(), TabNetFeatureTransformer()])
+        self.decision_aggregation = nn.Linear(16, 4)
+
+    def forward(self, table):
+        import torch
+        features = self.input_normalization(table)
+        prior = torch.ones_like(features)
+        decision = torch.zeros(table.shape[0], 16, device=table.device,
+                               dtype=table.dtype)
+        context = torch.zeros_like(decision)
+        for attentive, transform in zip(self.attentive_transformers,
+                                        self.feature_transformers):
+            mask = torch.softmax(attentive(context) + torch.log(prior + 1e-6), -1)
+            context = transform(mask * features)
+            decision = decision + torch.relu(context)
+            prior = prior * (1.5 - mask)
+        return self.decision_aggregation(decision)
+
+
 class TinyLatentDiffusion(nn.Module):
     """Compact LDM path: first-stage compression, conditioned latent denoising.
 
