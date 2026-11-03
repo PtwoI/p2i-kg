@@ -8,7 +8,8 @@ from .extended_registry import EXTENDED_IDS
 BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18',
     'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr',
     'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
-    'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet')
+    'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet',
+    'neuralode', 'fno', 'rwkv')
 RUNTIME_IDS = BASE_RUNTIME_IDS + EXTENDED_IDS
 
 
@@ -80,6 +81,15 @@ def make_model(runtime_id):
         if runtime_id == 'retnet':
             from .models import TinyRetNet
             return TinyRetNet().eval(), (torch.randn(2, 12, 8),)
+        if runtime_id == 'neuralode':
+            from .models import TinyNeuralODE
+            return TinyNeuralODE().eval(), (torch.randn(3, 6),)
+        if runtime_id == 'fno':
+            from .models import TinyFNO
+            return TinyFNO().eval(), (torch.randn(2, 1, 32),)
+        if runtime_id == 'rwkv':
+            from .models import TinyRWKV
+            return TinyRWKV().eval(), (torch.randint(0, 32, (2, 10)),)
         if runtime_id == 'ldm':
             from .models import TinyLatentDiffusion
             return TinyLatentDiffusion().eval(), (
