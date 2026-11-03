@@ -127,6 +127,13 @@ recurrent time mixing, gated channel mixing and language readout. Their runtime
 notes explicitly distinguish these compact teaching graphs from adaptive adjoint
 solvers, production neural-operator stacks and official fused RWKV kernels.
 
+The TCN example exposes three exponentially dilated causal residual blocks. The
+N-BEATS example makes backward residual subtraction and forward forecast
+accumulation explicit across two blocks. The TabNet example executes two
+prior-aware attentive feature-selection steps and aggregates their decision
+representations. Their runtime notes delimit omitted regularization, deep
+forecasting ensembles and production sparse/ghost-normalization details.
+
 The bundled LDM and DiT examples connect two successive diffusion changes. LDM
 separates first-stage image compression from conditioned latent denoising; DiT
 keeps that latent diffusion setting while replacing the U-Net with latent patch
