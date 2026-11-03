@@ -17,7 +17,7 @@ def test_semantic_questions_and_explanations():
     assert {'model:bert','model:gpt2','model:vit','model:gat'} <= attended.keys()
     assert 'model:mamba' not in attended
     assert len(attended['model:gpt2']) >= 2
-    assert {x['node']['id'] for x in graph.query(concept='concept:position', objective='objective:autoregressive')} == {'model:gpt2','model:llama'}
+    assert {x['node']['id'] for x in graph.query(concept='concept:position', objective='objective:autoregressive')} == {'model:gpt2','model:llama','model:retnet'}
     assert 'model:unet' in {x['node']['id'] for x in graph.query(task='task:segmentation')}
     assert graph.query(concept='concept:cross_attention', objective='objective:masked_lm') == []
     # extensions must not silently inherit architecture features.
