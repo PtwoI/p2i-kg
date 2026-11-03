@@ -4,6 +4,18 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'tcn': [('component:tcn_temporal_blocks', 'temporal_blocks'),
+        ('component:dilated_causal_convolution', 'temporal_blocks.1.causal_one'),
+        ('component:tcn_residual_path', 'temporal_blocks.1.residual'),
+        ('component:tcn_sequence_head', 'sequence_head')],
+    'nbeats': [('component:nbeats_block_stack', 'blocks'),
+        ('component:nbeats_block_mlp', 'blocks.0.block_mlp'),
+        ('component:backcast_head', 'blocks.0.backcast_head'),
+        ('component:forecast_head', 'blocks.0.forecast_head')],
+    'tabnet': [('component:tabnet_input_normalization', 'input_normalization'),
+        ('component:attentive_transformer', 'attentive_transformers.0'),
+        ('component:feature_transformer', 'feature_transformers.0'),
+        ('component:decision_aggregation', 'decision_aggregation')],
     'neuralode': [('component:ode_input_projection', 'input_projection'),
         ('component:neural_vector_field', 'vector_field'),
         ('component:differentiable_ode_solver', 'ode_solver'),
