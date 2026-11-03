@@ -4,6 +4,22 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'moco': [('component:query_encoder', 'query_encoder'),
+        ('component:key_encoder', 'key_encoder'),
+        ('component:query_projector', 'query_projector'),
+        ('component:key_projector', 'key_projector'),
+        ('component:negative_queue', 'negative_queue')],
+    'dino': [('component:student_encoder', 'student_encoder'),
+        ('component:teacher_encoder', 'teacher_encoder'),
+        ('component:student_head', 'student_head'),
+        ('component:teacher_head', 'teacher_head')],
+    'gin': [('component:gin_layer', 'gin_layer'),
+        ('component:graph_sum_pool', 'graph_pool'),
+        ('component:graph_classifier', 'classifier')],
+    'mamba2': [('component:mamba2_input_projection', 'input_projection'),
+        ('component:ssd_core', 'ssd_core'),
+        ('component:mamba2_output_gate', 'output_gate'),
+        ('component:mamba2_output_projection', 'output_projection')],
     'ldm': [('component:first_stage_encoder', 'first_stage_encoder'),
         ('component:first_stage_decoder', 'first_stage_decoder'),
         ('component:conditioning_encoder', 'condition_encoder'),

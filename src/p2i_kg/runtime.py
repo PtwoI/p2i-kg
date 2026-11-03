@@ -8,7 +8,7 @@ from .extended_registry import EXTENDED_IDS
 BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18',
     'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr',
     'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
-    'ldm', 'dit')
+    'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2')
 RUNTIME_IDS = BASE_RUNTIME_IDS + EXTENDED_IDS
 
 
@@ -57,6 +57,20 @@ def make_model(runtime_id):
             # same batch; augmentation itself remains outside the fixed graph.
             return model.eval(), (torch.randn(4, 3, 16, 16),
                                   torch.randn(4, 3, 16, 16))
+        if runtime_id in ('moco', 'dino'):
+            from .models import TinyMoCo, TinyDINO
+            model = TinyMoCo() if runtime_id == 'moco' else TinyDINO()
+            return model.eval(), (torch.randn(4, 3, 16, 16),
+                                  torch.randn(4, 3, 16, 16))
+        if runtime_id == 'gin':
+            from .models import TinyGIN
+            adjacency = torch.tensor([[[0., 1., 1., 0., 0.],
+                [1., 0., 1., 0., 0.], [1., 1., 0., 1., 0.],
+                [0., 0., 1., 0., 1.], [0., 0., 0., 1., 0.]]]).expand(2, -1, -1)
+            return TinyGIN().eval(), (torch.randn(2, 5, 8), adjacency)
+        if runtime_id == 'mamba2':
+            from .models import TinyMamba2
+            return TinyMamba2().eval(), (torch.randn(2, 8, 8),)
         if runtime_id == 'ldm':
             from .models import TinyLatentDiffusion
             return TinyLatentDiffusion().eval(), (

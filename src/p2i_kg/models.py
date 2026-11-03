@@ -323,6 +323,147 @@ class TinyBYOL(nn.Module):
             target.mul_(momentum).add_(online, alpha=1. - momentum)
 
 
+class FixedNegativeQueue(nn.Module):
+    """A registered, normalized MoCo dictionary used without mutation in tracing."""
+    def __init__(self, size=16, width=8):
+        super().__init__()
+        import torch
+        queue = torch.randn(size, width)
+        self.register_buffer('entries', torch.nn.functional.normalize(queue, dim=-1))
+
+    def forward(self):
+        return self.entries
+
+
+class TinyMoCo(nn.Module):
+    """MoCo-shaped query/key encoders with EMA key path and a fixed queue."""
+    def __init__(self):
+        super().__init__()
+        import copy
+        self.query_encoder = TinyViewEncoder()
+        self.query_projector = nn.Linear(16, 8)
+        self.key_encoder = copy.deepcopy(self.query_encoder)
+        self.key_projector = copy.deepcopy(self.query_projector)
+        self.negative_queue = FixedNegativeQueue()
+        for parameter in list(self.key_encoder.parameters()) + list(self.key_projector.parameters()):
+            parameter.requires_grad_(False)
+
+    def forward(self, query_view, key_view):
+        import torch
+        query = torch.nn.functional.normalize(
+            self.query_projector(self.query_encoder(query_view)), dim=-1)
+        with torch.no_grad():
+            key = torch.nn.functional.normalize(
+                self.key_projector(self.key_encoder(key_view)), dim=-1)
+        positive = (query * key).sum(-1, keepdim=True)
+        negatives = query @ self.negative_queue().transpose(0, 1)
+        return torch.cat((positive, negatives), dim=1)
+
+    @__import__('torch').no_grad()
+    def update_key_encoder(self, momentum=.99):
+        pairs = zip(self.query_encoder.parameters(), self.key_encoder.parameters())
+        for query, key in pairs:
+            key.mul_(momentum).add_(query, alpha=1. - momentum)
+        pairs = zip(self.query_projector.parameters(), self.key_projector.parameters())
+        for query, key in pairs:
+            key.mul_(momentum).add_(query, alpha=1. - momentum)
+
+
+class TinyDINO(nn.Module):
+    """Compact DINO student/EMA-teacher self-distillation path."""
+    def __init__(self):
+        super().__init__()
+        import copy
+        self.student_encoder = TinyViewEncoder()
+        self.student_head = nn.Sequential(nn.Linear(16, 16), nn.GELU(), nn.Linear(16, 8))
+        self.teacher_encoder = copy.deepcopy(self.student_encoder)
+        self.teacher_head = copy.deepcopy(self.student_head)
+        self.register_buffer('center', __import__('torch').zeros(1, 8))
+        for parameter in list(self.teacher_encoder.parameters()) + list(self.teacher_head.parameters()):
+            parameter.requires_grad_(False)
+
+    def forward(self, global_view, local_view):
+        import torch
+        student = self.student_head(self.student_encoder(local_view))
+        with torch.no_grad():
+            teacher = self.teacher_head(self.teacher_encoder(global_view)) - self.center
+        return torch.stack((student, teacher), dim=1)
+
+    def self_distillation_loss(self, outputs, student_temperature=.1, teacher_temperature=.04):
+        import torch
+        student_log = torch.nn.functional.log_softmax(outputs[:, 0] / student_temperature, -1)
+        teacher_prob = torch.nn.functional.softmax(outputs[:, 1].detach() / teacher_temperature, -1)
+        return -(teacher_prob * student_log).sum(-1).mean()
+
+
+class GINLayer(nn.Module):
+    """Sum aggregation followed by an MLP, with learnable epsilon."""
+    def __init__(self, width=8):
+        super().__init__()
+        import torch
+        self.epsilon = nn.Parameter(torch.zeros(()))
+        self.mlp = nn.Sequential(nn.Linear(width, 16), nn.ReLU(), nn.Linear(16, width))
+
+    def forward(self, features, adjacency):
+        neighbors = adjacency @ features
+        return self.mlp((1. + self.epsilon) * features + neighbors)
+
+
+class GraphSumPool(nn.Module):
+    def forward(self, features):
+        return features.sum(1)
+
+
+class TinyGIN(nn.Module):
+    """One GIN layer, graph-level sum readout and classifier."""
+    def __init__(self):
+        super().__init__()
+        self.gin_layer = GINLayer()
+        self.graph_pool = GraphSumPool()
+        self.classifier = nn.Linear(8, 3)
+
+    def forward(self, features, adjacency):
+        import torch
+        hidden = torch.relu(self.gin_layer(features, adjacency))
+        return self.classifier(self.graph_pool(hidden))
+
+
+class SSDCore(nn.Module):
+    """Small scalar-transition structured state-space dual recurrence."""
+    def __init__(self, width=16, state_size=4):
+        super().__init__()
+        import torch
+        self.state_input = nn.Linear(width, state_size)
+        self.state_output = nn.Linear(state_size, width)
+        self.log_decay = nn.Parameter(torch.zeros(state_size))
+
+    def forward(self, sequence):
+        import torch
+        state = torch.zeros(sequence.shape[0], self.state_input.out_features,
+                            device=sequence.device, dtype=sequence.dtype)
+        decay = torch.sigmoid(self.log_decay)
+        outputs = []
+        for step in sequence.unbind(1):
+            state = decay * state + self.state_input(step)
+            outputs.append(self.state_output(state))
+        return torch.stack(outputs, dim=1)
+
+
+class TinyMamba2(nn.Module):
+    """Compact Mamba-2/SSD block with input split, SSD core and gated output."""
+    def __init__(self):
+        super().__init__()
+        self.input_projection = nn.Linear(8, 32)
+        self.ssd_core = SSDCore(16, 4)
+        self.output_gate = nn.SiLU()
+        self.output_projection = nn.Linear(16, 8)
+
+    def forward(self, sequence):
+        projected, gate = self.input_projection(sequence).chunk(2, dim=-1)
+        mixed = self.ssd_core(projected)
+        return self.output_projection(mixed * self.output_gate(gate))
+
+
 class TinyLatentDiffusion(nn.Module):
     """Compact LDM path: first-stage compression, conditioned latent denoising.
 
