@@ -105,6 +105,14 @@ online-only predictor and provides an explicit EMA target update. Augmentation
 is outside both fixed runtime graphs; their runtime notes therefore state that
 the two input tensors are already-created views.
 
+The bundled MoCo and DINO examples add two distinct momentum-teacher families:
+MoCo contrasts a query against a fixed queue-backed dictionary, while DINO
+matches a student distribution to a centered, stop-gradient teacher. The GIN
+example exposes learnable-epsilon sum aggregation and graph-level sum readout.
+The Mamba-2 example isolates the input split, a small SSD recurrence, output
+gate and projection; it documents, but does not pretend to reproduce, the
+official CUDA chunk-scan kernel.
+
 The bundled LDM and DiT examples connect two successive diffusion changes. LDM
 separates first-stage image compression from conditioned latent denoising; DiT
 keeps that latent diffusion setting while replacing the U-Net with latent patch

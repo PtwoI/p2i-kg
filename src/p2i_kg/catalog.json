@@ -2248,6 +2248,290 @@
       "kind": "task",
       "label": "Conditional image generation",
       "summary": "텍스트나 클래스 같은 외부 조건에 맞는 이미지를 생성합니다."
+    },
+    {
+      "id": "paper:moco",
+      "kind": "paper",
+      "label": "Momentum Contrast for Unsupervised Visual Representation Learning",
+      "summary": "동적 사전, 모멘텀 키 인코더와 큐를 결합한 MoCo 원논문이며 facebookresearch/moco가 공식 PyTorch 구현입니다.",
+      "reference_year": 2020,
+      "url": "https://openaccess.thecvf.com/content_CVPR_2020/html/He_Momentum_Contrast_for_Unsupervised_Visual_Representation_Learning_CVPR_2020_paper.html",
+      "authors": [
+        "Kaiming He",
+        "Haoqi Fan",
+        "Yuxin Wu",
+        "Saining Xie",
+        "Ross Girshick"
+      ]
+    },
+    {
+      "id": "paper:dino",
+      "kind": "paper",
+      "label": "Emerging Properties in Self-Supervised Vision Transformers",
+      "summary": "레이블 없는 자기증류, 모멘텀 교사, centering과 multi-crop을 결합한 DINO 원논문이며 facebookresearch/dino가 공식 구현입니다.",
+      "reference_year": 2021,
+      "url": "https://openaccess.thecvf.com/content/ICCV2021/html/Caron_Emerging_Properties_in_Self-Supervised_Vision_Transformers_ICCV_2021_paper.html",
+      "authors": [
+        "Mathilde Caron",
+        "Hugo Touvron",
+        "Ishan Misra",
+        "Hervé Jégou",
+        "Julien Mairal",
+        "Piotr Bojanowski",
+        "Armand Joulin"
+      ]
+    },
+    {
+      "id": "paper:gin",
+      "kind": "paper",
+      "label": "How Powerful are Graph Neural Networks?",
+      "summary": "WL 검정과 동등한 표현력을 갖는 injective sum-aggregation GIN을 제안한 원논문이며 weihua916/powerful-gnns가 저자 공식 구현입니다.",
+      "reference_year": 2019,
+      "url": "https://openreview.net/forum?id=ryGs6iA5Km",
+      "authors": [
+        "Keyulu Xu",
+        "Weihua Hu",
+        "Jure Leskovec",
+        "Stefanie Jegelka"
+      ]
+    },
+    {
+      "id": "paper:mamba2",
+      "kind": "paper",
+      "label": "Transformers are SSMs: Generalized Models and Efficient Algorithms Through Structured State Space Duality",
+      "summary": "구조화 상태공간 이중성으로 SSD와 Mamba-2를 도출한 원논문이며 state-spaces/mamba가 저자 공식 구현입니다.",
+      "reference_year": 2024,
+      "url": "https://proceedings.mlr.press/v235/dao24a.html",
+      "authors": [
+        "Tri Dao",
+        "Albert Gu"
+      ]
+    },
+    {
+      "id": "model:moco",
+      "kind": "model",
+      "label": "MoCo",
+      "summary": "모멘텀 갱신 키 인코더와 큐 기반 동적 사전으로 많은 일관된 음성 표본을 제공하는 대조 사전학습 구조입니다.",
+      "reference_year": 2020,
+      "family": "self-supervised",
+      "runtime_id": "moco",
+      "runtime_note": "16×16 두 시점을 query/key CNN과 별도 투영기로 처리하고 16개 고정 음성 큐에 대한 logits를 계산합니다. EMA 갱신은 제공하지만 추적 중 enqueue, 분산 shuffle, 대규모 ResNet 학습과 사전학습 가중치는 포함하지 않습니다.",
+      "aliases": [
+        "Momentum Contrast"
+      ]
+    },
+    {
+      "id": "model:dino",
+      "kind": "model",
+      "label": "DINO",
+      "summary": "학생과 모멘텀 교사의 확률 분포를 centering·sharpening과 함께 맞추는 레이블 없는 자기증류 구조입니다.",
+      "reference_year": 2021,
+      "family": "self-supervised",
+      "runtime_id": "dino",
+      "runtime_note": "16×16 전역·국소 시점을 작은 student/teacher CNN과 2층 head로 처리하고 centered teacher 분포의 자기증류 손실을 제공합니다. multi-crop 생성, EMA·center 갱신 반복, ViT 대규모 학습과 사전학습 가중치는 포함하지 않습니다.",
+      "aliases": [
+        "Self-Distillation with No Labels"
+      ]
+    },
+    {
+      "id": "model:gin",
+      "kind": "model",
+      "label": "GIN",
+      "summary": "이웃 합과 MLP의 injective 갱신으로 WL 검정 수준의 그래프 구별력을 목표로 하는 Graph Isomorphism Network입니다.",
+      "reference_year": 2019,
+      "family": "graph",
+      "runtime_id": "gin",
+      "runtime_note": "5개 노드 그래프 두 개에 한 층의 learnable-epsilon GIN, 그래프 합 readout과 분류기를 실행합니다. 다층 jumping knowledge, 배치 정규화, 데이터셋 학습과 사전학습 가중치는 포함하지 않습니다.",
+      "aliases": [
+        "Graph Isomorphism Network"
+      ]
+    },
+    {
+      "id": "model:mamba2",
+      "kind": "model",
+      "label": "Mamba-2",
+      "summary": "상태공간 모델과 attention의 구조적 이중성을 이용해 SSD 핵심층을 더 큰 head dimension으로 효율화한 시퀀스 구조입니다.",
+      "reference_year": 2024,
+      "family": "state-space",
+      "runtime_id": "mamba2",
+      "runtime_note": "8개 토큰·폭 8 입력을 split projection, 폭 16의 작은 scalar-transition SSD recurrence, SiLU gate와 출력 투영으로 처리합니다. CUDA chunk scan, tensor parallelism, 언어 임베딩·LM head, 대규모 학습과 사전학습 가중치는 포함하지 않습니다.",
+      "aliases": [
+        "State Space Dual Model"
+      ]
+    },
+    {
+      "id": "concept:dynamic_dictionary",
+      "kind": "concept",
+      "label": "Dynamic contrastive dictionary",
+      "summary": "현재 표현 공간과 일관성을 유지하며 학습 중 갱신되는 대조 키 사전입니다."
+    },
+    {
+      "id": "concept:queue_negatives",
+      "kind": "concept",
+      "label": "Queued negatives",
+      "summary": "미니배치 크기와 분리된 FIFO 큐에서 많은 음성 키를 재사용합니다."
+    },
+    {
+      "id": "concept:self_distillation",
+      "kind": "concept",
+      "label": "Self-distillation",
+      "summary": "별도 레이블 없이 교사 네트워크의 출력을 학생 네트워크의 학습 표적으로 사용합니다."
+    },
+    {
+      "id": "concept:multi_crop",
+      "kind": "concept",
+      "label": "Multi-crop views",
+      "summary": "서로 다른 해상도와 범위의 전역·국소 이미지 시점을 함께 사용합니다."
+    },
+    {
+      "id": "concept:teacher_centering",
+      "kind": "concept",
+      "label": "Teacher centering",
+      "summary": "교사 logits의 이동 중심을 제거해 자기증류의 붕괴를 억제합니다."
+    },
+    {
+      "id": "concept:injective_aggregation",
+      "kind": "concept",
+      "label": "Injective neighborhood aggregation",
+      "summary": "서로 다른 이웃 multiset을 구별하도록 합 집계와 MLP를 구성합니다."
+    },
+    {
+      "id": "concept:wl_expressivity",
+      "kind": "concept",
+      "label": "Weisfeiler–Lehman expressivity",
+      "summary": "메시지 전달 그래프 신경망의 구별력을 WL 그래프 동형성 검정과 연결합니다."
+    },
+    {
+      "id": "concept:state_space_duality",
+      "kind": "concept",
+      "label": "Structured state space duality",
+      "summary": "구조화 상태공간 변환과 반분리 행렬 형태의 attention 계산 사이의 동등성을 이용합니다."
+    },
+    {
+      "id": "concept:semiseparable_matrix",
+      "kind": "concept",
+      "label": "Semiseparable sequence matrix",
+      "summary": "낮은 반분리 rank를 가져 recurrent와 parallel 형태 모두로 계산 가능한 인과 행렬입니다."
+    },
+    {
+      "id": "concept:ssd_algorithm",
+      "kind": "concept",
+      "label": "State Space Dual algorithm",
+      "summary": "상태공간 이중성에 기반해 시퀀스를 블록 단위로 병렬 계산하는 핵심 알고리즘입니다."
+    },
+    {
+      "id": "component:query_encoder",
+      "kind": "component",
+      "label": "MoCo query encoder",
+      "summary": "역전파로 직접 갱신되는 query 시점 인코더입니다."
+    },
+    {
+      "id": "component:key_encoder",
+      "kind": "component",
+      "label": "MoCo key encoder",
+      "summary": "query 인코더의 지수 이동 평균으로 갱신되는 키 인코더입니다."
+    },
+    {
+      "id": "component:query_projector",
+      "kind": "component",
+      "label": "MoCo query projector",
+      "summary": "query 표현을 대조 임베딩 공간으로 투영합니다."
+    },
+    {
+      "id": "component:key_projector",
+      "kind": "component",
+      "label": "MoCo key projector",
+      "summary": "key 표현을 동일한 대조 임베딩 공간으로 투영합니다."
+    },
+    {
+      "id": "component:negative_queue",
+      "kind": "component",
+      "label": "MoCo negative queue",
+      "summary": "최근 미니배치의 키를 저장하는 대규모 음성 사전입니다."
+    },
+    {
+      "id": "component:student_encoder",
+      "kind": "component",
+      "label": "DINO student encoder",
+      "summary": "다양한 crop을 받아 직접 최적화되는 학생 시각 인코더입니다."
+    },
+    {
+      "id": "component:teacher_encoder",
+      "kind": "component",
+      "label": "DINO teacher encoder",
+      "summary": "학생 가중치의 모멘텀 평균으로 갱신되는 교사 인코더입니다."
+    },
+    {
+      "id": "component:student_head",
+      "kind": "component",
+      "label": "DINO student head",
+      "summary": "학생 표현을 자기증류 분포 logits로 투영합니다."
+    },
+    {
+      "id": "component:teacher_head",
+      "kind": "component",
+      "label": "DINO teacher head",
+      "summary": "중심화·sharpening 전 교사 logits를 생성합니다."
+    },
+    {
+      "id": "component:gin_layer",
+      "kind": "component",
+      "label": "GIN aggregation layer",
+      "summary": "자기 특징과 이웃 특징의 합을 MLP로 변환하는 GIN 층입니다."
+    },
+    {
+      "id": "component:graph_sum_pool",
+      "kind": "component",
+      "label": "Graph sum readout",
+      "summary": "노드 표현을 합해 그래프 수준 표현을 만듭니다."
+    },
+    {
+      "id": "component:graph_classifier",
+      "kind": "component",
+      "label": "Graph classifier",
+      "summary": "그래프 수준 표현을 클래스 logits로 투영합니다."
+    },
+    {
+      "id": "component:mamba2_input_projection",
+      "kind": "component",
+      "label": "Mamba-2 input projection",
+      "summary": "입력을 SSD 내용 경로와 출력 gate 경로로 분리합니다."
+    },
+    {
+      "id": "component:ssd_core",
+      "kind": "component",
+      "label": "SSD core",
+      "summary": "구조화 상태공간 이중성의 recurrent 또는 chunked 병렬 핵심 변환입니다."
+    },
+    {
+      "id": "component:mamba2_output_gate",
+      "kind": "component",
+      "label": "Mamba-2 output gate",
+      "summary": "입력 의존 gate로 SSD 출력을 조절합니다."
+    },
+    {
+      "id": "component:mamba2_output_projection",
+      "kind": "component",
+      "label": "Mamba-2 output projection",
+      "summary": "gated SSD 표현을 모델 폭으로 되돌립니다."
+    },
+    {
+      "id": "objective:info_nce",
+      "kind": "objective",
+      "label": "InfoNCE dictionary loss",
+      "summary": "양성 query-key 일치를 높이고 동적 사전의 음성 키와 구별합니다."
+    },
+    {
+      "id": "objective:dino_self_distillation",
+      "kind": "objective",
+      "label": "DINO self-distillation loss",
+      "summary": "temperature가 다른 학생·중심화 교사 분포 사이의 교차 엔트로피를 최소화합니다."
+    },
+    {
+      "id": "task:graph_classification",
+      "kind": "task",
+      "label": "Graph classification",
+      "summary": "전체 그래프를 하나의 범주로 분류합니다."
     }
   ],
   "edges": [
@@ -8531,6 +8815,578 @@
         "paper:dit"
       ],
       "locator": "§3; FinalLayer and unpatchify"
+    },
+    {
+      "source": "model:moco",
+      "relation": "documented_in",
+      "target": "paper:moco",
+      "basis": "documented",
+      "explanation": "MoCo의 원논문과 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "§3; Algorithm 1; official facebookresearch/moco builder.py"
+    },
+    {
+      "source": "model:moco",
+      "relation": "uses",
+      "target": "concept:dynamic_dictionary",
+      "basis": "structural",
+      "explanation": "큐와 모멘텀 인코더가 동적 사전을 구성합니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "§3.1–3.2"
+    },
+    {
+      "source": "model:moco",
+      "relation": "uses",
+      "target": "concept:queue_negatives",
+      "basis": "structural",
+      "explanation": "미니배치와 분리된 큐에서 음성 키를 유지합니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "§3.2"
+    },
+    {
+      "source": "model:moco",
+      "relation": "uses",
+      "target": "concept:contrastive",
+      "basis": "structural",
+      "explanation": "query-key 사전 조회를 대조 학습으로 최적화합니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "Eq.1"
+    },
+    {
+      "source": "model:moco",
+      "relation": "has_component",
+      "target": "component:query_encoder",
+      "basis": "structural",
+      "explanation": "직접 학습되는 query 경로입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "Fig.2; Algorithm 1"
+    },
+    {
+      "source": "model:moco",
+      "relation": "has_component",
+      "target": "component:key_encoder",
+      "basis": "structural",
+      "explanation": "모멘텀 key 경로입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "Fig.2; Algorithm 1"
+    },
+    {
+      "source": "model:moco",
+      "relation": "has_component",
+      "target": "component:query_projector",
+      "basis": "structural",
+      "explanation": "대조 임베딩 query 투영입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "§3; official builder.py encoder_q.fc"
+    },
+    {
+      "source": "model:moco",
+      "relation": "has_component",
+      "target": "component:key_projector",
+      "basis": "structural",
+      "explanation": "대조 임베딩 key 투영입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "§3; official builder.py encoder_k.fc"
+    },
+    {
+      "source": "model:moco",
+      "relation": "has_component",
+      "target": "component:negative_queue",
+      "basis": "structural",
+      "explanation": "음성 키 큐입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "Algorithm 1; official builder.py queue"
+    },
+    {
+      "source": "model:moco",
+      "relation": "trained_with",
+      "target": "objective:info_nce",
+      "basis": "structural",
+      "explanation": "양성 키와 큐 음성을 softmax로 구별합니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "Eq.1"
+    },
+    {
+      "source": "model:moco",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "비전 표현 사전학습을 평가합니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "§4–5"
+    },
+    {
+      "source": "model:dino",
+      "relation": "documented_in",
+      "target": "paper:dino",
+      "basis": "documented",
+      "explanation": "DINO의 원논문과 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "§3; official facebookresearch/dino main_dino.py"
+    },
+    {
+      "source": "model:dino",
+      "relation": "uses",
+      "target": "concept:self_distillation",
+      "basis": "structural",
+      "explanation": "교사 분포를 학생의 레이블 없는 표적으로 사용합니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "model:dino",
+      "relation": "uses",
+      "target": "concept:multi_crop",
+      "basis": "structural",
+      "explanation": "전역·국소 crop 사이 일관성을 학습합니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "§3.1, Fig.2"
+    },
+    {
+      "source": "model:dino",
+      "relation": "uses",
+      "target": "concept:teacher_centering",
+      "basis": "structural",
+      "explanation": "교사 출력의 center를 이동 평균으로 보정합니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "§3.1"
+    },
+    {
+      "source": "model:dino",
+      "relation": "has_component",
+      "target": "component:student_encoder",
+      "basis": "structural",
+      "explanation": "직접 최적화되는 학생 backbone입니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "Fig.2; official MultiCropWrapper"
+    },
+    {
+      "source": "model:dino",
+      "relation": "has_component",
+      "target": "component:teacher_encoder",
+      "basis": "structural",
+      "explanation": "모멘텀 교사 backbone입니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "Fig.2; official teacher_without_ddp"
+    },
+    {
+      "source": "model:dino",
+      "relation": "has_component",
+      "target": "component:student_head",
+      "basis": "structural",
+      "explanation": "학생 DINO head입니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "official DINOHead"
+    },
+    {
+      "source": "model:dino",
+      "relation": "has_component",
+      "target": "component:teacher_head",
+      "basis": "structural",
+      "explanation": "교사 DINO head입니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "official DINOHead"
+    },
+    {
+      "source": "model:dino",
+      "relation": "trained_with",
+      "target": "objective:dino_self_distillation",
+      "basis": "structural",
+      "explanation": "학생과 중심화·sharpening 교사 분포를 맞춥니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "Eq.3; DINOLoss"
+    },
+    {
+      "source": "model:dino",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "자기지도 비전 표현을 평가합니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "§4"
+    },
+    {
+      "source": "model:gin",
+      "relation": "documented_in",
+      "target": "paper:gin",
+      "basis": "documented",
+      "explanation": "GIN의 원논문과 저자 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "§4–5; official powerful-gnns models/graphcnn.py"
+    },
+    {
+      "source": "model:gin",
+      "relation": "uses",
+      "target": "concept:message_passing",
+      "basis": "structural",
+      "explanation": "반복 이웃 집계로 노드 표현을 갱신합니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "§2"
+    },
+    {
+      "source": "model:gin",
+      "relation": "uses",
+      "target": "concept:injective_aggregation",
+      "basis": "structural",
+      "explanation": "합과 MLP가 multiset에 대한 injective 함수를 근사합니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "Theorem 3; Eq.4.1"
+    },
+    {
+      "source": "model:gin",
+      "relation": "uses",
+      "target": "concept:wl_expressivity",
+      "basis": "structural",
+      "explanation": "표현력을 WL 검정과 연결합니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "Theorem 3"
+    },
+    {
+      "source": "model:gin",
+      "relation": "has_component",
+      "target": "component:gin_layer",
+      "basis": "structural",
+      "explanation": "sum-MLP 노드 갱신 층입니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "Eq.4.1; GraphCNN"
+    },
+    {
+      "source": "model:gin",
+      "relation": "has_component",
+      "target": "component:graph_sum_pool",
+      "basis": "structural",
+      "explanation": "그래프 수준 합 readout입니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "§4.2; Eq.4.2"
+    },
+    {
+      "source": "model:gin",
+      "relation": "has_component",
+      "target": "component:graph_classifier",
+      "basis": "structural",
+      "explanation": "그래프 분류 선형 head입니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "§4.2"
+    },
+    {
+      "source": "model:gin",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "그래프 분류 레이블로 지도 학습합니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "§6"
+    },
+    {
+      "source": "model:gin",
+      "relation": "applied_to",
+      "target": "task:graph_classification",
+      "basis": "documented",
+      "explanation": "그래프 분류 벤치마크에서 평가합니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "§6.2"
+    },
+    {
+      "source": "model:gin",
+      "relation": "extends",
+      "target": "model:gcn",
+      "basis": "pedagogical",
+      "explanation": "GCN보다 강한 multiset 구별력을 목표로 하는 메시지 전달 계보입니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "§3, Table 1"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "documented_in",
+      "target": "paper:mamba2",
+      "basis": "documented",
+      "explanation": "Mamba-2/SSD의 원논문과 저자 공식 구현 근거입니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§6–7; official state-spaces/mamba mamba2.py and ssd_combined.py"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "uses",
+      "target": "concept:state_space",
+      "basis": "structural",
+      "explanation": "연속 상태를 recurrent하게 갱신하는 SSM입니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§2"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "uses",
+      "target": "concept:state_space_duality",
+      "basis": "structural",
+      "explanation": "SSM과 구조화 attention 행렬의 이중성을 사용합니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§3–5"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "uses",
+      "target": "concept:semiseparable_matrix",
+      "basis": "structural",
+      "explanation": "SSM 변환 행렬을 semiseparable 구조로 해석합니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§3"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "uses",
+      "target": "concept:ssd_algorithm",
+      "basis": "structural",
+      "explanation": "SSD block decomposition으로 병렬 계산합니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§6, Algorithm 1"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "has_component",
+      "target": "component:mamba2_input_projection",
+      "basis": "structural",
+      "explanation": "SSD 입력과 gate 경로를 만듭니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§7; official Mamba2 in_proj"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "has_component",
+      "target": "component:ssd_core",
+      "basis": "structural",
+      "explanation": "핵심 SSD 상태 변환입니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "Algorithm 1; official mamba_chunk_scan_combined"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "has_component",
+      "target": "component:mamba2_output_gate",
+      "basis": "structural",
+      "explanation": "SSD 출력의 입력 의존 gate입니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§7; official gated RMSNorm path"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "has_component",
+      "target": "component:mamba2_output_projection",
+      "basis": "structural",
+      "explanation": "모델 폭으로 되돌리는 출력 투영입니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "official Mamba2 out_proj"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "trained_with",
+      "target": "objective:autoregressive",
+      "basis": "documented",
+      "explanation": "언어 모델링 실험에서 다음 토큰 예측으로 학습합니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§8"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "applied_to",
+      "target": "task:language_modeling",
+      "basis": "documented",
+      "explanation": "언어 모델링에서 Transformer와 비교합니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§8"
+    },
+    {
+      "source": "model:mamba2",
+      "relation": "extends",
+      "target": "model:mamba",
+      "basis": "structural",
+      "explanation": "선택적 SSM을 SSD 관점으로 재구성한 후속 구조입니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§7"
+    },
+    {
+      "source": "component:query_encoder",
+      "relation": "documented_in",
+      "target": "paper:moco",
+      "basis": "documented",
+      "explanation": "query encoder 근거입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "Algorithm 1"
+    },
+    {
+      "source": "component:key_encoder",
+      "relation": "documented_in",
+      "target": "paper:moco",
+      "basis": "documented",
+      "explanation": "momentum key encoder 근거입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "Eq.2"
+    },
+    {
+      "source": "component:negative_queue",
+      "relation": "documented_in",
+      "target": "paper:moco",
+      "basis": "documented",
+      "explanation": "queue dictionary 근거입니다.",
+      "evidence": [
+        "paper:moco"
+      ],
+      "locator": "§3.2"
+    },
+    {
+      "source": "component:student_encoder",
+      "relation": "documented_in",
+      "target": "paper:dino",
+      "basis": "documented",
+      "explanation": "student 경로 근거입니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "Fig.2"
+    },
+    {
+      "source": "component:teacher_encoder",
+      "relation": "documented_in",
+      "target": "paper:dino",
+      "basis": "documented",
+      "explanation": "teacher 경로 근거입니다.",
+      "evidence": [
+        "paper:dino"
+      ],
+      "locator": "Fig.2"
+    },
+    {
+      "source": "component:gin_layer",
+      "relation": "documented_in",
+      "target": "paper:gin",
+      "basis": "documented",
+      "explanation": "GIN 층 근거입니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "Eq.4.1"
+    },
+    {
+      "source": "component:graph_sum_pool",
+      "relation": "documented_in",
+      "target": "paper:gin",
+      "basis": "documented",
+      "explanation": "그래프 readout 근거입니다.",
+      "evidence": [
+        "paper:gin"
+      ],
+      "locator": "Eq.4.2"
+    },
+    {
+      "source": "component:ssd_core",
+      "relation": "documented_in",
+      "target": "paper:mamba2",
+      "basis": "documented",
+      "explanation": "SSD core 근거입니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "Algorithm 1"
+    },
+    {
+      "source": "component:mamba2_input_projection",
+      "relation": "documented_in",
+      "target": "paper:mamba2",
+      "basis": "documented",
+      "explanation": "입력 투영 근거입니다.",
+      "evidence": [
+        "paper:mamba2"
+      ],
+      "locator": "§7; official mamba2.py"
     }
   ]
 }
