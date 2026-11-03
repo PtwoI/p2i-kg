@@ -120,6 +120,13 @@ the catalog retains the original S4 DPLR/Cauchy-kernel contribution. The RetNet
 example executes parallel causal retention with two decay scales and binds its
 QKV projection, retention core, gate and output projections.
 
+The Neural ODE example separates a learned vector field from a fixed
+differentiable Euler solver. The FNO example combines a learned low-mode Fourier
+multiplier with a pointwise local path. The RWKV example exposes token embedding,
+recurrent time mixing, gated channel mixing and language readout. Their runtime
+notes explicitly distinguish these compact teaching graphs from adaptive adjoint
+solvers, production neural-operator stacks and official fused RWKV kernels.
+
 The bundled LDM and DiT examples connect two successive diffusion changes. LDM
 separates first-stage image compression from conditioned latent denoising; DiT
 keeps that latent diffusion setting while replacing the U-Net with latent patch
