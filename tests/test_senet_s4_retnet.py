@@ -91,7 +91,7 @@ def test_architecture_specific_computation_and_gradients():
 def test_every_model_has_unique_runtime_and_scope():
     graph = seed_graph()
     models = [node for node in graph.nodes if node.kind == 'model']
-    assert len(models) == 52
+    assert len(models) == 55
     runtime_ids = [node.runtime_id for node in models]
     assert all(runtime_ids) and len(runtime_ids) == len(set(runtime_ids))
     assert all(node.runtime_note for node in models)
