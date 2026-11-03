@@ -20,7 +20,9 @@ def test_extension_is_additive_idempotent_and_preserves_curation(tmp_path):
         for edge in fragment['edges']}
     current['nodes'] = [node for node in current['nodes'] if node['id'] not in new_ids]
     current['edges'] = [edge for edge in current['edges']
-        if (edge['source'], edge['relation'], edge['target']) not in new_edges]
+        if (edge['source'], edge['relation'], edge['target']) not in new_edges
+        and edge['source'] not in new_ids and edge['target'] not in new_ids
+        and not (set(edge['evidence']) & new_ids)]
     current['nodes'][0]['summary'] = 'Preserve this user-curated text.'
     store = GraphStore(tmp_path / 'kg.db')
     store.replace(KnowledgeGraph.model_validate(current))
@@ -89,7 +91,7 @@ def test_architecture_specific_computation_and_gradients():
 def test_every_model_has_unique_runtime_and_scope():
     graph = seed_graph()
     models = [node for node in graph.nodes if node.kind == 'model']
-    assert len(models) == 49
+    assert len(models) == 52
     runtime_ids = [node.runtime_id for node in models]
     assert all(runtime_ids) and len(runtime_ids) == len(set(runtime_ids))
     assert all(node.runtime_note for node in models)
