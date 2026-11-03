@@ -4,6 +4,19 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'neuralode': [('component:ode_input_projection', 'input_projection'),
+        ('component:neural_vector_field', 'vector_field'),
+        ('component:differentiable_ode_solver', 'ode_solver'),
+        ('component:ode_classifier', 'classifier')],
+    'fno': [('component:fno_lifting', 'lifting'),
+        ('component:spectral_convolution', 'spectral_convolution'),
+        ('component:fno_local_path', 'local_convolution'),
+        ('component:fno_projection', 'projection')],
+    'rwkv': [('component:token_embedding', 'embedding'),
+        ('component:rwkv_time_mix', 'time_mix'),
+        ('component:rwkv_channel_mix', 'channel_mix'),
+        ('component:rwkv_normalization', 'normalization'),
+        ('component:language_head', 'lm_head')],
     'senet': [('component:convolution', 'stem.0'),
         ('component:se_residual_block', 'block'),
         ('component:squeeze_pool', 'block.se.squeeze'),

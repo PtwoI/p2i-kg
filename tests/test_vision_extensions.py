@@ -12,7 +12,10 @@ def test_extension_preserves_existing_curation(tmp_path):
     new_ids = {n['id'] for n in fragment['nodes']}
     new_edges = {(e['source'], e['relation'], e['target']) for e in fragment['edges']}
     current['nodes'] = [n for n in current['nodes'] if n['id'] not in new_ids]
-    current['edges'] = [e for e in current['edges'] if (e['source'],e['relation'],e['target']) not in new_edges]
+    current['edges'] = [e for e in current['edges']
+        if (e['source'],e['relation'],e['target']) not in new_edges
+        and e['source'] not in new_ids and e['target'] not in new_ids
+        and not (set(e['evidence']) & new_ids)]
     current['nodes'][0]['summary'] = 'User curated text must survive.'
     store = GraphStore(tmp_path/'kg.db')
     store.replace(KnowledgeGraph.model_validate(current))

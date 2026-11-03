@@ -588,6 +588,143 @@ class TinyRetNet(nn.Module):
         return self.output_projection(retained * self.output_gate(projected))
 
 
+class ODEVectorField(nn.Module):
+    """Autonomous neural vector field used by the fixed ODE solver."""
+    def __init__(self, width=12):
+        super().__init__()
+        self.network = nn.Sequential(
+            nn.Linear(width, width), nn.Tanh(), nn.Linear(width, width))
+
+    def forward(self, state):
+        return self.network(state)
+
+
+class FixedEulerSolver(nn.Module):
+    """Four explicit Euler steps, kept as a module boundary for inspection."""
+    def __init__(self, vector_field, steps=4):
+        super().__init__()
+        self.vector_field = vector_field
+        self.steps = steps
+
+    def forward(self, initial_state):
+        state = initial_state
+        step_size = 1. / self.steps
+        for _ in range(self.steps):
+            state = state + step_size * self.vector_field(state)
+        return state
+
+
+class TinyNeuralODE(nn.Module):
+    """Compact continuous-depth classifier with a differentiable ODE block."""
+    def __init__(self):
+        super().__init__()
+        self.input_projection = nn.Linear(6, 12)
+        self.vector_field = ODEVectorField(12)
+        self.ode_solver = FixedEulerSolver(self.vector_field, 4)
+        self.classifier = nn.Linear(12, 3)
+
+    def forward(self, features):
+        state = self.input_projection(features)
+        return self.classifier(self.ode_solver(state))
+
+
+class SpectralConvolution1d(nn.Module):
+    """Low-frequency Fourier multiplier for a real one-dimensional field."""
+    def __init__(self, width=8, modes=6):
+        super().__init__()
+        import torch
+        self.modes = modes
+        scale = 1. / width
+        self.weight = nn.Parameter(scale * torch.randn(width, width, modes,
+                                                       dtype=torch.cfloat))
+
+    def forward(self, field):
+        import torch
+        spectrum = torch.fft.rfft(field, dim=-1)
+        truncated = spectrum[:, :, :self.modes]
+        mixed = torch.einsum('bim,iom->bom', truncated, self.weight)
+        output = torch.zeros(field.shape[0], field.shape[1], spectrum.shape[-1],
+                             dtype=spectrum.dtype, device=field.device)
+        output[:, :, :self.modes] = mixed
+        return torch.fft.irfft(output, n=field.shape[-1], dim=-1)
+
+
+class TinyFNO(nn.Module):
+    """One-dimensional Fourier neural operator with spectral and local paths."""
+    def __init__(self):
+        super().__init__()
+        self.lifting = nn.Conv1d(2, 8, 1)
+        self.spectral_convolution = SpectralConvolution1d(8, 6)
+        self.local_convolution = nn.Conv1d(8, 8, 1)
+        self.projection = nn.Sequential(
+            nn.Linear(8, 8), nn.GELU(), nn.Linear(8, 1))
+
+    def forward(self, field):
+        import torch
+        grid = torch.linspace(0, 1, field.shape[-1], device=field.device,
+                              dtype=field.dtype).expand(field.shape[0], 1, -1)
+        lifted = self.lifting(torch.cat((field, grid), dim=1))
+        hidden = torch.nn.functional.gelu(
+            self.spectral_convolution(lifted) + self.local_convolution(lifted))
+        return self.projection(hidden.transpose(1, 2)).transpose(1, 2)
+
+
+class RWKVTimeMix(nn.Module):
+    """Small recurrent weighted key-value time mixer inspired by RWKV-4."""
+    def __init__(self, width=12):
+        super().__init__()
+        import torch
+        self.key = nn.Linear(width, width)
+        self.value = nn.Linear(width, width)
+        self.receptance = nn.Linear(width, width)
+        self.output = nn.Linear(width, width)
+        self.time_decay = nn.Parameter(torch.zeros(width))
+
+    def forward(self, sequence):
+        import torch
+        numerator = torch.zeros_like(sequence[:, 0])
+        denominator = torch.zeros_like(sequence[:, 0])
+        decay = torch.sigmoid(self.time_decay)
+        outputs = []
+        for token in sequence.unbind(1):
+            key_weight = torch.exp(torch.clamp(self.key(token), -8., 8.))
+            numerator = decay * numerator + key_weight * self.value(token)
+            denominator = decay * denominator + key_weight
+            mixed = numerator / denominator.clamp_min(1e-6)
+            outputs.append(self.output(torch.sigmoid(self.receptance(token)) * mixed))
+        return torch.stack(outputs, dim=1)
+
+
+class RWKVChannelMix(nn.Module):
+    def __init__(self, width=12):
+        super().__init__()
+        self.key = nn.Linear(width, 2 * width)
+        self.value = nn.Linear(2 * width, width)
+        self.receptance = nn.Linear(width, width)
+
+    def forward(self, sequence):
+        import torch
+        hidden = torch.relu(self.key(sequence)).square()
+        return torch.sigmoid(self.receptance(sequence)) * self.value(hidden)
+
+
+class TinyRWKV(nn.Module):
+    """Compact attention-free token model with RWKV time/channel mixing."""
+    def __init__(self):
+        super().__init__()
+        self.embedding = nn.Embedding(32, 12)
+        self.time_mix = RWKVTimeMix(12)
+        self.channel_mix = RWKVChannelMix(12)
+        self.normalization = nn.LayerNorm(12)
+        self.lm_head = nn.Linear(12, 32)
+
+    def forward(self, tokens):
+        hidden = self.embedding(tokens)
+        hidden = hidden + self.time_mix(hidden)
+        hidden = self.normalization(hidden + self.channel_mix(hidden))
+        return self.lm_head(hidden)
+
+
 class TinyLatentDiffusion(nn.Module):
     """Compact LDM path: first-stage compression, conditioned latent denoising.
 
