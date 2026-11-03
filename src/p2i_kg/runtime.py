@@ -8,7 +8,7 @@ from .extended_registry import EXTENDED_IDS
 BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18',
     'transformer', 'seq2seq', 'bert', 'vit', 'gpt2', 'mixer', 'mae', 'detr',
     'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
-    'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2')
+    'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet')
 RUNTIME_IDS = BASE_RUNTIME_IDS + EXTENDED_IDS
 
 
@@ -71,6 +71,15 @@ def make_model(runtime_id):
         if runtime_id == 'mamba2':
             from .models import TinyMamba2
             return TinyMamba2().eval(), (torch.randn(2, 8, 8),)
+        if runtime_id == 'senet':
+            from .models import TinySENet
+            return TinySENet().eval(), (torch.randn(2, 3, 16, 16),)
+        if runtime_id == 's4':
+            from .models import TinyS4
+            return TinyS4().eval(), (torch.randn(2, 16, 8),)
+        if runtime_id == 'retnet':
+            from .models import TinyRetNet
+            return TinyRetNet().eval(), (torch.randn(2, 12, 8),)
         if runtime_id == 'ldm':
             from .models import TinyLatentDiffusion
             return TinyLatentDiffusion().eval(), (

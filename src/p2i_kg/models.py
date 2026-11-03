@@ -464,6 +464,130 @@ class TinyMamba2(nn.Module):
         return self.output_projection(mixed * self.output_gate(gate))
 
 
+class SqueezeExcitation(nn.Module):
+    """Global squeeze followed by a bottleneck channel gate."""
+    def __init__(self, channels=8, reduction=4):
+        super().__init__()
+        self.squeeze = nn.AdaptiveAvgPool2d(1)
+        self.excitation = nn.Sequential(
+            nn.Linear(channels, channels // reduction), nn.ReLU(),
+            nn.Linear(channels // reduction, channels), nn.Sigmoid())
+
+    def forward(self, features):
+        scale = self.excitation(self.squeeze(features).flatten(1))
+        return features * scale[:, :, None, None]
+
+
+class SEResidualBlock(nn.Module):
+    """Two convolutions with SE recalibration before residual addition."""
+    def __init__(self, channels=8):
+        super().__init__()
+        self.convolutions = nn.Sequential(
+            nn.Conv2d(channels, channels, 3, padding=1), nn.ReLU(),
+            nn.Conv2d(channels, channels, 3, padding=1))
+        self.se = SqueezeExcitation(channels)
+
+    def forward(self, features):
+        return __import__('torch').relu(features + self.se(self.convolutions(features)))
+
+
+class TinySENet(nn.Module):
+    """Compact SE-ResNet-shaped image classifier."""
+    def __init__(self):
+        super().__init__()
+        self.stem = nn.Sequential(nn.Conv2d(3, 8, 3, padding=1), nn.ReLU())
+        self.block = SEResidualBlock(8)
+        self.pool = nn.AdaptiveAvgPool2d(1)
+        self.head = nn.Linear(8, 4)
+
+    def forward(self, images):
+        features = self.block(self.stem(images))
+        return self.head(self.pool(features).flatten(1))
+
+
+class DiagonalS4Kernel(nn.Module):
+    """Small stable diagonal SSM recurrence in the S4D family."""
+    def __init__(self, width=16, state_size=4):
+        super().__init__()
+        import torch
+        self.input_map = nn.Linear(width, state_size)
+        self.output_map = nn.Linear(state_size, width)
+        self.log_step = nn.Parameter(torch.full((state_size,), -2.))
+        self.log_decay = nn.Parameter(torch.linspace(-1., -3., state_size))
+
+    def forward(self, sequence):
+        import torch
+        step = torch.nn.functional.softplus(self.log_step)
+        decay = torch.exp(-step * torch.exp(self.log_decay))
+        state = torch.zeros(sequence.shape[0], self.input_map.out_features,
+                            device=sequence.device, dtype=sequence.dtype)
+        outputs = []
+        for token in sequence.unbind(1):
+            state = decay * state + step * self.input_map(token)
+            outputs.append(self.output_map(state))
+        return torch.stack(outputs, dim=1)
+
+
+class TinyS4(nn.Module):
+    """Compact residual S4D-style long-sequence classifier."""
+    def __init__(self):
+        super().__init__()
+        self.input_projection = nn.Linear(8, 16)
+        self.state_kernel = DiagonalS4Kernel(16, 4)
+        self.normalization = nn.LayerNorm(16)
+        self.head = nn.Linear(16, 4)
+
+    def forward(self, sequence):
+        projected = self.input_projection(sequence)
+        mixed = self.normalization(projected + self.state_kernel(projected))
+        return self.head(mixed.mean(1))
+
+
+class MultiScaleRetention(nn.Module):
+    """Parallel causal retention with one fixed decay per head."""
+    def __init__(self, width=16, heads=2):
+        super().__init__()
+        import torch
+        self.heads = heads
+        self.head_width = width // heads
+        self.qkv = nn.Linear(width, 3 * width)
+        self.output = nn.Linear(width, width)
+        self.register_buffer('decays', torch.tensor([.8, .95]))
+
+    def forward(self, sequence):
+        import torch
+        batch, length, width = sequence.shape
+        q, k, value = self.qkv(sequence).chunk(3, dim=-1)
+        def split(tensor):
+            return tensor.reshape(batch, length, self.heads,
+                                  self.head_width).transpose(1, 2)
+        q, k, value = split(q), split(k), split(value)
+        positions = torch.arange(length, device=sequence.device)
+        distance = positions[:, None] - positions[None, :]
+        causal = distance >= 0
+        decay = self.decays[:, None, None].pow(distance.clamp_min(0))
+        weights = (q @ k.transpose(-1, -2)) / self.head_width ** .5
+        weights = weights * decay[None] * causal[None, None]
+        retained = weights @ value
+        retained = retained.transpose(1, 2).reshape(batch, length, width)
+        return self.output(retained)
+
+
+class TinyRetNet(nn.Module):
+    """Compact gated multi-scale retention block."""
+    def __init__(self):
+        super().__init__()
+        self.input_projection = nn.Linear(8, 16)
+        self.retention = MultiScaleRetention(16, 2)
+        self.output_gate = nn.Sequential(nn.Linear(16, 16), nn.SiLU())
+        self.output_projection = nn.Linear(16, 8)
+
+    def forward(self, sequence):
+        projected = self.input_projection(sequence)
+        retained = self.retention(projected)
+        return self.output_projection(retained * self.output_gate(projected))
+
+
 class TinyLatentDiffusion(nn.Module):
     """Compact LDM path: first-stage compression, conditioned latent denoising.
 
