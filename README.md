@@ -3,7 +3,7 @@
 A local educational knowledge graph connecting neural models, building-block
 concepts and representative papers, with live P2I model exploration.
 
-Version 0.2 contains **55 models, 384 nodes and 760 sourced relationships**.
+Version 0.2 contains **79 models, 473 nodes and 971 sourced relationships**.
 Alongside the original Perceptron/MLP/CNN/RNN/LSTM/GRU/ResNet/Transformer path,
 it includes VGG, Inception, DenseNet, MobileNet, EfficientNet, ConvNeXt, U-Net,
 BERT, GPT-2, T5, ViT, Swin, RoFormer, LLaMA (2023), VAE, GAN, DDPM, GCN, GAT,
