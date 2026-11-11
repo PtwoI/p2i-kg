@@ -3209,6 +3209,861 @@
       "kind": "task",
       "label": "Tabular prediction",
       "summary": "수치·범주형 열로 구성된 표의 행에 대해 분류 또는 회귀를 수행합니다."
+    },
+    {
+      "id": "paper:dqn",
+      "kind": "paper",
+      "label": "Playing Atari with Deep Reinforcement Learning",
+      "summary": "심층 신경망으로 Atari의 행동 가치를 추정한 DQN 논문입니다.",
+      "reference_year": 2013,
+      "url": "https://arxiv.org/abs/1312.5602",
+      "authors": [
+        "Volodymyr Mnih",
+        "Koray Kavukcuoglu",
+        "David Silver",
+        "Alex Graves",
+        "Ioannis Antonoglou",
+        "Daan Wierstra",
+        "Martin Riedmiller"
+      ]
+    },
+    {
+      "id": "paper:ppo",
+      "kind": "paper",
+      "label": "Proximal Policy Optimization Algorithms",
+      "summary": "clipped surrogate objective를 이용하는 정책 최적화 알고리즘입니다.",
+      "reference_year": 2017,
+      "url": "https://arxiv.org/abs/1707.06347",
+      "authors": [
+        "John Schulman",
+        "Filip Wolski",
+        "Prafulla Dhariwal",
+        "Alec Radford",
+        "Oleg Klimov"
+      ]
+    },
+    {
+      "id": "paper:dreamer",
+      "kind": "paper",
+      "label": "Dream to Control: Learning Behaviors by Latent Imagination",
+      "summary": "잠재 세계 모델에서 상상한 trajectory로 행동을 학습합니다.",
+      "reference_year": 2019,
+      "url": "https://arxiv.org/abs/1912.01603",
+      "authors": [
+        "Danijar Hafner",
+        "Timothy Lillicrap",
+        "Jimmy Ba",
+        "Mohammad Norouzi"
+      ]
+    },
+    {
+      "id": "paper:diayn",
+      "kind": "paper",
+      "label": "Diversity is All You Need: Learning Skills without a Reward Function",
+      "summary": "스킬 판별과 최대 엔트로피 정책으로 다양한 스킬을 비지도 학습합니다.",
+      "reference_year": 2018,
+      "url": "https://arxiv.org/abs/1802.06070",
+      "authors": [
+        "Benjamin Eysenbach",
+        "Abhishek Gupta",
+        "Julian Ibarz",
+        "Sergey Levine"
+      ]
+    },
+    {
+      "id": "model:dqn",
+      "kind": "model",
+      "label": "DQN",
+      "summary": "신경망으로 상태별 행동 가치를 추정하는 가치 기반 강화학습 에이전트입니다.",
+      "reference_year": 2013,
+      "family": "reinforcement-learning",
+      "runtime_id": "dqn_rl",
+      "runtime_note": "8차원 상태를 입력해 네 행동의 Q값을 출력하는 임의 초기화 MLP입니다. Atari CNN, 경험 재생, target network 및 학습 루프는 실행하지 않습니다."
+    },
+    {
+      "id": "model:ppo",
+      "kind": "model",
+      "label": "PPO",
+      "summary": "제한된 정책 갱신을 사용하는 정책 최적화 알고리즘입니다.",
+      "reference_year": 2017,
+      "family": "reinforcement-learning",
+      "runtime_id": "ppo_rl",
+      "runtime_note": "공유 특징 추출기와 정책 logits 및 상태 가치 head를 보여주는 임의 초기화 actor–critic 예제입니다. PPO clipped loss, rollout, GAE 및 학습은 실행하지 않습니다."
+    },
+    {
+      "id": "model:dreamer",
+      "kind": "model",
+      "label": "Dreamer",
+      "summary": "잠재 세계 모델이 상상한 궤적에서 정책과 가치 함수를 학습하는 model-based RL입니다.",
+      "reference_year": 2019,
+      "family": "reinforcement-learning",
+      "runtime_id": "dreamer_rl",
+      "runtime_note": "작은 관측 인코더, 결정론적 GRU 기반 상태 전이, 두 단계의 상상 rollout, 보상·가치·복원 head와 actor를 실행합니다. 원논문의 확률적 RSSM, 이미지 모델, replay와 학습 목적을 구현한 재현 모델은 아닙니다."
+    },
+    {
+      "id": "model:diayn",
+      "kind": "model",
+      "label": "DIAYN",
+      "summary": "스킬 조건부 정책과 상태로부터 스킬을 예측하는 판별기를 활용해 다양한 스킬을 발견합니다.",
+      "reference_year": 2018,
+      "family": "reinforcement-learning",
+      "runtime_id": "diayn_rl",
+      "runtime_note": "4개 스킬 임베딩을 이용하는 작은 조건부 정책과 상태–스킬 분류기를 실행합니다. 최대 엔트로피 RL, 상호정보량 보상, 환경과 학습 루프는 포함하지 않습니다."
+    },
+    {
+      "id": "concept:rl_value_learning",
+      "kind": "concept",
+      "label": "Action-value learning",
+      "summary": "상태와 행동의 예상 누적 보상을 추정합니다."
+    },
+    {
+      "id": "concept:rl_actor_critic",
+      "kind": "concept",
+      "label": "Actor–critic",
+      "summary": "정책과 가치 추정기를 함께 사용합니다."
+    },
+    {
+      "id": "concept:rl_latent_imagination",
+      "kind": "concept",
+      "label": "Latent imagination",
+      "summary": "학습된 잠재 동역학을 사용해 미래 궤적을 상상합니다."
+    },
+    {
+      "id": "concept:rl_skill_discovery",
+      "kind": "concept",
+      "label": "Skill discovery",
+      "summary": "서로 구별 가능한 행동 스킬을 학습합니다."
+    },
+    {
+      "id": "component:rl_encoder",
+      "kind": "component",
+      "label": "RL observation encoder",
+      "summary": "상태나 관측을 신경망 특징으로 변환합니다."
+    },
+    {
+      "id": "component:rl_q_head",
+      "kind": "component",
+      "label": "Action-value head",
+      "summary": "특징으로 행동별 가치를 예측합니다."
+    },
+    {
+      "id": "component:rl_actor",
+      "kind": "component",
+      "label": "Policy network",
+      "summary": "상태 또는 잠재 상태에서 행동 정책을 산출합니다."
+    },
+    {
+      "id": "component:rl_critic",
+      "kind": "component",
+      "label": "Value network",
+      "summary": "상태나 행동의 미래 가치를 추정합니다."
+    },
+    {
+      "id": "component:rl_posterior",
+      "kind": "component",
+      "label": "Posterior state representation",
+      "summary": "관측 특징을 잠재 상태로 변환합니다."
+    },
+    {
+      "id": "component:rl_dynamics",
+      "kind": "component",
+      "label": "Latent dynamics",
+      "summary": "행동에 따른 잠재 상태 변화를 예측합니다."
+    },
+    {
+      "id": "component:rl_reward",
+      "kind": "component",
+      "label": "Reward predictor",
+      "summary": "잠재 상태에서 보상을 추정합니다."
+    },
+    {
+      "id": "component:rl_decoder",
+      "kind": "component",
+      "label": "Observation decoder",
+      "summary": "잠재 상태에서 관측을 복원합니다."
+    },
+    {
+      "id": "component:rl_skill_embedding",
+      "kind": "component",
+      "label": "Skill representation",
+      "summary": "스킬 ID를 조건 표현으로 변환합니다."
+    },
+    {
+      "id": "component:rl_skill_discriminator",
+      "kind": "component",
+      "label": "Skill discriminator",
+      "summary": "상태로부터 스킬을 판별합니다."
+    },
+    {
+      "id": "objective:rl_return",
+      "kind": "objective",
+      "label": "Expected return maximization",
+      "summary": "누적 보상의 기댓값을 높이는 정책을 학습합니다."
+    },
+    {
+      "id": "objective:rl_skill_diversity",
+      "kind": "objective",
+      "label": "Skill diversity objective",
+      "summary": "행동 스킬과 방문 상태 사이의 구별 가능성을 높입니다."
+    },
+    {
+      "id": "task:rl_control",
+      "kind": "task",
+      "label": "Sequential control",
+      "summary": "환경과 상호작용하며 행동을 선택합니다."
+    },
+    {
+      "id": "task:rl_skill_learning",
+      "kind": "task",
+      "label": "Unsupervised skill learning",
+      "summary": "외부 과제 보상 없이 다양한 행동 스킬을 학습합니다."
+    },
+    {
+      "id": "paper:sac",
+      "kind": "paper",
+      "label": "Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor",
+      "summary": "최대 엔트로피 off-policy actor–critic을 제안합니다.",
+      "reference_year": 2018,
+      "url": "https://proceedings.mlr.press/v80/haarnoja18b.html",
+      "authors": [
+        "Tuomas Haarnoja",
+        "Aurick Zhou",
+        "Pieter Abbeel",
+        "Sergey Levine"
+      ]
+    },
+    {
+      "id": "paper:muzero",
+      "kind": "paper",
+      "label": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
+      "summary": "학습된 잠재 모델과 트리 탐색을 결합합니다.",
+      "reference_year": 2019,
+      "url": "https://arxiv.org/abs/1911.08265",
+      "authors": [
+        "Julian Schrittwieser",
+        "Ioannis Antonoglou",
+        "Thomas Hubert",
+        "Karen Simonyan",
+        "Laurent Sifre",
+        "Simon Schmitt",
+        "Arthur Guez",
+        "Edward Lockhart",
+        "Demis Hassabis",
+        "Thore Graepel",
+        "Timothy Lillicrap",
+        "David Silver"
+      ]
+    },
+    {
+      "id": "paper:decision_transformer",
+      "kind": "paper",
+      "label": "Decision Transformer: Reinforcement Learning via Sequence Modeling",
+      "summary": "목표 return에 조건부인 순차 모델링으로 행동을 예측합니다.",
+      "reference_year": 2021,
+      "url": "https://arxiv.org/abs/2106.01345",
+      "authors": [
+        "Lili Chen",
+        "Kevin Lu",
+        "Aravind Rajeswaran",
+        "Kimin Lee",
+        "Aditya Grover",
+        "Michael Laskin",
+        "Pieter Abbeel",
+        "Aravind Srinivas",
+        "Igor Mordatch"
+      ]
+    },
+    {
+      "id": "model:sac",
+      "kind": "model",
+      "label": "Soft Actor-Critic",
+      "summary": "최대 엔트로피 목표를 사용하는 off-policy 확률적 actor–critic입니다.",
+      "reference_year": 2018,
+      "family": "reinforcement-learning",
+      "runtime_id": "sac_rl",
+      "runtime_note": "8차원 상태에서 Gaussian actor의 평균·log 표준편차와 두 state-action critic을 실행합니다. 이중 critic을 사용하는 후속 변형을 따른 작은 구조 예제이며 sampling, target network, entropy temperature 및 학습은 생략합니다."
+    },
+    {
+      "id": "model:muzero",
+      "kind": "model",
+      "label": "MuZero",
+      "summary": "학습된 representation·dynamics·prediction 모델과 탐색을 결합합니다.",
+      "reference_year": 2019,
+      "family": "reinforcement-learning",
+      "runtime_id": "muzero_rl",
+      "runtime_note": "작은 상태와 행동 입력으로 잠재 표현, 한 단계 전이, 보상·정책·가치 head를 실행합니다. MCTS, 재귀 unroll 학습, 이미지 인코더와 value support는 포함하지 않습니다."
+    },
+    {
+      "id": "model:decision_transformer",
+      "kind": "model",
+      "label": "Decision Transformer",
+      "summary": "return·상태·행동 시퀀스에 조건부인 causal Transformer로 행동을 예측합니다.",
+      "reference_year": 2021,
+      "family": "reinforcement-learning",
+      "runtime_id": "decision_transformer_rl",
+      "runtime_note": "길이 3인 return·상태·행동 토큰과 causal Transformer encoder layer를 사용해 각 상태 위치의 행동을 예측합니다. timestep embedding, GPT backbone, dataset과 학습은 포함하지 않습니다."
+    },
+    {
+      "id": "concept:rl_max_entropy",
+      "kind": "concept",
+      "label": "Maximum entropy reinforcement learning",
+      "summary": "예상 보상과 정책 엔트로피를 함께 최적화합니다."
+    },
+    {
+      "id": "concept:rl_learned_planning",
+      "kind": "concept",
+      "label": "Planning with a learned model",
+      "summary": "학습된 dynamics 예측을 탐색과 결합합니다."
+    },
+    {
+      "id": "concept:rl_return_conditioning",
+      "kind": "concept",
+      "label": "Return-conditioned sequence modeling",
+      "summary": "목표 return을 행동 생성의 조건으로 사용합니다."
+    },
+    {
+      "id": "component:rl_return_embedding",
+      "kind": "component",
+      "label": "Return embedding",
+      "summary": "목표 return을 토큰으로 투영합니다."
+    },
+    {
+      "id": "component:rl_state_embedding",
+      "kind": "component",
+      "label": "State embedding",
+      "summary": "상태를 토큰으로 투영합니다."
+    },
+    {
+      "id": "component:rl_action_embedding",
+      "kind": "component",
+      "label": "Action embedding",
+      "summary": "과거 행동을 토큰으로 투영합니다."
+    },
+    {
+      "id": "component:rl_causal_transformer",
+      "kind": "component",
+      "label": "Causal trajectory transformer",
+      "summary": "과거 trajectory 토큰을 인과적으로 처리합니다."
+    },
+    {
+      "id": "objective:rl_action_prediction",
+      "kind": "objective",
+      "label": "Return-conditioned action prediction",
+      "summary": "목표 return과 관측 이력에 조건부로 데이터셋의 행동을 예측합니다."
+    },
+    {
+      "id": "paper:dreamerv2",
+      "kind": "paper",
+      "label": "Mastering Atari with Discrete World Models",
+      "summary": "이산 잠재 세계 모델과 상상된 경로에서 학습하는 DreamerV2입니다.",
+      "reference_year": 2020,
+      "url": "https://arxiv.org/abs/2010.02193",
+      "authors": [
+        "Danijar Hafner",
+        "Timothy Lillicrap",
+        "Mohammad Norouzi",
+        "Jimmy Ba"
+      ]
+    },
+    {
+      "id": "paper:dreamerv3",
+      "kind": "paper",
+      "label": "Mastering Diverse Domains through World Models",
+      "summary": "다양한 영역에 단일 설정을 적용하는 DreamerV3입니다.",
+      "reference_year": 2023,
+      "url": "https://arxiv.org/abs/2301.04104",
+      "authors": [
+        "Danijar Hafner",
+        "Jurgis Pasukonis",
+        "Jimmy Ba",
+        "Timothy Lillicrap"
+      ]
+    },
+    {
+      "id": "paper:dreamer4",
+      "kind": "paper",
+      "label": "Training Agents Inside of Scalable World Models",
+      "summary": "확장 가능한 세계 모델 안의 상상 학습을 제안합니다.",
+      "reference_year": 2025,
+      "url": "https://arxiv.org/abs/2509.24527",
+      "authors": [
+        "Danijar Hafner",
+        "Wilson Yan",
+        "Timothy Lillicrap"
+      ]
+    },
+    {
+      "id": "model:dreamerv2",
+      "kind": "model",
+      "label": "DreamerV2",
+      "summary": "이산 잠재 상태 세계 모델을 학습하고 상상 경로에서 행동을 학습합니다.",
+      "reference_year": 2020,
+      "family": "reinforcement-learning",
+      "runtime_id": "dreamerv2_rl",
+      "runtime_note": "작은 범주형 확률 표현, GRU 전이, 정책·보상·가치·복원 head를 실행합니다. 확률 샘플링과 straight-through gradient, KL loss, 실제 Atari와 학습은 생략한 교육용 예제입니다."
+    },
+    {
+      "id": "model:dreamerv3",
+      "kind": "model",
+      "label": "DreamerV3",
+      "summary": "세계 모델, 상상 정책 학습과 정규화 기법을 결합해 다양한 과제에 적용합니다.",
+      "reference_year": 2023,
+      "family": "reinforcement-learning",
+      "runtime_id": "dreamerv3_rl",
+      "runtime_note": "작은 범주형 확률 잠재 표현과 symlog 입력, GRU 전이 및 정책·가치·보상 head를 실행합니다. 원본의 샘플링, 분포형 head, KL balancing, 정규화, 환경과 학습은 포함하지 않습니다."
+    },
+    {
+      "id": "model:dreamer4",
+      "kind": "model",
+      "label": "Dreamer 4",
+      "summary": "확장 가능한 행동 조건부 세계 모델에서 강화학습 행동을 학습합니다.",
+      "reference_year": 2025,
+      "family": "reinforcement-learning",
+      "runtime_id": "dreamer4_rl",
+      "runtime_note": "행동과 관측을 더해 작은 causal Transformer에 전달하고 복원·정책·가치 head를 실행합니다. 실제 diffusion 세계 모델, shortcut forcing, 영상 학습과 imagined RL은 포함하지 않는 구조적 설명 예제입니다."
+    },
+    {
+      "id": "concept:rl_discrete_latent",
+      "kind": "concept",
+      "label": "Discrete latent world model",
+      "summary": "범주형 잠재 변수로 세계 모델의 상태를 표현합니다."
+    },
+    {
+      "id": "concept:rl_symlog",
+      "kind": "concept",
+      "label": "Symlog scaling",
+      "summary": "큰 양수와 음수를 대칭 로그 스케일로 압축합니다."
+    },
+    {
+      "id": "concept:rl_video_world_model",
+      "kind": "concept",
+      "label": "Action-conditioned video world model",
+      "summary": "행동을 조건으로 미래 시각 관측을 모델링합니다."
+    },
+    {
+      "id": "paper:dads",
+      "kind": "paper",
+      "label": "Dynamics-Aware Unsupervised Discovery of Skills",
+      "summary": "예측 가능한 스킬의 조건부 동역학과 정책을 학습합니다.",
+      "reference_year": 2019,
+      "url": "https://arxiv.org/abs/1907.01657",
+      "authors": [
+        "Archit Sharma",
+        "Shixiang Gu",
+        "Sergey Levine",
+        "Vikash Kumar",
+        "Karol Hausman"
+      ]
+    },
+    {
+      "id": "paper:aps",
+      "kind": "paper",
+      "label": "APS: Active Pretraining with Successor Features",
+      "summary": "successor feature와 비모수 엔트로피를 결합한 사전학습입니다.",
+      "reference_year": 2021,
+      "url": "https://proceedings.mlr.press/v139/liu21b.html",
+      "authors": [
+        "Hao Liu",
+        "Pieter Abbeel"
+      ]
+    },
+    {
+      "id": "paper:option_critic",
+      "kind": "paper",
+      "label": "The Option-Critic Architecture",
+      "summary": "옵션별 정책과 종료 조건을 함께 학습합니다.",
+      "reference_year": 2016,
+      "url": "https://arxiv.org/abs/1609.05140",
+      "authors": [
+        "Pierre-Luc Bacon",
+        "Jean Harb",
+        "Doina Precup"
+      ]
+    },
+    {
+      "id": "model:dads",
+      "kind": "model",
+      "label": "DADS",
+      "summary": "스킬 조건부 동역학과 정책으로 예측 가능한 스킬을 발견합니다.",
+      "reference_year": 2019,
+      "family": "reinforcement-learning",
+      "runtime_id": "dads_rl",
+      "runtime_note": "상태와 연속 스킬을 입력받는 소형 정책 및 스킬 조건부 전이 예측기를 실행합니다. 원논문의 확률적 전이 밀도, 보상 계산, MPC 및 학습은 생략합니다."
+    },
+    {
+      "id": "model:aps",
+      "kind": "model",
+      "label": "APS",
+      "summary": "비모수 탐색과 successor feature를 결합하는 비지도 사전학습입니다.",
+      "reference_year": 2021,
+      "family": "reinforcement-learning",
+      "runtime_id": "aps_rl",
+      "runtime_note": "소형 상태 특징 추출기, 과제 조건부 actor와 successor-feature 예측 경로를 실행합니다. kNN 엔트로피, 보상 계산, target network 및 학습은 생략합니다."
+    },
+    {
+      "id": "model:option_critic",
+      "kind": "model",
+      "label": "Option-Critic",
+      "summary": "옵션별 정책과 종료 함수, 옵션 가치 추정을 함께 다룹니다.",
+      "reference_year": 2016,
+      "family": "reinforcement-learning",
+      "runtime_id": "option_critic_rl",
+      "runtime_note": "공유 인코더와 4개 옵션의 가치, 옵션별 3개 행동 logits 및 종료 확률 head를 실행합니다. 옵션 선택, gradient loss와 환경 상호작용은 생략합니다."
+    },
+    {
+      "id": "concept:rl_skill_dynamics",
+      "kind": "concept",
+      "label": "Skill-conditioned dynamics",
+      "summary": "상태 변화가 선택한 스킬에 어떻게 의존하는지 학습합니다."
+    },
+    {
+      "id": "concept:rl_successor_features",
+      "kind": "concept",
+      "label": "Successor features",
+      "summary": "미래 상태 특징의 할인 누적을 예측합니다."
+    },
+    {
+      "id": "concept:rl_temporal_options",
+      "kind": "concept",
+      "label": "Temporally extended options",
+      "summary": "여러 단계 지속되는 정책과 종료 조건을 표현합니다."
+    },
+    {
+      "id": "component:rl_skill_dynamics",
+      "kind": "component",
+      "label": "Skill dynamics model",
+      "summary": "상태와 스킬에서 전이를 예측합니다."
+    },
+    {
+      "id": "component:rl_successor_features",
+      "kind": "component",
+      "label": "Successor feature predictor",
+      "summary": "상태·행동·과제 조건에서 후속 특징을 추정합니다."
+    },
+    {
+      "id": "component:rl_option_values",
+      "kind": "component",
+      "label": "Option value head",
+      "summary": "상태의 옵션별 가치를 출력합니다."
+    },
+    {
+      "id": "component:rl_option_policies",
+      "kind": "component",
+      "label": "Intra-option policies",
+      "summary": "옵션별 행동 logits를 출력합니다."
+    },
+    {
+      "id": "component:rl_option_termination",
+      "kind": "component",
+      "label": "Option termination head",
+      "summary": "옵션별 종료 확률을 산출합니다."
+    },
+    {
+      "id": "concept:rl_policy_gradient",
+      "kind": "concept",
+      "label": "Policy gradient",
+      "summary": "정책 매개변수를 예상 return의 기울기로 최적화합니다."
+    },
+    {
+      "id": "concept:rl_self_play",
+      "kind": "concept",
+      "label": "Self-play and search",
+      "summary": "자기 대국과 탐색으로 정책·가치 학습 데이터를 만듭니다."
+    },
+    {
+      "id": "component:rl_value_stream",
+      "kind": "component",
+      "label": "Value stream",
+      "summary": "공유 특징에서 상태 가치 또는 가치 분포를 추정합니다."
+    },
+    {
+      "id": "component:rl_advantage_stream",
+      "kind": "component",
+      "label": "Advantage stream",
+      "summary": "공유 특징에서 행동별 상대적 이점을 추정합니다."
+    },
+    {
+      "id": "paper:double_dqn",
+      "kind": "paper",
+      "label": "Deep Reinforcement Learning with Double Q-learning",
+      "summary": "Double DQN의 대표 논문입니다.",
+      "reference_year": 2015,
+      "url": "https://arxiv.org/abs/1509.06461",
+      "authors": [
+        "Hado van Hasselt",
+        "Arthur Guez",
+        "David Silver"
+      ]
+    },
+    {
+      "id": "model:double_dqn",
+      "kind": "model",
+      "label": "Double DQN",
+      "summary": "Double DQN 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2015,
+      "family": "reinforcement-learning",
+      "runtime_id": "double_dqn_rl",
+      "runtime_note": "동일한 Q-network 추론 구조를 보여줍니다. Double DQN의 온라인·타깃 network를 이용한 target 계산과 학습은 포함하지 않습니다."
+    },
+    {
+      "id": "paper:dueling_dqn",
+      "kind": "paper",
+      "label": "Dueling Network Architectures for Deep Reinforcement Learning",
+      "summary": "Dueling DQN의 대표 논문입니다.",
+      "reference_year": 2015,
+      "url": "https://arxiv.org/abs/1511.06581",
+      "authors": [
+        "Ziyu Wang",
+        "Tom Schaul",
+        "Matteo Hessel",
+        "Hado van Hasselt",
+        "Marc Lanctot",
+        "Nando de Freitas"
+      ]
+    },
+    {
+      "id": "model:dueling_dqn",
+      "kind": "model",
+      "label": "Dueling DQN",
+      "summary": "Dueling DQN 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2015,
+      "family": "reinforcement-learning",
+      "runtime_id": "dueling_dqn_rl",
+      "runtime_note": "작은 공유 encoder에서 value와 advantage를 분리하고 평균을 뺀 후 Q값을 합칩니다. Atari CNN 및 학습은 포함하지 않습니다."
+    },
+    {
+      "id": "paper:rainbow",
+      "kind": "paper",
+      "label": "Rainbow: Combining Improvements in Deep Reinforcement Learning",
+      "summary": "Rainbow의 대표 논문입니다.",
+      "reference_year": 2017,
+      "url": "https://arxiv.org/abs/1710.02298",
+      "authors": [
+        "Matteo Hessel",
+        "Joseph Modayil",
+        "Hado van Hasselt",
+        "Tom Schaul",
+        "Georg Ostrovski",
+        "Will Dabney",
+        "Dan Horgan",
+        "Bilal Piot",
+        "Mohammad Azar",
+        "David Silver"
+      ]
+    },
+    {
+      "id": "model:rainbow",
+      "kind": "model",
+      "label": "Rainbow",
+      "summary": "Rainbow 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2017,
+      "family": "reinforcement-learning",
+      "runtime_id": "rainbow_rl",
+      "runtime_note": "두 갈래 dueling head가 행동별 5개 categorical atom logits를 출력합니다. NoisyNet, prioritized replay, n-step target, 학습과 실제 Atari encoder는 생략합니다."
+    },
+    {
+      "id": "paper:reinforce",
+      "kind": "paper",
+      "label": "Simple statistical gradient-following algorithms for connectionist reinforcement learning",
+      "summary": "REINFORCE의 대표 논문입니다.",
+      "reference_year": 1992,
+      "url": "https://doi.org/10.1007/BF00992696",
+      "authors": [
+        "Ronald J. Williams"
+      ]
+    },
+    {
+      "id": "model:reinforce",
+      "kind": "model",
+      "label": "REINFORCE",
+      "summary": "REINFORCE 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 1992,
+      "family": "reinforcement-learning",
+      "runtime_id": "reinforce_rl",
+      "runtime_note": "작은 관측 encoder와 정책 logits를 실행합니다. 반환값 기반 정책 gradient loss, 환경 및 학습은 생략합니다."
+    },
+    {
+      "id": "paper:actor_critic",
+      "kind": "paper",
+      "label": "Actor-Critic Algorithms",
+      "summary": "Actor–Critic의 대표 논문입니다.",
+      "reference_year": 1999,
+      "url": "https://papers.nips.cc/paper_files/paper/1999/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html",
+      "authors": [
+        "Vijay Konda",
+        "John Tsitsiklis"
+      ]
+    },
+    {
+      "id": "model:actor_critic",
+      "kind": "model",
+      "label": "Actor–Critic",
+      "summary": "Actor–Critic 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 1999,
+      "family": "reinforcement-learning",
+      "runtime_id": "actor_critic_rl",
+      "runtime_note": "공유 encoder 뒤 정책 및 가치 head가 있는 소형 신경망입니다. TD update 및 학습은 포함하지 않습니다."
+    },
+    {
+      "id": "paper:a3c",
+      "kind": "paper",
+      "label": "Asynchronous Methods for Deep Reinforcement Learning",
+      "summary": "A3C의 대표 논문입니다.",
+      "reference_year": 2016,
+      "url": "https://arxiv.org/abs/1602.01783",
+      "authors": [
+        "Volodymyr Mnih",
+        "Adria Puigdomenech Badia",
+        "Mehdi Mirza",
+        "Alex Graves",
+        "Timothy Lillicrap",
+        "Tim Harley",
+        "David Silver",
+        "Koray Kavukcuoglu"
+      ]
+    },
+    {
+      "id": "model:a3c",
+      "kind": "model",
+      "label": "A3C",
+      "summary": "A3C 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2016,
+      "family": "reinforcement-learning",
+      "runtime_id": "a3c_rl",
+      "runtime_note": "단일 actor–critic worker의 정책·가치 head를 실행합니다. 다중 비동기 worker, 전역 파라미터와 학습은 생략합니다."
+    },
+    {
+      "id": "paper:ddpg",
+      "kind": "paper",
+      "label": "Continuous Control with Deep Reinforcement Learning",
+      "summary": "DDPG의 대표 논문입니다.",
+      "reference_year": 2015,
+      "url": "https://arxiv.org/abs/1509.02971",
+      "authors": [
+        "Timothy Lillicrap",
+        "Jonathan Hunt",
+        "Alexander Pritzel",
+        "Nicolas Heess",
+        "Tom Erez",
+        "Yuval Tassa",
+        "David Silver",
+        "Daan Wierstra"
+      ]
+    },
+    {
+      "id": "model:ddpg",
+      "kind": "model",
+      "label": "DDPG",
+      "summary": "DDPG 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2015,
+      "family": "reinforcement-learning",
+      "runtime_id": "ddpg_rl",
+      "runtime_note": "소형 결정적 actor와 상태·행동 critic을 실행합니다. 타깃 network, replay, 노이즈 및 학습은 생략합니다."
+    },
+    {
+      "id": "paper:td3",
+      "kind": "paper",
+      "label": "Addressing Function Approximation Error in Actor-Critic Methods",
+      "summary": "TD3의 대표 논문입니다.",
+      "reference_year": 2018,
+      "url": "https://proceedings.mlr.press/v80/fujimoto18a.html",
+      "authors": [
+        "Scott Fujimoto",
+        "Herke van Hoof",
+        "David Meger"
+      ]
+    },
+    {
+      "id": "model:td3",
+      "kind": "model",
+      "label": "TD3",
+      "summary": "TD3 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2018,
+      "family": "reinforcement-learning",
+      "runtime_id": "td3_rl",
+      "runtime_note": "결정적 actor와 두 state-action critic을 실행합니다. 지연 업데이트, target smoothing, replay 및 학습은 생략합니다."
+    },
+    {
+      "id": "paper:alphazero",
+      "kind": "paper",
+      "label": "Mastering Chess and Shogi by Self-Play with a General Reinforcement Learning Algorithm",
+      "summary": "AlphaZero의 대표 논문입니다.",
+      "reference_year": 2017,
+      "url": "https://arxiv.org/abs/1712.01815",
+      "authors": [
+        "David Silver",
+        "Thomas Hubert",
+        "Julian Schrittwieser",
+        "Ioannis Antonoglou",
+        "Matthew Lai",
+        "Arthur Guez",
+        "Marc Lanctot",
+        "Laurent Sifre",
+        "Dharshan Kumaran",
+        "Thore Graepel",
+        "Timothy Lillicrap",
+        "Karen Simonyan",
+        "Demis Hassabis"
+      ]
+    },
+    {
+      "id": "model:alphazero",
+      "kind": "model",
+      "label": "AlphaZero",
+      "summary": "AlphaZero 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2017,
+      "family": "reinforcement-learning",
+      "runtime_id": "alphazero_rl",
+      "runtime_note": "작은 공유 trunk와 정책 및 가치 head를 실행합니다. MCTS, 자기 대국, 원논문 residual CNN 및 학습은 포함하지 않습니다."
+    },
+    {
+      "id": "paper:planet",
+      "kind": "paper",
+      "label": "Learning Latent Dynamics for Planning from Pixels",
+      "summary": "PlaNet의 대표 논문입니다.",
+      "reference_year": 2018,
+      "url": "https://arxiv.org/abs/1811.04551",
+      "authors": [
+        "Danijar Hafner",
+        "Timothy Lillicrap",
+        "Ian Fischer",
+        "Ruben Villegas",
+        "David Ha",
+        "Honglak Lee",
+        "James Davidson"
+      ]
+    },
+    {
+      "id": "model:planet",
+      "kind": "model",
+      "label": "PlaNet",
+      "summary": "PlaNet 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2018,
+      "family": "reinforcement-learning",
+      "runtime_id": "planet_rl",
+      "runtime_note": "작은 관측 인코더, 결정론적 GRU 전이, 복원과 보상 예측을 실행합니다. 확률적 RSSM, CEM 계획기, 영상 입력과 학습은 포함하지 않습니다."
+    },
+    {
+      "id": "paper:world_models",
+      "kind": "paper",
+      "label": "World Models",
+      "summary": "World Models의 대표 논문입니다.",
+      "reference_year": 2018,
+      "url": "https://arxiv.org/abs/1803.10122",
+      "authors": [
+        "David Ha",
+        "Jürgen Schmidhuber"
+      ]
+    },
+    {
+      "id": "model:world_models",
+      "kind": "model",
+      "label": "World Models",
+      "summary": "World Models 강화학습 구조 및 알고리즘입니다.",
+      "reference_year": 2018,
+      "family": "reinforcement-learning",
+      "runtime_id": "world_models_rl",
+      "runtime_note": "작은 encoder, 결정론적 순환 memory, controller와 decoder를 실행합니다. VAE sampling, MDN-RNN의 mixture density, 진화 탐색과 환경은 생략합니다."
     }
   ],
   "edges": [
@@ -11472,6 +12327,2119 @@
         "paper:tabnet"
       ],
       "locator": "§3"
+    },
+    {
+      "source": "model:dqn",
+      "relation": "documented_in",
+      "target": "paper:dqn",
+      "basis": "documented",
+      "explanation": "DQN을 소개합니다.",
+      "evidence": [
+        "paper:dqn"
+      ]
+    },
+    {
+      "source": "model:dqn",
+      "relation": "uses",
+      "target": "concept:rl_value_learning",
+      "basis": "documented",
+      "explanation": "행동별 Q값을 추정합니다.",
+      "evidence": [
+        "paper:dqn"
+      ]
+    },
+    {
+      "source": "model:dqn",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "관측을 특징으로 변환합니다.",
+      "evidence": [
+        "paper:dqn"
+      ]
+    },
+    {
+      "source": "model:dqn",
+      "relation": "has_component",
+      "target": "component:rl_q_head",
+      "basis": "documented",
+      "explanation": "가능한 행동의 가치를 출력합니다.",
+      "evidence": [
+        "paper:dqn"
+      ]
+    },
+    {
+      "source": "model:dqn",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "가치 추정과 행동 선택으로 장기 보상을 최적화합니다.",
+      "evidence": [
+        "paper:dqn"
+      ]
+    },
+    {
+      "source": "model:dqn",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "Atari 행동 선택에 적용합니다.",
+      "evidence": [
+        "paper:dqn"
+      ]
+    },
+    {
+      "source": "model:ppo",
+      "relation": "documented_in",
+      "target": "paper:ppo",
+      "basis": "documented",
+      "explanation": "PPO를 소개합니다.",
+      "evidence": [
+        "paper:ppo"
+      ]
+    },
+    {
+      "source": "model:ppo",
+      "relation": "uses",
+      "target": "concept:rl_actor_critic",
+      "basis": "structural",
+      "explanation": "가치 기반 advantage 추정과 정책 학습을 결합합니다.",
+      "evidence": [
+        "paper:ppo"
+      ]
+    },
+    {
+      "source": "model:ppo",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제의 공유 특징 추출기입니다.",
+      "evidence": [
+        "paper:ppo"
+      ]
+    },
+    {
+      "source": "model:ppo",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "정책을 매개변수화합니다.",
+      "evidence": [
+        "paper:ppo"
+      ]
+    },
+    {
+      "source": "model:ppo",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "documented",
+      "explanation": "가치 함수를 추정합니다.",
+      "evidence": [
+        "paper:ppo"
+      ]
+    },
+    {
+      "source": "model:ppo",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "기대 보상 향상을 목표로 합니다.",
+      "evidence": [
+        "paper:ppo"
+      ]
+    },
+    {
+      "source": "model:ppo",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "연속 제어와 Atari에 평가합니다.",
+      "evidence": [
+        "paper:ppo"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "documented_in",
+      "target": "paper:dreamer",
+      "basis": "documented",
+      "explanation": "Dreamer를 소개합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "uses",
+      "target": "concept:rl_latent_imagination",
+      "basis": "documented",
+      "explanation": "잠재 모델에서 상상한 trajectory를 사용합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "uses",
+      "target": "concept:rl_actor_critic",
+      "basis": "documented",
+      "explanation": "잠재 공간에서 정책과 가치 모델을 학습합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "documented",
+      "explanation": "관측을 잠재 모델로 인코딩합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "has_component",
+      "target": "component:rl_posterior",
+      "basis": "documented",
+      "explanation": "관측으로 posterior state를 추정합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "has_component",
+      "target": "component:rl_dynamics",
+      "basis": "documented",
+      "explanation": "잠재 동역학을 모델링합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "잠재 상태를 사용해 행동을 선택합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "documented",
+      "explanation": "잠재 상태의 가치를 예측합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "has_component",
+      "target": "component:rl_reward",
+      "basis": "documented",
+      "explanation": "세계 모델이 보상을 예측합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "has_component",
+      "target": "component:rl_decoder",
+      "basis": "documented",
+      "explanation": "잠재 상태에서 관측을 예측합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "documented",
+      "explanation": "상상된 가치의 기울기로 행동을 최적화합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "영상 기반 제어 과제에 적용합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:diayn",
+      "relation": "documented_in",
+      "target": "paper:diayn",
+      "basis": "documented",
+      "explanation": "DIAYN을 소개합니다.",
+      "evidence": [
+        "paper:diayn"
+      ]
+    },
+    {
+      "source": "model:diayn",
+      "relation": "uses",
+      "target": "concept:rl_skill_discovery",
+      "basis": "documented",
+      "explanation": "보상 없이 구별 가능한 스킬을 학습합니다.",
+      "evidence": [
+        "paper:diayn"
+      ]
+    },
+    {
+      "source": "model:diayn",
+      "relation": "has_component",
+      "target": "component:rl_skill_embedding",
+      "basis": "structural",
+      "explanation": "실행 예제는 이산 스킬을 조건 벡터로 변환합니다.",
+      "evidence": [
+        "paper:diayn"
+      ]
+    },
+    {
+      "source": "model:diayn",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "스킬 조건부 정책을 학습합니다.",
+      "evidence": [
+        "paper:diayn"
+      ]
+    },
+    {
+      "source": "model:diayn",
+      "relation": "has_component",
+      "target": "component:rl_skill_discriminator",
+      "basis": "documented",
+      "explanation": "상태에서 스킬을 예측합니다.",
+      "evidence": [
+        "paper:diayn"
+      ]
+    },
+    {
+      "source": "model:diayn",
+      "relation": "trained_with",
+      "target": "objective:rl_skill_diversity",
+      "basis": "documented",
+      "explanation": "정보 이론적 스킬 다양성 목적을 최적화합니다.",
+      "evidence": [
+        "paper:diayn"
+      ]
+    },
+    {
+      "source": "model:diayn",
+      "relation": "applied_to",
+      "target": "task:rl_skill_learning",
+      "basis": "documented",
+      "explanation": "비지도 스킬 발견에 적용합니다.",
+      "evidence": [
+        "paper:diayn"
+      ]
+    },
+    {
+      "source": "model:sac",
+      "relation": "documented_in",
+      "target": "paper:sac",
+      "basis": "documented",
+      "explanation": "SAC를 소개한 논문입니다.",
+      "evidence": [
+        "paper:sac"
+      ]
+    },
+    {
+      "source": "model:sac",
+      "relation": "uses",
+      "target": "concept:rl_max_entropy",
+      "basis": "documented",
+      "explanation": "엔트로피와 보상을 함께 최대화합니다.",
+      "evidence": [
+        "paper:sac"
+      ]
+    },
+    {
+      "source": "model:sac",
+      "relation": "uses",
+      "target": "concept:rl_actor_critic",
+      "basis": "documented",
+      "explanation": "확률적 actor와 critic을 사용합니다.",
+      "evidence": [
+        "paper:sac"
+      ]
+    },
+    {
+      "source": "model:sac",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "확률적 정책을 매개변수화합니다.",
+      "evidence": [
+        "paper:sac"
+      ]
+    },
+    {
+      "source": "model:sac",
+      "relation": "has_component",
+      "target": "component:rl_q_head",
+      "basis": "documented",
+      "explanation": "Q 함수를 추정합니다.",
+      "evidence": [
+        "paper:sac"
+      ]
+    },
+    {
+      "source": "model:sac",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "엔트로피를 포함한 장기 보상을 추구합니다.",
+      "evidence": [
+        "paper:sac"
+      ]
+    },
+    {
+      "source": "model:sac",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "연속 제어 과제에 적용합니다.",
+      "evidence": [
+        "paper:sac"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "documented_in",
+      "target": "paper:muzero",
+      "basis": "documented",
+      "explanation": "MuZero를 소개합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "uses",
+      "target": "concept:rl_learned_planning",
+      "basis": "documented",
+      "explanation": "학습된 모델의 예측을 트리 탐색에 사용합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "documented",
+      "explanation": "관측을 잠재 상태로 나타냅니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "has_component",
+      "target": "component:rl_dynamics",
+      "basis": "documented",
+      "explanation": "행동에 따른 잠재 전이를 예측합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "has_component",
+      "target": "component:rl_reward",
+      "basis": "documented",
+      "explanation": "전이 보상을 예측합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "정책 prior를 예측합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "documented",
+      "explanation": "잠재 상태의 가치를 예측합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "탐색과 자기 대국을 통해 장기 성과를 추구합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "Atari 및 보드 게임에서 행동을 선택합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "documented_in",
+      "target": "paper:decision_transformer",
+      "basis": "documented",
+      "explanation": "Decision Transformer를 소개합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "uses",
+      "target": "concept:rl_return_conditioning",
+      "basis": "documented",
+      "explanation": "목표 return과 과거 궤적에 조건부로 행동을 산출합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "has_component",
+      "target": "component:rl_return_embedding",
+      "basis": "documented",
+      "explanation": "return-to-go를 토큰으로 투영합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "has_component",
+      "target": "component:rl_state_embedding",
+      "basis": "documented",
+      "explanation": "상태를 토큰으로 투영합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "has_component",
+      "target": "component:rl_action_embedding",
+      "basis": "documented",
+      "explanation": "행동을 토큰으로 투영합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "has_component",
+      "target": "component:rl_causal_transformer",
+      "basis": "documented",
+      "explanation": "causal Transformer가 trajectory를 처리합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "structural",
+      "explanation": "상태 토큰에서 행동을 예측합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "오프라인 데이터로 제어 행동을 예측합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "extends",
+      "target": "model:transformer",
+      "basis": "structural",
+      "explanation": "인과 Transformer를 trajectory 모델링에 적용합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:decision_transformer",
+      "relation": "trained_with",
+      "target": "objective:rl_action_prediction",
+      "basis": "documented",
+      "explanation": "return에 조건부로 궤적의 행동을 예측합니다.",
+      "evidence": [
+        "paper:decision_transformer"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "documented_in",
+      "target": "paper:dreamerv2",
+      "basis": "documented",
+      "explanation": "DreamerV2 원논문입니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "extends",
+      "target": "model:dreamer",
+      "basis": "documented",
+      "explanation": "Dreamer의 잠재 모델을 이산 상태로 확장합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "uses",
+      "target": "concept:rl_discrete_latent",
+      "basis": "documented",
+      "explanation": "범주형 잠재 변수를 사용합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "uses",
+      "target": "concept:rl_latent_imagination",
+      "basis": "documented",
+      "explanation": "상상된 잠재 경로에서 행동을 학습합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "documented",
+      "explanation": "관측을 인코딩합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "has_component",
+      "target": "component:rl_posterior",
+      "basis": "documented",
+      "explanation": "범주형 잠재 상태를 추정합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "has_component",
+      "target": "component:rl_dynamics",
+      "basis": "documented",
+      "explanation": "잠재 전이를 예측합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "상상 경로에서 정책을 학습합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "documented",
+      "explanation": "잠재 상태의 가치를 예측합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "has_component",
+      "target": "component:rl_reward",
+      "basis": "documented",
+      "explanation": "보상을 예측합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "has_component",
+      "target": "component:rl_decoder",
+      "basis": "documented",
+      "explanation": "관측을 복원합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "상상된 보상을 최적화합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv2",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "Atari와 시각 제어에 적용합니다.",
+      "evidence": [
+        "paper:dreamerv2"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "documented_in",
+      "target": "paper:dreamerv3",
+      "basis": "documented",
+      "explanation": "DreamerV3 원논문입니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "extends",
+      "target": "model:dreamerv2",
+      "basis": "documented",
+      "explanation": "DreamerV2 세계 모델과 학습을 개선합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "uses",
+      "target": "concept:rl_discrete_latent",
+      "basis": "documented",
+      "explanation": "범주형 잠재 상태를 사용합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "uses",
+      "target": "concept:rl_symlog",
+      "basis": "documented",
+      "explanation": "다양한 크기의 신호를 symlog로 다룹니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "uses",
+      "target": "concept:rl_latent_imagination",
+      "basis": "documented",
+      "explanation": "잠재 공간 상상으로 actor–critic을 학습합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "documented",
+      "explanation": "관측을 인코딩합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "has_component",
+      "target": "component:rl_posterior",
+      "basis": "documented",
+      "explanation": "잠재 상태를 추정합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "has_component",
+      "target": "component:rl_dynamics",
+      "basis": "documented",
+      "explanation": "잠재 동역학을 모델링합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "행동 정책을 출력합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "documented",
+      "explanation": "가치를 추정합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "has_component",
+      "target": "component:rl_reward",
+      "basis": "documented",
+      "explanation": "보상을 예측합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "has_component",
+      "target": "component:rl_decoder",
+      "basis": "documented",
+      "explanation": "관측을 복원합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "행동의 장기 보상을 최적화합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamerv3",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "다양한 제어 환경에서 평가합니다.",
+      "evidence": [
+        "paper:dreamerv3"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "documented_in",
+      "target": "paper:dreamer4",
+      "basis": "documented",
+      "explanation": "Dreamer 4 원논문입니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "extends",
+      "target": "model:dreamerv3",
+      "basis": "structural",
+      "explanation": "Dreamer 계열의 세계 모델과 상상 행동 학습을 발전시킵니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "uses",
+      "target": "concept:rl_video_world_model",
+      "basis": "documented",
+      "explanation": "행동 조건부 세계 모델로 시각적 미래를 생성합니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "uses",
+      "target": "concept:rl_latent_imagination",
+      "basis": "documented",
+      "explanation": "세계 모델의 예측 안에서 행동을 학습합니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "관측을 특징으로 변환합니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "has_component",
+      "target": "component:rl_action_embedding",
+      "basis": "structural",
+      "explanation": "행동 조건을 세계 모델에 전달합니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "has_component",
+      "target": "component:rl_causal_transformer",
+      "basis": "structural",
+      "explanation": "Transformer가 조건부 세계 모델을 구성합니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "has_component",
+      "target": "component:rl_decoder",
+      "basis": "structural",
+      "explanation": "세계 모델의 시각 예측 경로를 표현합니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "상상된 경험으로 정책을 학습합니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "structural",
+      "explanation": "정책 최적화에 사용되는 가치 추정 경로입니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "documented",
+      "explanation": "세계 모델 안에서 강화학습합니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dreamer4",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "Minecraft 등 장기 제어를 다룹니다.",
+      "evidence": [
+        "paper:dreamer4"
+      ]
+    },
+    {
+      "source": "model:dads",
+      "relation": "documented_in",
+      "target": "paper:dads",
+      "basis": "documented",
+      "explanation": "DADS 원논문입니다.",
+      "evidence": [
+        "paper:dads"
+      ]
+    },
+    {
+      "source": "model:dads",
+      "relation": "uses",
+      "target": "concept:rl_skill_discovery",
+      "basis": "documented",
+      "explanation": "보상 없이 스킬을 발견합니다.",
+      "evidence": [
+        "paper:dads"
+      ]
+    },
+    {
+      "source": "model:dads",
+      "relation": "uses",
+      "target": "concept:rl_skill_dynamics",
+      "basis": "documented",
+      "explanation": "스킬별 예측 가능한 전이를 학습합니다.",
+      "evidence": [
+        "paper:dads"
+      ]
+    },
+    {
+      "source": "model:dads",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "스킬 조건부 정책을 사용합니다.",
+      "evidence": [
+        "paper:dads"
+      ]
+    },
+    {
+      "source": "model:dads",
+      "relation": "has_component",
+      "target": "component:rl_skill_dynamics",
+      "basis": "documented",
+      "explanation": "스킬 조건부 동역학을 추정합니다.",
+      "evidence": [
+        "paper:dads"
+      ]
+    },
+    {
+      "source": "model:dads",
+      "relation": "trained_with",
+      "target": "objective:rl_skill_diversity",
+      "basis": "structural",
+      "explanation": "스킬에 따른 전이의 구별 가능성을 높입니다.",
+      "evidence": [
+        "paper:dads"
+      ]
+    },
+    {
+      "source": "model:dads",
+      "relation": "applied_to",
+      "target": "task:rl_skill_learning",
+      "basis": "documented",
+      "explanation": "비지도 스킬을 발견합니다.",
+      "evidence": [
+        "paper:dads"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "documented_in",
+      "target": "paper:aps",
+      "basis": "documented",
+      "explanation": "APS 원논문입니다.",
+      "evidence": [
+        "paper:aps"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "uses",
+      "target": "concept:rl_skill_discovery",
+      "basis": "structural",
+      "explanation": "과제 조건부 행동을 사전학습합니다.",
+      "evidence": [
+        "paper:aps"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "uses",
+      "target": "concept:rl_successor_features",
+      "basis": "documented",
+      "explanation": "successor feature를 사용합니다.",
+      "evidence": [
+        "paper:aps"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "상태 특징을 학습합니다.",
+      "evidence": [
+        "paper:aps"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "documented",
+      "explanation": "조건부 정책을 학습합니다.",
+      "evidence": [
+        "paper:aps"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "has_component",
+      "target": "component:rl_successor_features",
+      "basis": "documented",
+      "explanation": "후속 특징을 예측합니다.",
+      "evidence": [
+        "paper:aps"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "trained_with",
+      "target": "objective:rl_skill_diversity",
+      "basis": "structural",
+      "explanation": "과제와 상태 사이 상호정보량을 추구합니다.",
+      "evidence": [
+        "paper:aps"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "applied_to",
+      "target": "task:rl_skill_learning",
+      "basis": "documented",
+      "explanation": "보상 없는 사전학습을 수행합니다.",
+      "evidence": [
+        "paper:aps"
+      ]
+    },
+    {
+      "source": "model:option_critic",
+      "relation": "documented_in",
+      "target": "paper:option_critic",
+      "basis": "documented",
+      "explanation": "Option-Critic 원논문입니다.",
+      "evidence": [
+        "paper:option_critic"
+      ]
+    },
+    {
+      "source": "model:option_critic",
+      "relation": "uses",
+      "target": "concept:rl_temporal_options",
+      "basis": "documented",
+      "explanation": "다단계 옵션과 종료를 학습합니다.",
+      "evidence": [
+        "paper:option_critic"
+      ]
+    },
+    {
+      "source": "model:option_critic",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제의 공유 특징 추출기입니다.",
+      "evidence": [
+        "paper:option_critic"
+      ]
+    },
+    {
+      "source": "model:option_critic",
+      "relation": "has_component",
+      "target": "component:rl_option_values",
+      "basis": "documented",
+      "explanation": "옵션별 가치를 추정합니다.",
+      "evidence": [
+        "paper:option_critic"
+      ]
+    },
+    {
+      "source": "model:option_critic",
+      "relation": "has_component",
+      "target": "component:rl_option_policies",
+      "basis": "documented",
+      "explanation": "옵션 내부 정책을 학습합니다.",
+      "evidence": [
+        "paper:option_critic"
+      ]
+    },
+    {
+      "source": "model:option_critic",
+      "relation": "has_component",
+      "target": "component:rl_option_termination",
+      "basis": "documented",
+      "explanation": "옵션 종료 함수를 학습합니다.",
+      "evidence": [
+        "paper:option_critic"
+      ]
+    },
+    {
+      "source": "model:option_critic",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "documented",
+      "explanation": "옵션 정책과 종료를 환경 보상으로 최적화합니다.",
+      "evidence": [
+        "paper:option_critic"
+      ]
+    },
+    {
+      "source": "model:option_critic",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "documented",
+      "explanation": "이산 및 연속 제어에 적용합니다.",
+      "evidence": [
+        "paper:option_critic"
+      ]
+    },
+    {
+      "source": "model:double_dqn",
+      "relation": "documented_in",
+      "target": "paper:double_dqn",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:double_dqn"
+      ]
+    },
+    {
+      "source": "model:double_dqn",
+      "relation": "uses",
+      "target": "concept:rl_value_learning",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:double_dqn"
+      ]
+    },
+    {
+      "source": "model:double_dqn",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:double_dqn"
+      ]
+    },
+    {
+      "source": "model:double_dqn",
+      "relation": "has_component",
+      "target": "component:rl_q_head",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:double_dqn"
+      ]
+    },
+    {
+      "source": "model:double_dqn",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:double_dqn"
+      ]
+    },
+    {
+      "source": "model:double_dqn",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:double_dqn"
+      ]
+    },
+    {
+      "source": "model:double_dqn",
+      "relation": "extends",
+      "target": "model:dqn",
+      "basis": "structural",
+      "explanation": "명시된 기반 기법의 구조 또는 학습법을 확장합니다.",
+      "evidence": [
+        "paper:double_dqn"
+      ]
+    },
+    {
+      "source": "model:dueling_dqn",
+      "relation": "documented_in",
+      "target": "paper:dueling_dqn",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:dueling_dqn"
+      ]
+    },
+    {
+      "source": "model:dueling_dqn",
+      "relation": "uses",
+      "target": "concept:rl_value_learning",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:dueling_dqn"
+      ]
+    },
+    {
+      "source": "model:dueling_dqn",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:dueling_dqn"
+      ]
+    },
+    {
+      "source": "model:dueling_dqn",
+      "relation": "has_component",
+      "target": "component:rl_value_stream",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:dueling_dqn"
+      ]
+    },
+    {
+      "source": "model:dueling_dqn",
+      "relation": "has_component",
+      "target": "component:rl_advantage_stream",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:dueling_dqn"
+      ]
+    },
+    {
+      "source": "model:dueling_dqn",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:dueling_dqn"
+      ]
+    },
+    {
+      "source": "model:dueling_dqn",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:dueling_dqn"
+      ]
+    },
+    {
+      "source": "model:dueling_dqn",
+      "relation": "extends",
+      "target": "model:dqn",
+      "basis": "structural",
+      "explanation": "명시된 기반 기법의 구조 또는 학습법을 확장합니다.",
+      "evidence": [
+        "paper:dueling_dqn"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "documented_in",
+      "target": "paper:rainbow",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "uses",
+      "target": "concept:rl_value_learning",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "has_component",
+      "target": "component:rl_value_stream",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "has_component",
+      "target": "component:rl_advantage_stream",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "extends",
+      "target": "model:dqn",
+      "basis": "structural",
+      "explanation": "명시된 기반 기법의 구조 또는 학습법을 확장합니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:reinforce",
+      "relation": "documented_in",
+      "target": "paper:reinforce",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:reinforce"
+      ]
+    },
+    {
+      "source": "model:reinforce",
+      "relation": "uses",
+      "target": "concept:rl_policy_gradient",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:reinforce"
+      ]
+    },
+    {
+      "source": "model:reinforce",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:reinforce"
+      ]
+    },
+    {
+      "source": "model:reinforce",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:reinforce"
+      ]
+    },
+    {
+      "source": "model:reinforce",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:reinforce"
+      ]
+    },
+    {
+      "source": "model:reinforce",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:reinforce"
+      ]
+    },
+    {
+      "source": "model:actor_critic",
+      "relation": "documented_in",
+      "target": "paper:actor_critic",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:actor_critic"
+      ]
+    },
+    {
+      "source": "model:actor_critic",
+      "relation": "uses",
+      "target": "concept:rl_actor_critic",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:actor_critic"
+      ]
+    },
+    {
+      "source": "model:actor_critic",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:actor_critic"
+      ]
+    },
+    {
+      "source": "model:actor_critic",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:actor_critic"
+      ]
+    },
+    {
+      "source": "model:actor_critic",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:actor_critic"
+      ]
+    },
+    {
+      "source": "model:actor_critic",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:actor_critic"
+      ]
+    },
+    {
+      "source": "model:actor_critic",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:actor_critic"
+      ]
+    },
+    {
+      "source": "model:a3c",
+      "relation": "documented_in",
+      "target": "paper:a3c",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:a3c"
+      ]
+    },
+    {
+      "source": "model:a3c",
+      "relation": "uses",
+      "target": "concept:rl_actor_critic",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:a3c"
+      ]
+    },
+    {
+      "source": "model:a3c",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:a3c"
+      ]
+    },
+    {
+      "source": "model:a3c",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:a3c"
+      ]
+    },
+    {
+      "source": "model:a3c",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:a3c"
+      ]
+    },
+    {
+      "source": "model:a3c",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:a3c"
+      ]
+    },
+    {
+      "source": "model:a3c",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:a3c"
+      ]
+    },
+    {
+      "source": "model:a3c",
+      "relation": "extends",
+      "target": "model:actor_critic",
+      "basis": "structural",
+      "explanation": "명시된 기반 기법의 구조 또는 학습법을 확장합니다.",
+      "evidence": [
+        "paper:a3c"
+      ]
+    },
+    {
+      "source": "model:ddpg",
+      "relation": "documented_in",
+      "target": "paper:ddpg",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:ddpg"
+      ]
+    },
+    {
+      "source": "model:ddpg",
+      "relation": "uses",
+      "target": "concept:rl_actor_critic",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:ddpg"
+      ]
+    },
+    {
+      "source": "model:ddpg",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:ddpg"
+      ]
+    },
+    {
+      "source": "model:ddpg",
+      "relation": "has_component",
+      "target": "component:rl_q_head",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:ddpg"
+      ]
+    },
+    {
+      "source": "model:ddpg",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:ddpg"
+      ]
+    },
+    {
+      "source": "model:ddpg",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:ddpg"
+      ]
+    },
+    {
+      "source": "model:td3",
+      "relation": "documented_in",
+      "target": "paper:td3",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:td3"
+      ]
+    },
+    {
+      "source": "model:td3",
+      "relation": "uses",
+      "target": "concept:rl_actor_critic",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:td3"
+      ]
+    },
+    {
+      "source": "model:td3",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:td3"
+      ]
+    },
+    {
+      "source": "model:td3",
+      "relation": "has_component",
+      "target": "component:rl_q_head",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:td3"
+      ]
+    },
+    {
+      "source": "model:td3",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:td3"
+      ]
+    },
+    {
+      "source": "model:td3",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:td3"
+      ]
+    },
+    {
+      "source": "model:td3",
+      "relation": "extends",
+      "target": "model:ddpg",
+      "basis": "structural",
+      "explanation": "명시된 기반 기법의 구조 또는 학습법을 확장합니다.",
+      "evidence": [
+        "paper:td3"
+      ]
+    },
+    {
+      "source": "model:alphazero",
+      "relation": "documented_in",
+      "target": "paper:alphazero",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:alphazero"
+      ]
+    },
+    {
+      "source": "model:alphazero",
+      "relation": "uses",
+      "target": "concept:rl_self_play",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:alphazero"
+      ]
+    },
+    {
+      "source": "model:alphazero",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:alphazero"
+      ]
+    },
+    {
+      "source": "model:alphazero",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:alphazero"
+      ]
+    },
+    {
+      "source": "model:alphazero",
+      "relation": "has_component",
+      "target": "component:rl_critic",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:alphazero"
+      ]
+    },
+    {
+      "source": "model:alphazero",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:alphazero"
+      ]
+    },
+    {
+      "source": "model:alphazero",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:alphazero"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "documented_in",
+      "target": "paper:planet",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "uses",
+      "target": "concept:rl_learned_planning",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "has_component",
+      "target": "component:rl_posterior",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "has_component",
+      "target": "component:rl_dynamics",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "has_component",
+      "target": "component:rl_reward",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "has_component",
+      "target": "component:rl_decoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:world_models",
+      "relation": "documented_in",
+      "target": "paper:world_models",
+      "basis": "documented",
+      "explanation": "모델의 대표 논문입니다.",
+      "evidence": [
+        "paper:world_models"
+      ]
+    },
+    {
+      "source": "model:world_models",
+      "relation": "uses",
+      "target": "concept:rl_latent_imagination",
+      "basis": "structural",
+      "explanation": "해당 개념을 사용합니다.",
+      "evidence": [
+        "paper:world_models"
+      ]
+    },
+    {
+      "source": "model:world_models",
+      "relation": "has_component",
+      "target": "component:rl_encoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:world_models"
+      ]
+    },
+    {
+      "source": "model:world_models",
+      "relation": "has_component",
+      "target": "component:rl_dynamics",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:world_models"
+      ]
+    },
+    {
+      "source": "model:world_models",
+      "relation": "has_component",
+      "target": "component:rl_actor",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:world_models"
+      ]
+    },
+    {
+      "source": "model:world_models",
+      "relation": "has_component",
+      "target": "component:rl_decoder",
+      "basis": "structural",
+      "explanation": "실행 예제에 연결된 신경망 구성 요소입니다.",
+      "evidence": [
+        "paper:world_models"
+      ]
+    },
+    {
+      "source": "model:world_models",
+      "relation": "trained_with",
+      "target": "objective:rl_return",
+      "basis": "structural",
+      "explanation": "환경에서 장기 성과를 최적화합니다.",
+      "evidence": [
+        "paper:world_models"
+      ]
+    },
+    {
+      "source": "model:world_models",
+      "relation": "applied_to",
+      "target": "task:rl_control",
+      "basis": "structural",
+      "explanation": "순차 제어 또는 게임 의사결정에 사용합니다.",
+      "evidence": [
+        "paper:world_models"
+      ]
+    },
+    {
+      "source": "model:ppo",
+      "relation": "extends",
+      "target": "model:actor_critic",
+      "basis": "structural",
+      "explanation": "PPO의 actor–critic 구현은 정책 업데이트에 clipped objective를 적용합니다.",
+      "evidence": [
+        "paper:ppo"
+      ]
+    },
+    {
+      "source": "model:ddpg",
+      "relation": "extends",
+      "target": "model:actor_critic",
+      "basis": "structural",
+      "explanation": "결정적 정책과 action-value critic을 결합합니다.",
+      "evidence": [
+        "paper:ddpg"
+      ]
+    },
+    {
+      "source": "model:sac",
+      "relation": "alternative_to",
+      "target": "model:td3",
+      "basis": "structural",
+      "explanation": "연속 제어에서 결정적 정책과 확률적 최대 엔트로피 정책을 비교합니다.",
+      "evidence": [
+        "paper:sac",
+        "paper:td3"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "extends",
+      "target": "model:double_dqn",
+      "basis": "documented",
+      "explanation": "Rainbow는 Double Q-learning을 포함한 개선을 결합합니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:rainbow",
+      "relation": "extends",
+      "target": "model:dueling_dqn",
+      "basis": "documented",
+      "explanation": "Rainbow는 dueling 구조를 포함합니다.",
+      "evidence": [
+        "paper:rainbow"
+      ]
+    },
+    {
+      "source": "model:muzero",
+      "relation": "extends",
+      "target": "model:alphazero",
+      "basis": "documented",
+      "explanation": "완전한 게임 규칙 대신 학습된 모델을 탐색에 사용합니다.",
+      "evidence": [
+        "paper:muzero"
+      ]
+    },
+    {
+      "source": "model:planet",
+      "relation": "extends",
+      "target": "model:world_models",
+      "basis": "structural",
+      "explanation": "시각 입력의 잠재 동역학을 이용해 계획합니다.",
+      "evidence": [
+        "paper:planet"
+      ]
+    },
+    {
+      "source": "model:dreamer",
+      "relation": "extends",
+      "target": "model:planet",
+      "basis": "documented",
+      "explanation": "PlaNet 계열의 잠재 세계 모델에서 행동을 학습합니다.",
+      "evidence": [
+        "paper:dreamer"
+      ]
+    },
+    {
+      "source": "model:dads",
+      "relation": "alternative_to",
+      "target": "model:diayn",
+      "basis": "structural",
+      "explanation": "상태에서 스킬을 분류하는 대신 스킬에 조건부인 전이를 모델링합니다.",
+      "evidence": [
+        "paper:dads",
+        "paper:diayn"
+      ]
+    },
+    {
+      "source": "model:aps",
+      "relation": "alternative_to",
+      "target": "model:diayn",
+      "basis": "structural",
+      "explanation": "스킬 표현 사전학습에서 successor feature와 상태 탐색을 결합합니다.",
+      "evidence": [
+        "paper:aps",
+        "paper:diayn"
+      ]
     }
   ]
 }
