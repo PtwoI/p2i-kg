@@ -1,3 +1,4 @@
+import {mindmap,neighborhood,connectionLayout,edgePath,NODE_WIDTH,NODE_HEIGHT} from './layout.js?v=20261103-dependency-flow';
 import {read,hosted} from './catalog-client.js?v=neon-v1';
 const $=selector=>document.querySelector(selector);
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -8,7 +9,7 @@ let mapRequest=0;
 const relations={extends:'확장',alternative_to:'대안',documented_in:'대표 문헌',uses:'사용 개념',has_component:'구성 요소',subconcept_of:'상위 개념',trained_with:'학습 목적',applied_to:'적용 과제'};
 const kinds={model:'모델',concept:'개념',paper:'논문',component:'구성 요소',objective:'학습 목적',task:'과제'};
 const bases={documented:'문헌 관계',structural:'구조적 관계',pedagogical:'교육적 연결'};
-const families={feedforward:['Feedforward','#c6ff6b'],sequence:['Sequence','#b99aff'],vision:['Vision','#5ccfff'],attention:['Attention','#39f6cf'],generative:['Generative','#ffba69'],graph:['Graph','#d8ec6a'],multimodal:['Multimodal','#ff87ca']};
+const families={feedforward:['Feedforward','#c6ff6b'],sequence:['Sequence','#b99aff'],vision:['Vision','#5ccfff'],attention:['Attention','#39f6cf'],generative:['Generative','#ffba69'],graph:['Graph','#d8ec6a'],multimodal:['Multimodal','#ff87ca'],set:['Set models','#73d9c7'],'3d':['3D vision','#8db9ff'],'self-supervised':['Self-supervised','#e8a3ff'],'state-space':['State space','#d5b6ff'],'reinforcement-learning':['Reinforcement learning','#ffcf70']};
 function select(id,{closePanels=true}={}){
  if(!nodes.has(id))return;selected=id;
  const previousMode=mode;if(nodes.get(id).kind!=='model')mode='neighborhood';
@@ -19,46 +20,59 @@ function select(id,{closePanels=true}={}){
 function chip(id){const node=nodes.get(id);return `<button class="chip" data-node="${esc(id)}">${esc(node?.label??id)}</button>`}
 function applyCamera(){ $('#map').setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.width} ${camera.height}`);$('#zoom-reset').textContent=zoom===1?'전체':Math.round(zoom*100)+'%'; }
 function fit(){zoom=1;camera={x:0,y:0,width:world.width,height:world.height};applyCamera();}
-function scaleMap(factor){const next=Math.max(.6,Math.min(5,zoom*factor)),ratio=zoom/next;camera={x:camera.x+camera.width*(1-ratio)/2,y:camera.y+camera.height*(1-ratio)/2,width:camera.width*ratio,height:camera.height*ratio};zoom=next;applyCamera();}
+function scaleMap(factor){const next=Math.max(.3,Math.min(16,zoom*factor)),ratio=zoom/next;camera={x:camera.x+camera.width*(1-ratio)/2,y:camera.y+camera.height*(1-ratio)/2,width:camera.width*ratio,height:camera.height*ratio};zoom=next;applyCamera();}
+function wrapLabel(label,max=24){
+ const chars=Array.from(label);if(chars.length<=max)return [label];
+ let split=label.lastIndexOf(' ',max);if(split<max/2)split=max;
+ const tail=Array.from(chars.slice(split).join('').trim());
+ return [chars.slice(0,split).join(''),tail.length>max?tail.slice(0,max-1).join('')+'…':tail.join('')];
+}
 async function renderMap(reset=true){
- const request=++mapRequest,id=selected;
+ const request=++mapRequest,id=selected,family=$('#family').value;
  $('#overview').setAttribute('aria-pressed',String(mode==='overview'));$('#neighborhood').setAttribute('aria-pressed',String(mode==='neighborhood'));$('.focus-controls').hidden=mode==='overview';
  try{
-  const hops=$('#hops').value,relation=$('#relation').value,family=$('#family').value;
-  let result,positions=new Map(),width,height;
-  if(mode==='overview'){
-   const models=graph.nodes.filter(n=>n.kind==='model'&&(family==='all'||n.family===family)).sort((a,b)=>(a.reference_year??0)-(b.reference_year??0)||a.id.localeCompare(b.id));
-   const known=new Set(models.map(n=>n.id));result={nodes:models,edges:graph.edges.filter(e=>known.has(e.source)&&known.has(e.target)&&['extends','alternative_to'].includes(e.relation))};
-   const columns=Math.min(6,Math.max(2,Math.ceil(Math.sqrt(models.length*1.5)))),rows=Math.ceil(models.length/columns);
-   width=columns*226+70;height=rows*132+85;
-   models.forEach((node,i)=>positions.set(node.id,[145+(i%columns)*226,85+Math.floor(i/columns)*132]));
-  }else{
-   result=await read(`/api/kg/neighborhood/${encodeURIComponent(id)}?hops=${hops}&limit=40${relation?'&relations='+relation:''}`);if(request!==mapRequest)return;
-   const neighbors=result.nodes.filter(n=>n.id!==id).sort((a,b)=>a.kind.localeCompare(b.kind)||a.label.localeCompare(b.label));
-   const columns=neighbors.length>14?4:3,rows=Math.max(2,Math.ceil(neighbors.length/columns));width=390+columns*226;height=rows*120+70;
-   positions.set(id,[140,height/2]);neighbors.forEach((node,i)=>positions.set(node.id,[405+Math.floor(i/rows)*226,70+(i%rows)*120]));
-  }
+  const hops=Number($('#hops').value),relation=$('#relation').value;
+  const result=mode==='neighborhood'?neighborhood(graph,id,hops,relation):null;
+  const layout=mode==='overview'?mindmap(graph,family):connectionLayout(result,id);
   if(request!==mapRequest)return;
-  world={width,height};const adjacent=new Set(result.edges.filter(e=>e.source===id||e.target===id).flatMap(e=>[e.source,e.target]));
-  let svg='<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#809d8d"/></marker></defs>';
-  if(mode==='overview')svg+=`<text x="45" y="25" class="map-caption">모델 ${result.nodes.length}개 · 대표 문헌 연도순 · 색상은 모델 계열</text>`;
-  for(const edge of result.edges){
-   const a=positions.get(edge.source),b=positions.get(edge.target);if(!a||!b)continue;
-   let path;
-   if(Math.abs(a[1]-b[1])<10){const forward=b[0]>a[0],x1=a[0]+(forward?96:-96),x2=b[0]+(forward?-96:96),lift=Math.abs(a[0]-b[0])>230?55:18;path=`M${x1},${a[1]} C${x1},${a[1]-lift} ${x2},${b[1]-lift} ${x2},${b[1]}`;}
-   else{const down=b[1]>a[1],y1=a[1]+(down?39:-39),y2=b[1]+(down?-39:39),mid=(y1+y2)/2;path=`M${a[0]},${y1} C${a[0]},${mid} ${b[0]},${mid} ${b[0]},${y2}`;}
-   const index=graph.edges.indexOf(edge),key=index<0?graph.edges.findIndex(e=>e.source===edge.source&&e.target===edge.target&&e.relation===edge.relation):index;
-   svg+=`<g data-edge="${key}" role="button" tabindex="0" aria-label="관계 ${esc(nodes.get(edge.source)?.label)} → ${esc(nodes.get(edge.target)?.label)} · ${esc(relations[edge.relation])}"><title>${esc(edge.explanation)}</title><path class="edge-hit" d="${path}"/><path class="map-edge ${edge.basis==='pedagogical'||edge.relation==='alternative_to'?'dotted':''} ${[edge.source,edge.target].includes(id)?'active':'faded'}" d="${path}" marker-end="url(#arrow)"/></g>`;
+  const items=new Map(layout.items.map(item=>[item.key,item]));
+  world={width:layout.width,height:layout.height};
+  const adjacent=new Set(graph.edges.filter(e=>e.source===id||e.target===id).flatMap(e=>[e.source,e.target]));
+  let svg='<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M1,1 L7,4 L1,7" fill="none" stroke="context-stroke" stroke-width="1.5"/></marker></defs>';
+  for(const guide of layout.guides)svg+=`<g class="direction-guide ${guide.side}" transform="translate(${guide.x},${guide.y})"><text text-anchor="middle">${esc(guide.label)}</text><path d="M-65,14 H65"/></g>`;
+  for(const branch of layout.branches){
+   const a=items.get(branch.source),b=items.get(branch.target),color=families[b.node.family]?.[1]??'#9cadc5';
+   svg+=`<path class="mindmap-branch" style="--branch-color:${color}" d="${edgePath(a,b)}"/>`;
   }
-  for(const node of result.nodes){
-   const [x,y]=positions.get(node.id),label=Array.from(node.label),short=label.length>21?label.slice(0,20).join('')+'…':node.label,accent=families[node.family]?.[1]??'#6d8a74';
-   svg+=`<g class="model-node kind-${node.kind} ${node.id===id?'selected':adjacent.has(node.id)?'related':''}" style="--node-accent:${accent}" data-node="${esc(node.id)}" role="button" tabindex="0" aria-label="선택 ${esc(node.label)}" transform="translate(${x-96},${y-39})"><title>${esc(node.label)}</title><rect width="192" height="78" rx="9"/><rect class="node-stripe" x="0" y="14" width="3" height="49" rx="1"/><text x="15" y="19" class="node-index">${esc(node.kind==='model'?families[node.family]?.[0]??'MODEL':kinds[node.kind])}</text><text x="15" y="44" class="node-label">${esc(short)}</text><text x="15" y="65" class="node-year">${esc(node.reference_year??'ONTOLOGY')}</text></g>`;
+  const links=mode==='overview'?graph.edges.filter(e=>[e.source,e.target].includes(id)&&items.has(e.source)&&items.has(e.target)).map(edge=>({edge,source:edge.source,target:edge.target})):layout.edges;
+  const parallel=new Map();
+  for(const {edge,source,target}of links){
+   const a=items.get(source),b=items.get(target);if(!a||!b)continue;
+   const pair=source+'|'+target,count=parallel.get(pair)??0;parallel.set(pair,count+1);
+   const path=edgePath(a,b,count*7),index=graph.edges.indexOf(edge),active=[edge.source,edge.target].includes(id);
+   const label=`${nodes.get(edge.source)?.label} → ${nodes.get(edge.target)?.label} · ${relations[edge.relation]??edge.relation}`;
+   const labelX=(a.x+b.x)/2,labelY=(a.y+b.y)/2-9+count*7;
+   svg+=`<g class="relation-edge ${active?'is-active':''}" data-edge="${index}" role="button" tabindex="0" aria-label="${esc(label)}"><title>${esc(label)}${edge.explanation?' — '+esc(edge.explanation):''}</title><path class="edge-hit" d="${path}"/><path class="map-edge ${edge.basis==='pedagogical'||edge.relation==='alternative_to'?'dotted':''} ${active?'active':'faded'}" d="${path}" marker-end="url(#arrow)"/><text class="edge-label" x="${labelX}" y="${labelY}" text-anchor="middle">${esc(relations[edge.relation]??edge.relation)}</text></g>`;
   }
-  $('#map').innerHTML=svg;if(reset)fit();else applyCamera();
-  $('#map-message').textContent=mode==='overview'?`${result.nodes.length}개 모델 · ${result.edges.length}개 모델 간 관계 · 연결 방향은 상세 패널에서 확인`:`${result.nodes.length}개 노드 · ${result.edges.length}개 관계${result.truncated?' · 일부 표시':''}`;
-  $('#family-legend').innerHTML=mode==='overview'?Object.entries(families).filter(([key])=>family==='all'||family===key).map(([,value])=>`<span><i style="--node-accent:${value[1]}"></i>${value[0]}</span>`).join(''):'모델 · 개념 · 구성 요소 · 학습 목적 · 과제 · 문헌';
+  for(const item of layout.items){
+   const {node,x,y}=item,accent=families[node.family]?.[1]??'#9cadc5';
+   if(node.kind==='root'){
+    svg+=`<g class="mindmap-root" data-map-home role="button" tabindex="0" aria-label="모든 모델 지도"><rect x="${x-96}" y="${y-42}" width="192" height="84" rx="24"/><text x="${x}" y="${y-13}" text-anchor="middle" class="root-eyebrow">P2I / ARCHITECTURE</text><text x="${x}" y="${y+10}" text-anchor="middle" class="root-label">Neural networks</text><text x="${x}" y="${y+29}" text-anchor="middle" class="root-count">${node.count} models · ${layout.items.filter(n=>n.node.kind==='family').length} families</text></g>`;continue;
+   }
+   if(node.kind==='family'){
+    svg+=`<g class="family-node" style="--node-accent:${accent}" data-family="${esc(node.family)}" role="button" tabindex="0" aria-label="${esc(families[node.family]?.[0]??node.label)} 계열만 보기" transform="translate(${x-96},${y-28})"><rect width="192" height="56" rx="18"/><text x="96" y="24" text-anchor="middle">${esc(families[node.family]?.[0]??node.label)}</text><text class="family-count" x="96" y="43" text-anchor="middle">${node.count} models · 계열 보기</text></g>`;continue;
+   }
+   const label=wrapLabel(node.label),meta=node.kind==='model'?`${families[node.family]?.[0]??node.family??'MODEL'}${node.reference_year?' · '+node.reference_year:''}`:kinds[node.kind]??node.kind;
+   svg+=`<g class="model-node kind-${node.kind} ${node.id===id?'selected':adjacent.has(node.id)?'related':''}" style="--node-accent:${accent}" data-node="${esc(node.id)}" data-placement="${esc(item.key)}" role="button" tabindex="0" aria-label="선택 ${esc(node.label)}${item.duplicate?' · 양방향 연결로 양쪽에 표시':''}" transform="translate(${x-NODE_WIDTH/2},${y-NODE_HEIGHT/2})"><title>${esc(node.label)}</title><rect width="${NODE_WIDTH}" height="${NODE_HEIGHT}" rx="12"/><rect class="node-stripe" x="0" y="16" width="3" height="36" rx="1"/><text x="14" y="18" class="node-index">${esc(meta)}</text><text x="14" y="${label.length===1?45:37}" class="node-label">${label.map((line,i)=>`<tspan x="14" dy="${i?17:0}">${esc(line)}</tspan>`).join('')}</text>${item.duplicate?'<circle class="bidirectional-dot" cx="177" cy="15" r="3"/>':''}</g>`;
+  }
+  $('#map').innerHTML=svg;$('#map').classList.toggle('mindmap',mode==='overview');if(reset)fit();else applyCamera();
+  $('#global-error').textContent='';
+  $('#map-message').textContent=mode==='overview'?`${layout.modelCount}개 모델 · 계열별 마인드맵 · 선택한 모델의 실제 관계를 화살표로 표시`:`${result.nodes.length}개 노드 · ${result.edges.length}개 관계 · 기반·구성 ${layout.incomingCount} / 활용·확장 ${layout.outgoingCount} · ${hops}단계 전체 표시`;
+  $('#canvas-hint').textContent=mode==='overview'?'계열을 눌러 집중 보기 · 드래그 이동 · 휠 / 두 손가락 확대':'기반·구성은 왼쪽 · 활용·확장은 오른쪽 · 화살표는 저장된 관계 방향';
+  $('#family-legend').innerHTML=mode==='overview'?Object.entries(families).filter(([key])=>(family==='all'||family===key)&&graph.nodes.some(n=>n.kind==='model'&&n.family===key)).map(([,value])=>`<span><i style="--node-accent:${value[1]}"></i>${value[0]}</span>`).join(''):'기반 · 구성 / 선택한 항목 / 활용 · 확장';
  }catch(error){if(request===mapRequest)$('#global-error').textContent=error.message}
 }
+
 function showEdge(index){
  const edge=graph.edges[index];if(!edge)return;
  $('#detail').innerHTML=`<span class="detail-type">${esc(relations[edge.relation])} / ${esc(bases[edge.basis])}</span><h2>연결의 의미</h2><p class="edge-direction">${esc(nodes.get(edge.source).label)} → ${esc(nodes.get(edge.target).label)}</p><p>${esc(edge.explanation)}</p>${edge.locator?`<p class="muted">${esc(edge.locator)}</p>`:''}<h3>연결된 항목</h3><div class="chips">${chip(edge.source)}${chip(edge.target)}</div><h3>근거 문헌</h3><div class="chips">${edge.evidence.map(chip).join('')}</div>${nodes.get(edge.source).kind==='model'&&nodes.get(edge.target).kind==='model'?`<button class="secondary" data-compare-pair="${esc(edge.source)},${esc(edge.target)}">두 모델 비교</button>`:''}`;
@@ -109,6 +123,8 @@ async function compare(){
 }
 document.addEventListener('click',async event=>{
  if(pan?.moved){pan=null;return}
+ const category=event.target.closest('[data-family]');if(category){$('#family').value=category.dataset.family;$('#family').dispatchEvent(new Event('change'));return}
+ if(event.target.closest('[data-map-home]')){$('#family').value='all';$('#family').dispatchEvent(new Event('change'));return}
  const target=event.target.closest('[data-node]');if(target){select(target.dataset.node);return;}
  const edge=event.target.closest('[data-edge]');if(edge){showEdge(Number(edge.dataset.edge));return}
  const panel=event.target.closest('[data-panel]');if(panel){$('#'+panel.dataset.panel).showModal();return}
@@ -130,7 +146,7 @@ document.addEventListener('click',async event=>{
   const id=selected;try{await read(`/api/kg/runtime/${encodeURIComponent(id)}`,{method:'DELETE'});sessions.delete(id);renderDetail()}catch(error){$('#runtime-status').textContent=error.message}
  }
 });
-document.addEventListener('keydown',event=>{const node=event.target.closest('[data-node]'),edge=event.target.closest('[data-edge]');if((node||edge)&&(event.key==='Enter'||event.key===' ')){event.preventDefault();if(node)select(node.dataset.node);else showEdge(Number(edge.dataset.edge))}});
+document.addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.closest('[data-family],[data-map-home]')){event.preventDefault();event.target.closest('[data-family],[data-map-home]').dispatchEvent(new MouseEvent('click',{bubbles:true}));return;}const node=event.target.closest('[data-node]'),edge=event.target.closest('[data-edge]');if((node||edge)&&(event.key==='Enter'||event.key===' ')){event.preventDefault();if(node)select(node.dataset.node);else showEdge(Number(edge.dataset.edge))}});
 $('#family').addEventListener('change',()=>{
  const family=$('#family').value;$('#model-select').innerHTML=graph.nodes.filter(n=>n.kind==='model'&&(family==='all'||n.family===family)).map(n=>`<option value="${esc(n.id)}">${esc(n.label)}</option>`).join('');
  mode='overview';if(![...$('#model-select').options].some(option=>option.value===selected)&&$('#model-select').value)select($('#model-select').value);else{$('#model-select').value=selected;renderMap();}
@@ -166,6 +182,7 @@ $('#search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer
 async function loadGraph(){
  graph=await read('/api/kg');nodes=new Map(graph.nodes.map(node=>[node.id,node]));
  const models=graph.nodes.filter(node=>node.kind==='model');
+ for(const key of [...new Set(models.map(n=>n.family))])if(![...$('#family').options].some(option=>option.value===key)){const option=document.createElement('option');option.value=key;option.textContent=families[key]?.[0]??key;$('#family').append(option);}
  $('#stats').textContent=`${models.length}개 모델 · ${graph.nodes.length}개 노드 · ${graph.edges.length}개 관계`;
 
  $('#revision').textContent=`CATALOG ${graph.revision.slice(0,7)}`;
@@ -177,3 +194,4 @@ async function loadGraph(){
 try{await loadGraph()}catch(error){$('#global-error').textContent=error.message}
 
 $('#p2i-panel').addEventListener('close',()=>{$('#p2i-frame').removeAttribute('src')});
+
