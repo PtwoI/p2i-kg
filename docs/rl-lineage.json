@@ -1,0 +1,16 @@
+{
+ "schema_version":"0.2",
+ "nodes":[],
+ "edges":[
+  {"source":"model:ppo","relation":"extends","target":"model:actor_critic","basis":"structural","explanation":"PPO의 actor–critic 구현은 정책 업데이트에 clipped objective를 적용합니다.","evidence":["paper:ppo"]},
+  {"source":"model:ddpg","relation":"extends","target":"model:actor_critic","basis":"structural","explanation":"결정적 정책과 action-value critic을 결합합니다.","evidence":["paper:ddpg"]},
+  {"source":"model:sac","relation":"alternative_to","target":"model:td3","basis":"structural","explanation":"연속 제어에서 결정적 정책과 확률적 최대 엔트로피 정책을 비교합니다.","evidence":["paper:sac","paper:td3"]},
+  {"source":"model:rainbow","relation":"extends","target":"model:double_dqn","basis":"documented","explanation":"Rainbow는 Double Q-learning을 포함한 개선을 결합합니다.","evidence":["paper:rainbow"]},
+  {"source":"model:rainbow","relation":"extends","target":"model:dueling_dqn","basis":"documented","explanation":"Rainbow는 dueling 구조를 포함합니다.","evidence":["paper:rainbow"]},
+  {"source":"model:muzero","relation":"extends","target":"model:alphazero","basis":"documented","explanation":"완전한 게임 규칙 대신 학습된 모델을 탐색에 사용합니다.","evidence":["paper:muzero"]},
+  {"source":"model:planet","relation":"extends","target":"model:world_models","basis":"structural","explanation":"시각 입력의 잠재 동역학을 이용해 계획합니다.","evidence":["paper:planet"]},
+  {"source":"model:dreamer","relation":"extends","target":"model:planet","basis":"documented","explanation":"PlaNet 계열의 잠재 세계 모델에서 행동을 학습합니다.","evidence":["paper:dreamer"]},
+  {"source":"model:dads","relation":"alternative_to","target":"model:diayn","basis":"structural","explanation":"상태에서 스킬을 분류하는 대신 스킬에 조건부인 전이를 모델링합니다.","evidence":["paper:dads","paper:diayn"]},
+  {"source":"model:aps","relation":"alternative_to","target":"model:diayn","basis":"structural","explanation":"스킬 표현 사전학습에서 successor feature와 상태 탐색을 결합합니다.","evidence":["paper:aps","paper:diayn"]}
+ ]
+}
