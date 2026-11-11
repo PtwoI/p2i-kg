@@ -141,3 +141,13 @@ tokens and adaLN-conditioned Transformer blocks. Both execute one deterministic
 noise-prediction step with random weights. Their runtime notes explicitly exclude
 large pretrained encoders, complete iterative sampling and production-scale
 training so the executable graph is not confused with a full generator.
+
+
+The reinforcement-learning extension covers value and policy networks, learned
+world models and skill-conditioned policies. Its executable examples use small
+random-weight networks: each runtime note identifies the modeled forward pass
+and the training, planning or environmental machinery outside its scope. Shared
+network shapes do not imply that distinct training algorithms are identical.
+Voyager and other agent frameworks are not represented as neural-network models.
+The RL fragments in `docs/rl-*.json` are additive; their paper nodes record the
+primary references and their component bindings name actual runtime modules.

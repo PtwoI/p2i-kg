@@ -1,0 +1,23 @@
+.mindmap-branch{fill:none;stroke:var(--branch-color);stroke-width:2;opacity:.42;pointer-events:none}
+#map .family-node,#map .mindmap-root{cursor:pointer}
+#map .family-node rect{fill:#101e2a;stroke:var(--node-accent);stroke-opacity:.65;stroke-width:1.4}
+#map .family-node text{fill:var(--node-accent);font-size:15px;font-weight:650}
+#map .family-node .family-count{font-size:9px;font-weight:400;fill:#8ea3bb}
+#map .family-node:hover rect,#map .family-node:focus-visible rect{fill:#1a3040;stroke-width:2}
+#map .mindmap-root rect{fill:#112a2b;stroke:#58e9cf;stroke-width:1.6}
+#map .root-eyebrow{fill:#5cddc9;font-size:9px;letter-spacing:1.3px}
+#map .root-label{fill:#edf9f6;font-size:19px;font-weight:650}
+#map .root-count{fill:#97b4b4;font-size:10px}
+#map .model-node .node-label{font-size:13px}
+#map .model-node .node-index{font-size:9px;letter-spacing:.25px}
+#map .direction-guide text{fill:#8ca5bb;font-size:12px;font-weight:600;letter-spacing:1px}
+#map .direction-guide path{stroke:#2a4358;stroke-width:1}
+#map .direction-guide.incoming text{fill:#acbfff}
+#map .direction-guide.outgoing text{fill:#74ddc8}
+#map .edge-label{fill:#d4e9ed;stroke:#070c13;stroke-width:5px;paint-order:stroke;font-size:10px;opacity:0;pointer-events:none}
+#map .relation-edge:hover .edge-label,#map .relation-edge:focus-visible .edge-label{opacity:1}
+#map .relation-edge:hover .map-edge,#map .relation-edge:focus-visible .map-edge{stroke:#d2ffee;stroke-width:2.5;opacity:1}
+#map .model-node:focus-visible rect,#map .mindmap-root:focus-visible rect{stroke:#c6ff6b;stroke-width:3}
+#map .bidirectional-dot{fill:#d1a8ff}
+#map .mindmap-branch{stroke-linecap:round}
+.map-legend #family-legend{gap:8px 12px}

@@ -11,6 +11,11 @@ BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18'
     'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet',
     'neuralode', 'fno', 'rwkv')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('tcn', 'nbeats', 'tabnet')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('dqn_rl', 'ppo_rl', 'dreamer_rl', 'diayn_rl')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('sac_rl', 'muzero_rl', 'decision_transformer_rl')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('dreamerv2_rl', 'dreamerv3_rl', 'dreamer4_rl')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('dads_rl', 'aps_rl', 'option_critic_rl')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('double_dqn_rl', 'dueling_dqn_rl', 'rainbow_rl', 'reinforce_rl', 'actor_critic_rl', 'a3c_rl', 'ddpg_rl', 'td3_rl', 'alphazero_rl', 'planet_rl', 'world_models_rl')
 RUNTIME_IDS = BASE_RUNTIME_IDS + EXTENDED_IDS
 
 
@@ -100,6 +105,46 @@ def make_model(runtime_id):
         if runtime_id == 'tabnet':
             from .models import TinyTabNet
             return TinyTabNet().eval(), (torch.randn(4, 10),)
+        if runtime_id in ('dqn_rl', 'ppo_rl', 'dreamer_rl', 'diayn_rl'):
+            from .rl_models import DQNExample, ActorCriticExample, DreamerExample, DIAYNExample
+            constructors = {'dqn_rl': DQNExample, 'ppo_rl': ActorCriticExample,
+                            'dreamer_rl': DreamerExample, 'diayn_rl': DIAYNExample}
+            inputs = (torch.randn(2, 8),)
+            if runtime_id == 'diayn_rl':
+                inputs = (inputs[0], torch.tensor([0, 1]))
+            return constructors[runtime_id]().eval(), inputs
+        if runtime_id in ('sac_rl', 'muzero_rl', 'decision_transformer_rl'):
+            from .rl_models import SACExample, MuZeroExample, DecisionTransformerExample
+            if runtime_id == 'sac_rl':
+                return SACExample().eval(), (torch.randn(2, 8),)
+            if runtime_id == 'muzero_rl':
+                return MuZeroExample().eval(), (torch.randn(2, 8), torch.randn(2, 4))
+            return DecisionTransformerExample().eval(), (torch.randn(2, 3, 1), torch.randn(2, 3, 8), torch.randn(2, 3, 4))
+        if runtime_id in ('dreamerv2_rl', 'dreamerv3_rl', 'dreamer4_rl'):
+            from .rl_models import DreamerDiscreteExample, Dreamer4Example
+            if runtime_id == 'dreamer4_rl':
+                return Dreamer4Example().eval(), (torch.randn(2, 3, 8), torch.randn(2, 3, 4))
+            return DreamerDiscreteExample(symlog=runtime_id == 'dreamerv3_rl').eval(), (torch.randn(2, 8),)
+        if runtime_id in ('dads_rl', 'aps_rl', 'option_critic_rl'):
+            from .rl_models import DADSExample, APSExample, OptionCriticExample
+            if runtime_id == 'dads_rl':
+                return DADSExample().eval(), (torch.randn(2, 8), torch.randn(2, 4))
+            if runtime_id == 'aps_rl':
+                return APSExample().eval(), (torch.randn(2, 8), torch.randn(2, 4))
+            return OptionCriticExample().eval(), (torch.randn(2, 8),)
+        if runtime_id in ('double_dqn_rl', 'dueling_dqn_rl', 'rainbow_rl', 'reinforce_rl', 'actor_critic_rl', 'a3c_rl', 'ddpg_rl', 'td3_rl', 'alphazero_rl', 'planet_rl', 'world_models_rl'):
+            from .rl_models import (DQNExample, DuelingQExample, PolicyGradientExample,
+                ActorCriticExample, DeterministicControlExample, AlphaZeroExample,
+                PlaNetExample, WorldModelsExample)
+            state = torch.randn(2, 8)
+            if runtime_id == 'double_dqn_rl': return DQNExample().eval(), (state,)
+            if runtime_id in ('dueling_dqn_rl', 'rainbow_rl'): return DuelingQExample(5 if runtime_id == 'rainbow_rl' else 1).eval(), (state,)
+            if runtime_id == 'reinforce_rl': return PolicyGradientExample().eval(), (state,)
+            if runtime_id in ('actor_critic_rl', 'a3c_rl'): return ActorCriticExample().eval(), (state,)
+            if runtime_id in ('ddpg_rl', 'td3_rl'): return DeterministicControlExample(runtime_id == 'td3_rl').eval(), (state,)
+            if runtime_id == 'alphazero_rl': return AlphaZeroExample().eval(), (state,)
+            if runtime_id == 'planet_rl': return PlaNetExample().eval(), (state, torch.randn(2, 4))
+            return WorldModelsExample().eval(), (state, torch.randn(2, 4))
         if runtime_id == 'ldm':
             from .models import TinyLatentDiffusion
             return TinyLatentDiffusion().eval(), (

@@ -65,7 +65,7 @@ def test_architecture_specific_behavior_and_coverage():
 
     graph = seed_graph()
     models = [node for node in graph.nodes if node.kind == 'model']
-    assert len(models) == 55
+    assert len(models) == 79
     assert all(node.runtime_id and node.runtime_note for node in models)
 
     causal = CausalConv1d(1, 1, kernel_size=3, dilation=2).eval()
