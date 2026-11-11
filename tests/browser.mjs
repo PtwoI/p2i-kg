@@ -21,7 +21,7 @@ try{
  await expect(page.locator('#detail h2')).toHaveText('BERT');
  await page.getByRole('button',{name:'연결 펼치기',exact:true}).click();
  await expect(page.locator('#map [data-node="component:encoder"]')).toBeVisible();
- await page.getByRole('button',{name:'모델 지도',exact:true}).click();
+ await page.getByRole('button',{name:'마인드맵',exact:true}).click();
  await page.locator('#map [data-node="model:transformer"]').click();
  await expect(page.locator('#stats')).toContainText(`${modelCount}개 모델 · ${catalog.nodes.length}개 노드 · ${catalog.edges.length}개 관계`);
  await expect(page.locator('#detail h2')).toHaveText('Transformer');
@@ -103,7 +103,7 @@ try{
  await expect(page.locator('#patch-status')).toContainText('추가 완료: 1개 노드');
  await expect(page.locator('#stats')).toContainText(`${catalog.nodes.length+1}개 노드`);
  await page.getByRole('button',{name:'지도 데이터 닫기',exact:true}).click();
- await page.getByRole('button',{name:'모델 지도',exact:true}).click();
+ await page.getByRole('button',{name:'마인드맵',exact:true}).click();
  await page.screenshot({path:new URL('../artifacts/atlas-desktop.png',import.meta.url).pathname,fullPage:true});
  await page.setViewportSize({width:390,height:844});
  await expect(page.locator('#map')).toBeVisible();

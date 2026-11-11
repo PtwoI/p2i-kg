@@ -66,7 +66,7 @@ def test_architecture_specific_behavior_and_coverage():
     from p2i_kg.runtime import make_model
     graph = seed_graph()
     models = [node for node in graph.nodes if node.kind == 'model']
-    assert len(models) == 55
+    assert len(models) == 79
     assert all(node.runtime_id and node.runtime_note for node in models)
 
     neuralode, inputs = make_model('neuralode')
