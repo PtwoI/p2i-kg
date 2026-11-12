@@ -28,3 +28,6 @@
 .call-list button.current{background:#173c37;color:#d8f5ec;border-color:#55cdb5}
 .call-list code,.call-list small{color:#a6bdca}
 .operation-tensors code,.operation-tensors small{color:#a5c4d1}
+
+/* Keep the wider interaction target invisible in the dark theme. */
+.module-flow-edge path:first-child{stroke:transparent!important;stroke-width:14px!important}
