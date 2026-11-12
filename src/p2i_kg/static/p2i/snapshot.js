@@ -24,7 +24,7 @@ try{
    default:return respond({detail:'Snapshot endpoint unavailable'},404);
   }
  };
- await import('./assets/index-FtjKwduO.js');
+ await import('./assets/index-DfkMyfFB.js');
  // The original explorer can also serve local live sessions. This embedding is a snapshot.
  const observer=new MutationObserver(()=>{const badge=document.querySelector('header .local');if(badge&&badge.textContent!=='● P2I · 관측 결과')badge.textContent='● P2I · 관측 결과';});
  observer.observe(document.getElementById('root'),{childList:true,subtree:true});

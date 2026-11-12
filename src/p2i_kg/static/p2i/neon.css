@@ -11,3 +11,20 @@
 .execution-diff pre,.configuration-change pre{background:#0b1826;color:#c9dce9}
 .tensor-stage.tensor-active{background:#243622;outline-color:#c6ff6b}
 .heatmap button:disabled,.tensor-sample .heatmap-cell:disabled{background:repeating-linear-gradient(45deg,#243847,#243847 3px,#1a2b39 3px,#1a2b39 6px)!important}
+
+/* Inspector panels and graph chrome use dark surfaces throughout. */
+.analysis{background:#0b1420;color:#b5cbe0;border-color:#294252}
+.analysis summary,.analysis strong{color:#d1e7f1}
+.module-summary,.current-call{background:#102735;color:#d5e8f0;border-color:#345c68}
+.module-summary>span,.current-call>span{color:#9bc9ca}
+.module-summary p,.current-call p,.current-call h2{color:#d5e8f0}
+.module-card{background:#102333;color:#d4e6f1;border-color:#345364}
+.module-card h3,.module-card code{color:#d6ecf4}.module-card p{color:#abc4d3}
+.toolbar,.graph-hint{background:#090f18;color:#a5bfd0}.toolbar span{color:#a5bfd0}
+.graph-controls span{background:#0a1623;color:#b9d1df}
+.graph-wrap{background-color:#0a1623!important;background-image:radial-gradient(#284456 .7px,transparent .7px)!important}
+.graph-boundary strong,.graph-boundary code,.runtime-controls strong{color:#b8d7e2}
+.graph .op-label{fill:#e0f1fa}.graph marker path{fill:#61bdb1}
+.call-list button.current{background:#173c37;color:#d8f5ec;border-color:#55cdb5}
+.call-list code,.call-list small{color:#a6bdca}
+.operation-tensors code,.operation-tensors small{color:#a5c4d1}
