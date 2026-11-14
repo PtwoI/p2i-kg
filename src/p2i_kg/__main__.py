@@ -24,6 +24,11 @@ def main():
     pages.add_argument('--source-revision', required=True)
     verify = sub.add_parser('verify-pages')
     verify.add_argument('directory')
+    plan = sub.add_parser('publication-plan')
+    plan.add_argument('build')
+    plan.add_argument('homepage')
+    plan.add_argument('--expected-source', required=True)
+    plan.add_argument('--expected-home', required=True)
     imported = sub.add_parser('import')
     imported.add_argument('file')
     extended = sub.add_parser('extend')
@@ -37,6 +42,11 @@ def main():
     opened.add_argument('model_id')
     opened.add_argument('--port', type=int, default=8000)
     args = parser.parse_args()
+    if args.command == 'publication-plan':
+        from .publication_plan import publication_plan
+        print(json.dumps(publication_plan(args.build, args.homepage,
+            expected_source=args.expected_source, expected_home=args.expected_home), indent=2))
+        return
     if args.command in ('pages', 'verify-pages'):
         from .publication import build_pages, verify_pages
         result = build_pages(args.directory, source_revision=args.source_revision) if args.command == 'pages' else verify_pages(args.directory)

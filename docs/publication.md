@@ -37,3 +37,52 @@ The publication manifest records the source commit, catalog revision, model coun
 all runtime snapshot IDs and SHA-256 checksums for generated files. Cache versions
 change with the catalog and source commit. The static viewer is read-only; actual
 execution and editing remain available in local P2I sessions.
+
+## Event-driven publisher and safe update plan
+
+The twice-daily extension task researches and adds architectures. A separate
+GitHub PR-merge webhook runs publication for merged `PtwoI/p2i-kg` PRs targeting
+`main`. Direct pushes are not covered by that webhook. The extension task must
+still reconcile publication at the end of every run, including retries with no
+new models. GitHub CI builds artifacts; it does not itself write another repo.
+
+The publisher uses the existing authorized GitHub connection, never a new PAT.
+After checking successful CI for the pinned KG main SHA, prepare a read-only plan
+against a clean, latest homepage checkout:
+
+```sh
+python -m p2i_kg publication-plan ./new-p2imap ./homepage \
+  --expected-source "$KG_MAIN_SHA" --expected-home "$HOMEPAGE_MAIN_SHA" > plan.json
+```
+
+This command neither modifies the checkout nor publishes. It rejects a dirty or
+changed homepage, a wrong source SHA, incomplete checksums, symlinks, path
+traversal, unchecksummed build files, overwritten customizations, and collisions
+with unmanaged files. A repeated source/catalog event is a no-op. The plan lists
+only managed `apps/p2imap/` writes/deletes with before/after SHA-256 checksums.
+Never silently overwrite a modified managed UI file: port that customization
+back to the generator, test it, then regenerate.
+
+The publisher must enforce the remaining transactional requirements:
+
+- Serialize publication per destination repository. Do not merge concurrent or
+  older publication PRs. Recheck KG main before preparing and again before merge;
+  if it changed, rebuild. Use a branch keyed by source SHA and reuse its open PR
+  for duplicate deliveries rather than creating another one.
+- Read current homepage main again before creating the commit. Use
+  `expected_homepage_revision` as the parent and a non-forced compare-and-swap
+  update. On a changed parent, refresh the checkout and regenerate the plan.
+  Recheck every `before_sha256` and use only listed paths. Do not stage `git add .`
+  or delete an entire directory. Other homepage commits must remain intact.
+- Verify the exact PR head, checks and main revisions before merge. A merge or
+  push response alone is not deployment success. Wait for Pages and compare the
+  live manifest source SHA, catalog revision, exact runtime ID set and counts.
+  Open at least one new runtime in the browser. Record and report the verified
+  source SHA and Pages run; on failure keep/retry the pending publication.
+- A webhook can arrive before main CI finishes. Pending CI is not success or a
+  permanent failure: resume after CI, and leave a durable retry when interrupted.
+
+Do not replace this flow with a cross-repository `GITHUB_TOKEN` push. That token
+is repository-scoped. Even a same-repository token push does not trigger a Pages
+branch build, so a future all-Actions implementation needs an explicitly reviewed
+publication/authentication design rather than an assumed push side effect.
