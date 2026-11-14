@@ -22,6 +22,13 @@ def main():
     pages = sub.add_parser('pages')
     pages.add_argument('directory')
     pages.add_argument('--source-revision', required=True)
+    pages.add_argument('--archive')
+    pages.add_argument('--regenerate-snapshots', action='store_true')
+    archive = sub.add_parser('archive-pages')
+    archive.add_argument('build')
+    archive.add_argument('directory')
+    archived = sub.add_parser('verify-archive')
+    archived.add_argument('directory')
     verify = sub.add_parser('verify-pages')
     verify.add_argument('directory')
     plan = sub.add_parser('publication-plan')
@@ -42,6 +49,11 @@ def main():
     opened.add_argument('model_id')
     opened.add_argument('--port', type=int, default=8000)
     args = parser.parse_args()
+    if args.command in ('archive-pages', 'verify-archive'):
+        from .archive import archive_pages, verify_archive
+        result = archive_pages(args.build, args.directory) if args.command == 'archive-pages' else verify_archive(args.directory)
+        print(json.dumps(result))
+        return
     if args.command == 'publication-plan':
         from .publication_plan import publication_plan
         print(json.dumps(publication_plan(args.build, args.homepage,
@@ -49,7 +61,7 @@ def main():
         return
     if args.command in ('pages', 'verify-pages'):
         from .publication import build_pages, verify_pages
-        result = build_pages(args.directory, source_revision=args.source_revision) if args.command == 'pages' else verify_pages(args.directory)
+        result = build_pages(args.directory, source_revision=args.source_revision, archive=args.archive, regenerate_snapshots=args.regenerate_snapshots) if args.command == 'pages' else verify_pages(args.directory)
         print(json.dumps(result))
         return
     store = GraphStore(args.database)

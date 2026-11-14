@@ -37,7 +37,7 @@ def verify_pages(directory):
             'catalog_revision': catalog['revision'], 'source_revision': manifest.get('source_revision')}
 
 
-def build_pages(output, *, source_revision):
+def build_pages(output, *, source_revision, archive=None, regenerate_snapshots=False):
     """Use a fresh bundled catalog, never the maintainer's older local database.
 
     The caller publishes only after this returns; failures leave the live site
@@ -47,7 +47,20 @@ def build_pages(output, *, source_revision):
     root = Path(output)
     with tempfile.TemporaryDirectory(prefix='p2imap-catalog-') as temporary:
         store = GraphStore(Path(temporary) / 'catalog.sqlite3')
-        manifest = export_viewer(store, root, runtime=True)
+        manifest = export_viewer(store, root, runtime=regenerate_snapshots)
+        if not regenerate_snapshots:
+            from .archive import DEFAULT_ARCHIVE, copy_archive
+            archived = copy_archive(archive or DEFAULT_ARCHIVE, root,
+                                    catalog_revision=manifest['catalog_revision'])
+            manifest['runtime_snapshots'] = sorted(archived['snapshots'])
+            manifest['canonical_archive'] = {
+                'repository': 'PtwoI/p2i-kg', 'path': 'model-archive',
+                'revision': source_revision,
+                'generation_revision': archived['generation_revision'],
+                'manifest_sha256': sha256((Path(archive or DEFAULT_ARCHIVE) / 'manifest.json').read_bytes()).hexdigest()}
+
+    from .archive import source_hashes
+    manifest['snapshot_source_files'] = source_hashes()
     manifest['source_repository'] = 'PtwoI/p2i-kg'
     manifest['source_revision'] = source_revision
     manifest['model_count'] = len([node for node in json.loads((root / 'catalog.json').read_text())['nodes']
