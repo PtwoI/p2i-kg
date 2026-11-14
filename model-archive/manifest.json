@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "repository": "PtwoI/p2i-kg",
+  "generation_revision": "e54bb63a918e4957ba551ebfca8c173e7034d34f",
+  "catalog_revision": "b76c5163e942c89d5e7bbc01b437b333f3ab2368ce19954ac871611b6bee8745",
+  "source_files": {
+    "catalog.json": "defbe627a04b83ae367bac90d2747357de7b5f384e3fbf38b20a0d8655b1243c",
+    "runtime.py": "c624e818549bb906abd541eab247f93b8ce8cd7e3bab880e5b7582d12ddc2da2",
+    "bindings.py": "1d245ed1a0089e2be324eb51f34efe641342b20699ebb4861f0acef0887a1b3c",
+    "models.py": "e93f70c6822928c193c163400dee817e765e9b8241895512c06498bd8a21c447",
+    "extended_models.py": "138e589537627ddf4dc7f7dfded0b4f2c73cebdd2b316cf076ff23b1317a63e4",
+    "extended_registry.py": "8251e71474d9015f5b7d691ef95bce95dbfe87bf17e963c69a839c62f625e9d3",
+    "rl_models.py": "bd41dabfa4dacf78d182829a7c239a673914a39bf902aab9d2bb862113784504",
+    "viewer.py": "0dff67694069d5611e16c91915a25bd9719cbf85987edec877ecbec4b3b85dc3"
+  },
+  "weights": "random initialization, not trained checkpoints",
+  "snapshots": {
+    "a3c_rl": {
+      "model_id": "model:a3c",
+      "sha256": "f518d1e283d61ef0c705f25dd5bdc9f0506df56ba7cd0e5a70d7680c5e54701c"
+    },
+    "actor_critic_rl": {
+      "model_id": "model:actor_critic",
+      "sha256": "e054a0945b4b4b57eb9532eb62bbd90d2842e81d648c6e0e3e8fc7afc0ff5624"
+    },
+    "alphazero_rl": {
+      "model_id": "model:alphazero",
+      "sha256": "0e8e01ee18770b993aa18dee346a8fd6330bea421f1e07a752aec00305d10cd3"
+    },
+    "aps_rl": {
+      "model_id": "model:aps",
+      "sha256": "7ca7f62ec7f83d64248f5940170000908406e49de18404b9286e1d4c7dc4f804"
+    },
+    "bert": {
+      "model_id": "model:bert",
+      "sha256": "85b2eb188dddb3dffba37ddb3351b7584310b8aff889ff8f188889916e01c52e"
+    },
+    "byol": {
+      "model_id": "model:byol",
+      "sha256": "30eaec3a3751d9fb4a3b509adea18b38131dc84f25636801752388cbc159245d"
+    },
+    "clip": {
+      "model_id": "model:clip",
+      "sha256": "4c50312bd6c5faf47bd4bac4a98523c80e429e35e280081aece00891034f7151"
+    },
+    "cnn": {
+      "model_id": "model:cnn",
+      "sha256": "f352c3118c524d2c8800808c8fa8d87944e885e657902223554262d077bc2988"
+    },
+    "convnext": {
+      "model_id": "model:convnext",
+      "sha256": "0b42f803dbd210007170f3a2cc7d06c540976be235755f798c6b3acc80ea9744"
+    },
+    "dads_rl": {
+      "model_id": "model:dads",
+      "sha256": "8e1ae2ee5e6d80c41cec9c3d18a40b70cc9f2b6bd71efd142cb041632e8e5c18"
+    },
+    "ddpg_rl": {
+      "model_id": "model:ddpg",
+      "sha256": "65fcc7d9f28bf7e1663d304162ca172d8b7f515b983864d3c2bd12cf12c2119d"
+    },
+    "ddpm": {
+      "model_id": "model:ddpm",
+      "sha256": "68b88a211f027834490e0d2e6a8b3344290752ef38729094936691b0e3e25e74"
+    },
+    "decision_transformer_rl": {
+      "model_id": "model:decision_transformer",
+      "sha256": "ca964950a6127aaf1cc530b34640237a954aaddefd0305242cc81c11e88eff66"
+    },
+    "deepsets": {
+      "model_id": "model:deepsets",
+      "sha256": "56e726b382c4e01fa7a4f0942b47b2a37f6a0e5ab25886ad4fbe2aaf72ca55e2"
+    },
+    "densenet": {
+      "model_id": "model:densenet",
+      "sha256": "257d658f9fe87955f204dd2aee8c316c4bc7bdfaebf0543b95e4e373c16a215c"
+    },
+    "detr": {
+      "model_id": "model:detr",
+      "sha256": "8c899cb3ede31be74ef28c8070e7bcffbb1522e7a50e51b3761cdb1640b0582a"
+    },
+    "diayn_rl": {
+      "model_id": "model:diayn",
+      "sha256": "cb1ae033a5a2eb54b6f536eb3ffaab0ab0ab52a43ce86c3282fbc1b4db87e43f"
+    },
+    "dino": {
+      "model_id": "model:dino",
+      "sha256": "8fc9df289b6800cc18ebb97b8f51c004f050debc37da88768085d840f3ddebfd"
+    },
+    "dit": {
+      "model_id": "model:dit",
+      "sha256": "79cb5466c4d0c248aed14c425831612aec0e98d9654a1c99295fb7e140d8f654"
+    },
+    "double_dqn_rl": {
+      "model_id": "model:double_dqn",
+      "sha256": "cbf8ef21af572c4bac5d0fcaf00e8f4c10d9cdea5b030664d62a5fa973f68e65"
+    },
+    "dqn_rl": {
+      "model_id": "model:dqn",
+      "sha256": "a34a107850bde620cfbb3e93f5c16e6b1ec191bd2eb9550f8d69e6d7b7a38858"
+    },
+    "dreamer4_rl": {
+      "model_id": "model:dreamer4",
+      "sha256": "e66c12cbee316d163ee1833c7b540090e2d692f7e9fb5ec40d437d5317541d9a"
+    },
+    "dreamer_rl": {
+      "model_id": "model:dreamer",
+      "sha256": "01a0a7bc85f934c59588bf5aeb480177d0cb8aacca0e3ed2c40b0e93e4032a21"
+    },
+    "dreamerv2_rl": {
+      "model_id": "model:dreamerv2",
+      "sha256": "0d1c765d0684bc99c3856680db18139c1f3020158dbf4481fdc11faff78fa913"
+    },
+    "dreamerv3_rl": {
+      "model_id": "model:dreamerv3",
+      "sha256": "fbd98fb49e10fffd76ad3a723bf90c86bfade28b6b80643d13e24a8989fcee95"
+    },
+    "dueling_dqn_rl": {
+      "model_id": "model:dueling_dqn",
+      "sha256": "5a1c8da083391f1f3d425ed3e6d1542182d566984ba96024e365574528c5036b"
+    },
+    "efficientnet": {
+      "model_id": "model:efficientnet",
+      "sha256": "629c42720c1d8a624bb01dca66a7bc2739c45bd21bd57d66aed3adb7c7532470"
+    },
+    "fno": {
+      "model_id": "model:fno",
+      "sha256": "6ad50e5ed2822e7e71c31b187ec9b8b664f1802bb18b67c24c3a3d2e5aa42bf9"
+    },
+    "gan": {
+      "model_id": "model:gan",
+      "sha256": "51f4b826b2447b2c2cbde5cbf8990cdbb9e0afe93d7bc2a0503369f493455706"
+    },
+    "gat": {
+      "model_id": "model:gat",
+      "sha256": "f0237327f51553817beec1e0814286afd843100ad8563fdad7a964a298877ea4"
+    },
+    "gcn": {
+      "model_id": "model:gcn",
+      "sha256": "535e77973da97b3524968255ace5dbd169e8856b96f0696b652c9a16e388e05d"
+    },
+    "gin": {
+      "model_id": "model:gin",
+      "sha256": "67abb200d80497057ed1d287fcbb618af2669caedc5ec4173e5249eb72a5face"
+    },
+    "gpt2": {
+      "model_id": "model:gpt2",
+      "sha256": "c629718c15f8cc915c968bafba75853527589bef740cb531a7b668524fdfd6a2"
+    },
+    "graphsage": {
+      "model_id": "model:graphsage",
+      "sha256": "aab9cf4ca86b9467756c79828801e6efac44536dc276df497c5d3672b1a3e508"
+    },
+    "gru": {
+      "model_id": "model:gru",
+      "sha256": "50f11bcbfad28fc05050b10e401c0820441048678fd04a74b79f85a5b5df7204"
+    },
+    "inception": {
+      "model_id": "model:inception",
+      "sha256": "0a0573de5211e122ee7da224ffcf78d1c8ed795e20fe14db5138422b44cc39b2"
+    },
+    "ldm": {
+      "model_id": "model:ldm",
+      "sha256": "95fae142f63d0a6164860755d3e1679956e0fe7fb55cdc4084934403f741a614"
+    },
+    "llama": {
+      "model_id": "model:llama",
+      "sha256": "214ca57313ea280cac48fc573363cf22d3c7247fc6b56a4351fb4f996d597aa3"
+    },
+    "lstm": {
+      "model_id": "model:lstm",
+      "sha256": "87c787ec88f246723ac9a41f46ac9460a9326e219729d1e6e42695ce9c8694f4"
+    },
+    "mae": {
+      "model_id": "model:mae",
+      "sha256": "b4b0411191e2b8903b3abe093d1db6fea8a8898c49f904c5971775e075e5fca5"
+    },
+    "mamba": {
+      "model_id": "model:mamba",
+      "sha256": "3fa779a5147bf38aff480656a6b6e221fd283a24bf9992b79a76b98eb619e6f5"
+    },
+    "mamba2": {
+      "model_id": "model:mamba2",
+      "sha256": "028c81f82dea7f6840b8f551bc245d36b8788610d2c5468a1255c7b2b71afede"
+    },
+    "mixer": {
+      "model_id": "model:mixer",
+      "sha256": "8dde50fe19b2ce83b5c7afb0029f277c6368579707a3bd0e2d91019d6edc5fd5"
+    },
+    "mlp": {
+      "model_id": "model:mlp",
+      "sha256": "1f7c6e022b4953299401ac6499727a95bfc8a96c9eb00d7c873082713179396f"
+    },
+    "mobilenet": {
+      "model_id": "model:mobilenet",
+      "sha256": "e3c4b59cc7db81df67af61623bb3bfac604201e9d03043f22b2f1421bc012071"
+    },
+    "moco": {
+      "model_id": "model:moco",
+      "sha256": "1e9017cc4d2b38f3205725bbb1f10ba7d55463dec8807c45905602d1195f128e"
+    },
+    "muzero_rl": {
+      "model_id": "model:muzero",
+      "sha256": "3471e1b25a2c5beabe753ed9cf8bba9f7d9087d386e4df9d51509e1e00f96a3d"
+    },
+    "nbeats": {
+      "model_id": "model:nbeats",
+      "sha256": "1545ab91d6795be45e50019877a60f0b46da84a67a908613d5c76b7ffdbb753a"
+    },
+    "nerf": {
+      "model_id": "model:nerf",
+      "sha256": "af8b973e6226b704ac8a610133b298b8431696f570516dc7cbfdd38c0455cd28"
+    },
+    "neuralode": {
+      "model_id": "model:neuralode",
+      "sha256": "b264b17e62f34c7b66cf33c36cd3c6bb475f56e1444575602aed6618ec28ebcc"
+    },
+    "option_critic_rl": {
+      "model_id": "model:option_critic",
+      "sha256": "2a69c9c38525882c18f8e33f368c02443d5fc968b808dc5366242842bd035860"
+    },
+    "perceiver": {
+      "model_id": "model:perceiver",
+      "sha256": "5e4c0debfc11c5c2ef09e496bfc763f112345c2833976769a4ea44f981be340b"
+    },
+    "perceptron": {
+      "model_id": "model:perceptron",
+      "sha256": "b6dba7722ca0c3ef9f7e65f975d08cd2c46fbe46d65c3fc046b31bc0e6054d4b"
+    },
+    "planet_rl": {
+      "model_id": "model:planet",
+      "sha256": "bde02d9a76ec3874463c7e7d7479b882efb2f176f19648f5f9d3c87a3e8fd3e1"
+    },
+    "pointnet": {
+      "model_id": "model:pointnet",
+      "sha256": "0368786e829e92fe87c7422ad4c5ef6cf9680a1f3ec841e5e74b07f6a5828679"
+    },
+    "ppo_rl": {
+      "model_id": "model:ppo",
+      "sha256": "8558775c78f23ff10e0be8882fc2c86774414a6faf7b9dc3cb6fe8d33fe99c7e"
+    },
+    "rainbow_rl": {
+      "model_id": "model:rainbow",
+      "sha256": "855923053e2cfba18e74fd003116aad9f968e5be09f9fd15d62fcda5224bdfbd"
+    },
+    "reinforce_rl": {
+      "model_id": "model:reinforce",
+      "sha256": "2826f77071aeae94aaef43fdf9fc66298a19d5fda7d206eb919d4de80f6d805a"
+    },
+    "resnet18": {
+      "model_id": "model:resnet",
+      "sha256": "34debb59cc763a47998e1f1a01b15bac28e6782ae9a0e160d24514570fc142d0"
+    },
+    "retnet": {
+      "model_id": "model:retnet",
+      "sha256": "8e234b966edb17dc8e091df2b83b8fc00e198caae28c95d910f2e5307561f7c7"
+    },
+    "rnn": {
+      "model_id": "model:rnn",
+      "sha256": "9b154c13d4382b85b6b6d9784e5084a64d73b986735244373a62b8e0fd748b4b"
+    },
+    "roformer": {
+      "model_id": "model:roformer",
+      "sha256": "ae2903ff5fbc5befa363b21172b76b2b1d5cea9360cf6ae77a4976d52ea9037c"
+    },
+    "rwkv": {
+      "model_id": "model:rwkv",
+      "sha256": "f12068bbdf111e1e47f29e96d95e032902ede7dd60e7e9a796af3dd7000d70d9"
+    },
+    "s4": {
+      "model_id": "model:s4",
+      "sha256": "efba6a5516d8eaea186445416123599d457a4f43d91c0754fdb09768f731aa5a"
+    },
+    "sac_rl": {
+      "model_id": "model:sac",
+      "sha256": "9a4a8fd6a694660dfb003b52012bb345bb4c407e49fee54ff4c77d1ae8a7ff5e"
+    },
+    "senet": {
+      "model_id": "model:senet",
+      "sha256": "1ef7d4df1d33ff80005c941ac9f8e3991a698349ec066afa5afc7dd886c6836c"
+    },
+    "seq2seq": {
+      "model_id": "model:transformer",
+      "sha256": "c0df501195664497c385772a91da19455ef2fce79e5541a6409ced49007269ce"
+    },
+    "simclr": {
+      "model_id": "model:simclr",
+      "sha256": "b93012f47f741c4c14910dbd277cf0fadec27cced62175df45af5a6d32f0507f"
+    },
+    "swin": {
+      "model_id": "model:swin",
+      "sha256": "dc37e05ec0caedd0943caf24416e02382803232419277375ed052f2ec6d73781"
+    },
+    "switch": {
+      "model_id": "model:switch",
+      "sha256": "f60000e0d6a6a2fe4f74f6c9f4592bd6d5a8a44889af188b22eb2141e5c21f1f"
+    },
+    "t5": {
+      "model_id": "model:t5",
+      "sha256": "bc7af1d3c5d495a69f6466f0100c00f5278504d324ba33b4b8b3a66e3091f907"
+    },
+    "tabnet": {
+      "model_id": "model:tabnet",
+      "sha256": "edcd3e2713ca8019707f2d0fee84e2737fd428c57711ddc6f0c991b563e3f679"
+    },
+    "tcn": {
+      "model_id": "model:tcn",
+      "sha256": "35ca9893de9d36c08bef9719b3a2790c51e814d2821ede0ba57952e4c48f2850"
+    },
+    "td3_rl": {
+      "model_id": "model:td3",
+      "sha256": "1a9b97cf4782ae94aeb201e23702883b91561082406c6bc67bd12abbd557bb88"
+    },
+    "unet": {
+      "model_id": "model:unet",
+      "sha256": "e60fa92ebdf8aa749413f3746a57871b87325c68e9b104c9d2de500cdf7e00d3"
+    },
+    "vae": {
+      "model_id": "model:vae",
+      "sha256": "ee99615ef2bb678b0210884fd12410d2bc8b2d4883db7190b36828ca7f387026"
+    },
+    "vgg": {
+      "model_id": "model:vgg",
+      "sha256": "dd4aed0cac2500a65fb83f09a57897c675ea2d8e80d4d3429d3a998259f8db22"
+    },
+    "vit": {
+      "model_id": "model:vit",
+      "sha256": "6a0316e0692bfd18383b41f8ce2be2b3d07fc2ca8da6a6e7eecb5923de00e948"
+    },
+    "world_models_rl": {
+      "model_id": "model:world_models",
+      "sha256": "2764e9e7d4f32b3b84ee0a28e3d1dfe2f6886bd97cfe7873cee9199ecd478de0"
+    }
+  }
+}
