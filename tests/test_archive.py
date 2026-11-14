@@ -45,3 +45,30 @@ def test_archive_fails_closed(tmp_path, damage):
     path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError):
         verify_archive(root, catalog_revision=verify_archive()['catalog_revision'])
+
+
+@pytest.mark.parametrize('kind', ['unlisted', 'directory', 'symlink'])
+def test_archive_rejects_unlisted_or_nonregular_files(tmp_path, kind):
+    root = tmp_path/'archive'
+    shutil.copytree(DEFAULT_ARCHIVE, root)
+    path = root/'snapshots'/'unexpected'
+    if kind == 'unlisted':
+        path.write_text('must never deploy')
+    elif kind == 'directory':
+        path.mkdir()
+    else:
+        path.symlink_to(root/'manifest.json')
+    with pytest.raises(ValueError):
+        verify_archive(root)
+
+
+def test_import_requires_complete_snapshot_checksum_coverage(tmp_path):
+    output = tmp_path/'pages'
+    build_pages(output, source_revision='test-source')
+    path = output/'viewer-manifest.json'
+    manifest = json.loads(path.read_text())
+    key = manifest['runtime_snapshots'][0]
+    del manifest['files']['snapshots/'+key+'.json']
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match='checksum'):
+        archive_pages(output, tmp_path/'archive')
