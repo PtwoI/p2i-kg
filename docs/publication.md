@@ -5,7 +5,7 @@ The existing architecture-extension automation owns the cross-repository publica
 using the user-authorized GitHub connection. No long-lived deployment token is needed.
 
 1. Merge tested P2I dependencies first, then the KG PR. Pin the latest KG main SHA.
-2. The runtime CI job exports and validates artifact `p2imap-<SHA>`, including every
+2. The runtime CI job verifies the committed `model-archive/`, then exports and validates artifact `p2imap-<SHA>`, including every
    catalog model and its real P2I structure. Use that artifact, or build identically:
 
    ```sh
@@ -13,8 +13,9 @@ using the user-authorized GitHub connection. No long-lived deployment token is n
    python -m p2i_kg verify-pages ./new-p2imap
    ```
 
-   Install matching p2i-core/p2i-gui checkouts, CPU Torch/TorchVision and the KG
-   language extra. The build creates a temporary database from the bundled catalog;
+   Normal publication copies canonical snapshots without Torch. To regenerate
+   structures after model changes, install matching p2i-core/p2i-gui checkouts,
+   CPU Torch/TorchVision and the KG language extra (see below). The build creates a temporary database from the bundled catalog;
    a maintainer's stale or locally curated database is never used or overwritten.
    Every model needs a unique runtime and a working scope description. Missing runtime,
    missing/incorrect structure, or changed file checksums must fail publication.
@@ -86,3 +87,36 @@ Do not replace this flow with a cross-repository `GITHUB_TOKEN` push. That token
 is repository-scoped. Even a same-repository token push does not trigger a Pages
 branch build, so a future all-Actions implementation needs an explicitly reviewed
 publication/authentication design rather than an assumed push side effect.
+
+## Canonical model archive and regeneration
+
+**`PtwoI/p2i-kg/model-archive/` is the persistent structure archive.**
+The portfolio holds only generated serving copies. Its manifest names both the
+KG deployment revision and the archive generation revision; these differ because
+an archive cannot contain the hash of the commit that first stores it.
+
+`pages` now reads the committed archive by default, verifies every checksum, exact
+model coverage, catalog revision and runtime-source fingerprints, then copies
+snapshot bytes unchanged. It does not silently regenerate an outdated archive.
+An installed package can select the KG checkout's archive with `--archive PATH`.
+
+When extending/changing a catalog or runtime factory, regenerate **in the KG PR**:
+
+```sh
+python -m p2i_kg pages ./fresh-structures --source-revision "$(git rev-parse HEAD)" --regenerate-snapshots
+python -m p2i_kg archive-pages ./fresh-structures ./new-model-archive
+python -m p2i_kg verify-archive ./new-model-archive
+```
+
+The source revision is the generation checkout's committed HEAD. Commit source
+changes first so it identifies the inputs; the archive then records those exact
+source file hashes too. Review and replace only `model-archive/manifest.json` and
+managed snapshot JSON files from this new directory, preserving README.md. Stage
+those changes in the same PR, run the graph/runtime checks, then merge. Keep the
+old live map until the new KG archive and deployment both validate.
+
+After merge, build `pages` **without** `--regenerate-snapshots` against the final
+KG main SHA and use the guarded publication plan. Check live snapshot hashes
+against the KG archive, not merely another generated build. The portfolio stays
+self-contained for static hosting; duplicate serving bytes are intentional, not
+a second authoritative model archive. No trained weights are stored here.
