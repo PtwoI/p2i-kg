@@ -39,8 +39,14 @@ def verify_archive(directory=DEFAULT_ARCHIVE, *, catalog_revision=None):
         raise ValueError('Archive model coverage differs from bundled catalog')
     if not snapshots or any(not re.fullmatch(r'[A-Za-z0-9_-]+', key) for key in snapshots):
         raise ValueError('Unsafe or empty archive runtime IDs')
-    actual = {p.stem for p in (root / 'snapshots').glob('*.json')}
-    if actual != set(snapshots):
+    snapshot_dir = root / 'snapshots'
+    if snapshot_dir.is_symlink() or not snapshot_dir.is_dir():
+        raise ValueError('Archive snapshot directory must be a real directory')
+    paths = list(snapshot_dir.iterdir())
+    if any(path.is_symlink() or not path.is_file() for path in paths):
+        raise ValueError('Archive contains non-regular snapshot files')
+    actual = {path.name for path in paths}
+    if actual != {key + '.json' for key in snapshots}:
         raise ValueError('Archive snapshot coverage differs from manifest')
     for key, entry in snapshots.items():
         path = root / 'snapshots' / (key + '.json')
@@ -64,6 +70,10 @@ def archive_pages(build, output):
         raise ValueError('Archive import requires a KG source revision')
     if published.get('snapshot_source_files') != source_hashes():
         raise ValueError('Build runtime provenance differs from checked-out source files')
+    for key in published['runtime_snapshots']:
+        name = 'snapshots/' + key + '.json'
+        if published.get('files', {}).get(name) != sha256((build / name).read_bytes()).hexdigest():
+            raise ValueError(f'Build snapshot missing or invalid checksum: {key}')
     # Caller must generate/import using the same checked-out runtime sources.
     from .store import GraphStore
     import tempfile
@@ -72,7 +82,12 @@ def archive_pages(build, output):
     if published['catalog_revision'] != revision:
         raise ValueError('Cannot archive a stale catalog')
     output.mkdir(parents=True, exist_ok=False)
-    shutil.copytree(build / 'snapshots', output / 'snapshots')
+    (output / 'snapshots').mkdir()
+    for key in published['runtime_snapshots']:
+        source = build / 'snapshots' / (key + '.json')
+        if source.is_symlink() or (build / 'snapshots').is_symlink():
+            raise ValueError('Cannot import symlinked snapshots')
+        shutil.copyfile(source, output / 'snapshots' / source.name)
     manifest = {
         'schema_version': 1, 'repository': REPOSITORY,
         'generation_revision': published.get('canonical_archive', {}).get('generation_revision', published['source_revision']),
@@ -88,5 +103,8 @@ def archive_pages(build, output):
 
 def copy_archive(directory, destination, *, catalog_revision):
     manifest = verify_archive(directory, catalog_revision=catalog_revision)
-    shutil.copytree(Path(directory) / 'snapshots', Path(destination) / 'snapshots')
+    target = Path(destination) / 'snapshots'
+    target.mkdir()
+    for key in manifest['snapshots']:
+        shutil.copyfile(Path(directory) / 'snapshots' / (key + '.json'), target / (key + '.json'))
     return manifest
