@@ -151,3 +151,8 @@ network shapes do not imply that distinct training algorithms are identical.
 Voyager and other agent frameworks are not represented as neural-network models.
 The RL fragments in `docs/rl-*.json` are additive; their paper nodes record the
 primary references and their component bindings name actual runtime modules.
+
+KAN, xLSTM and TimeMixer provide complementary examples of spline edge
+functions, exponential-gated scalar memory and decomposable multiscale time
+mixing. Their fixed random-weight runtimes are small illustrations whose notes
+describe the original structures and training components that are omitted.
