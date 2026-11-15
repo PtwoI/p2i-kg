@@ -4064,6 +4064,169 @@
       "family": "reinforcement-learning",
       "runtime_id": "world_models_rl",
       "runtime_note": "작은 encoder, 결정론적 순환 memory, controller와 decoder를 실행합니다. VAE sampling, MDN-RNN의 mixture density, 진화 탐색과 환경은 생략합니다."
+    },
+    {
+      "id": "paper:kan",
+      "kind": "paper",
+      "label": "KAN: Kolmogorov-Arnold Networks",
+      "summary": "원 논문과 공식 구현 KindXiaoming/pykan",
+      "reference_year": 2024,
+      "url": "https://arxiv.org/abs/2404.19756",
+      "authors": [
+        "Ziming Liu",
+        "Yixuan Wang",
+        "Sachin Vaidya",
+        "Fabian Ruehle",
+        "James Halverson",
+        "Marin Soljačić",
+        "Thomas Y. Hou",
+        "Max Tegmark"
+      ]
+    },
+    {
+      "id": "model:kan",
+      "kind": "model",
+      "label": "KAN",
+      "summary": "입력별 학습 가능한 스플라인 함수를 합산하는 신경망입니다.",
+      "reference_year": 2024,
+      "family": "feedforward",
+      "runtime_id": "kan",
+      "runtime_note": "고정 격자의 1차 B-spline edge 두 층과 SiLU 기반 경로를 실행합니다. 원 논문의 고차 spline, 적응형 grid, symbolic 회귀 및 학습은 생략합니다."
+    },
+    {
+      "id": "concept:learnable_spline",
+      "kind": "concept",
+      "label": "Learnable edge spline",
+      "summary": "학습 가능한 단변량 함수로 연결별 비선형 변환을 표현합니다."
+    },
+    {
+      "id": "component:kan_spline",
+      "kind": "component",
+      "label": "Spline edge layer",
+      "summary": "입력 채널별 스플라인을 계산해 출력 채널별로 합산합니다."
+    },
+    {
+      "id": "paper:xlstm",
+      "kind": "paper",
+      "label": "xLSTM: Extended Long Short-Term Memory",
+      "summary": "원 논문과 공식 구현 NX-AI/xlstm",
+      "reference_year": 2024,
+      "url": "https://arxiv.org/abs/2405.04517",
+      "authors": [
+        "Maximilian Beck",
+        "Korbinian Pöppel",
+        "Markus Spanring",
+        "Andreas Auer",
+        "Oleksandra Prudnikova",
+        "Michael Kopp",
+        "Günter Klambauer",
+        "Johannes Brandstetter",
+        "Sepp Hochreiter"
+      ]
+    },
+    {
+      "id": "model:xlstm",
+      "kind": "model",
+      "label": "xLSTM",
+      "summary": "지수 게이트와 확장된 메모리로 LSTM을 발전시킨 순환 아키텍처입니다.",
+      "reference_year": 2024,
+      "family": "sequence",
+      "runtime_id": "xlstm",
+      "runtime_note": "작은 안정화된 sLSTM 스칼라 메모리와 입력·출력 선형 투영을 실행합니다. mLSTM 행렬 메모리, convolution, multi-head, residual block, 대규모 학습은 생략합니다."
+    },
+    {
+      "id": "concept:exponential_gating",
+      "kind": "concept",
+      "label": "Exponential gating",
+      "summary": "입력과 망각 게이트를 지수화하고 안정화해 메모리 갱신을 제어합니다."
+    },
+    {
+      "id": "component:xlstm_input",
+      "kind": "component",
+      "label": "xLSTM input projection",
+      "summary": "입력 특성을 메모리 폭으로 투영합니다."
+    },
+    {
+      "id": "component:xlstm_memory",
+      "kind": "component",
+      "label": "sLSTM memory",
+      "summary": "지수 게이트와 정규화 상태를 가진 스칼라 순환 메모리입니다."
+    },
+    {
+      "id": "component:xlstm_output",
+      "kind": "component",
+      "label": "xLSTM output projection",
+      "summary": "순환 표현을 출력 폭으로 투영합니다."
+    },
+    {
+      "id": "paper:timemixer",
+      "kind": "paper",
+      "label": "TimeMixer: Decomposable Multiscale Mixing for Time Series Forecasting",
+      "summary": "원 논문과 공식 구현 kwuking/TimeMixer",
+      "reference_year": 2024,
+      "url": "https://arxiv.org/abs/2405.14616",
+      "authors": [
+        "Shiyu Wang",
+        "Haixu Wu",
+        "Xiaoming Shi",
+        "Tengge Hu",
+        "Huakun Luo",
+        "Lintao Ma",
+        "James Y. Zhang",
+        "Jun Zhou"
+      ]
+    },
+    {
+      "id": "model:timemixer",
+      "kind": "model",
+      "label": "TimeMixer",
+      "summary": "시계열을 여러 해상도와 계절·추세 성분으로 분해해 양방향 혼합하고 예측을 결합합니다.",
+      "reference_year": 2024,
+      "family": "time-series-forecasting",
+      "runtime_id": "timemixer",
+      "runtime_note": "길이 8의 단변량 입력을 두 해상도로 평균 풀링하고 이동 평균 분해, 계절 하향·추세 상향 선형 혼합과 두 예측기의 합을 실행합니다. 깊은 PDM stack, 정규화, 여러 변수와 학습은 생략합니다."
+    },
+    {
+      "id": "concept:multiscale_decomposition",
+      "kind": "concept",
+      "label": "Decomposable multiscale mixing",
+      "summary": "다중 해상도의 계절 및 추세 성분을 서로 반대 방향으로 혼합합니다."
+    },
+    {
+      "id": "component:timemixer_decomposition",
+      "kind": "component",
+      "label": "Moving-average decomposition",
+      "summary": "시계열을 추세와 잔차 계절 성분으로 나눕니다."
+    },
+    {
+      "id": "component:timemixer_season",
+      "kind": "component",
+      "label": "Seasonal mixing",
+      "summary": "세밀한 해상도에서 거친 해상도로 계절 성분을 전달합니다."
+    },
+    {
+      "id": "component:timemixer_trend",
+      "kind": "component",
+      "label": "Trend mixing",
+      "summary": "거친 해상도에서 세밀한 해상도로 추세 성분을 전달합니다."
+    },
+    {
+      "id": "component:timemixer_forecast",
+      "kind": "component",
+      "label": "Multiscale predictor",
+      "summary": "여러 해상도의 예측을 더합니다."
+    },
+    {
+      "id": "objective:function_fitting_mse",
+      "kind": "objective",
+      "label": "Function fitting mean squared error",
+      "summary": "예측 함수와 목표 함수의 제곱 오차를 최소화합니다."
+    },
+    {
+      "id": "task:function_approximation",
+      "kind": "task",
+      "label": "Function approximation",
+      "summary": "표본으로부터 연속 함수를 근사합니다."
     }
   ],
   "edges": [
@@ -14440,6 +14603,259 @@
         "paper:aps",
         "paper:diayn"
       ]
+    },
+    {
+      "source": "model:kan",
+      "relation": "documented_in",
+      "target": "paper:kan",
+      "basis": "documented",
+      "explanation": "원 논문에서 모델을 제안합니다.",
+      "evidence": [
+        "paper:kan"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:kan",
+      "relation": "uses",
+      "target": "concept:learnable_spline",
+      "basis": "documented",
+      "explanation": "학습 가능한 단변량 함수로 연결별 비선형 변환을 표현합니다.",
+      "evidence": [
+        "paper:kan"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:kan",
+      "relation": "has_component",
+      "target": "component:kan_spline",
+      "basis": "structural",
+      "explanation": "입력 채널별 스플라인을 계산해 출력 채널별로 합산합니다.",
+      "evidence": [
+        "paper:kan"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:kan",
+      "relation": "trained_with",
+      "target": "objective:function_fitting_mse",
+      "basis": "documented",
+      "explanation": "원 논문에서 사용한 대표 학습 목적입니다.",
+      "evidence": [
+        "paper:kan"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:kan",
+      "relation": "applied_to",
+      "target": "task:function_approximation",
+      "basis": "documented",
+      "explanation": "원 논문에서 다루는 대표 과제입니다.",
+      "evidence": [
+        "paper:kan"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:kan",
+      "relation": "alternative_to",
+      "target": "model:mlp",
+      "basis": "structural",
+      "explanation": "구조적 계보 또는 과제 관점의 관계입니다.",
+      "evidence": [
+        "paper:kan"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:xlstm",
+      "relation": "documented_in",
+      "target": "paper:xlstm",
+      "basis": "documented",
+      "explanation": "원 논문에서 모델을 제안합니다.",
+      "evidence": [
+        "paper:xlstm"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:xlstm",
+      "relation": "uses",
+      "target": "concept:exponential_gating",
+      "basis": "documented",
+      "explanation": "입력과 망각 게이트를 지수화하고 안정화해 메모리 갱신을 제어합니다.",
+      "evidence": [
+        "paper:xlstm"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:xlstm",
+      "relation": "has_component",
+      "target": "component:xlstm_input",
+      "basis": "structural",
+      "explanation": "입력 특성을 메모리 폭으로 투영합니다.",
+      "evidence": [
+        "paper:xlstm"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:xlstm",
+      "relation": "has_component",
+      "target": "component:xlstm_memory",
+      "basis": "structural",
+      "explanation": "지수 게이트와 정규화 상태를 가진 스칼라 순환 메모리입니다.",
+      "evidence": [
+        "paper:xlstm"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:xlstm",
+      "relation": "has_component",
+      "target": "component:xlstm_output",
+      "basis": "structural",
+      "explanation": "순환 표현을 출력 폭으로 투영합니다.",
+      "evidence": [
+        "paper:xlstm"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:xlstm",
+      "relation": "trained_with",
+      "target": "objective:autoregressive",
+      "basis": "documented",
+      "explanation": "원 논문에서 사용한 대표 학습 목적입니다.",
+      "evidence": [
+        "paper:xlstm"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:xlstm",
+      "relation": "applied_to",
+      "target": "task:language_modeling",
+      "basis": "documented",
+      "explanation": "원 논문에서 다루는 대표 과제입니다.",
+      "evidence": [
+        "paper:xlstm"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:xlstm",
+      "relation": "extends",
+      "target": "model:lstm",
+      "basis": "structural",
+      "explanation": "구조적 계보 또는 과제 관점의 관계입니다.",
+      "evidence": [
+        "paper:xlstm"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "documented_in",
+      "target": "paper:timemixer",
+      "basis": "documented",
+      "explanation": "원 논문에서 모델을 제안합니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "uses",
+      "target": "concept:multiscale_decomposition",
+      "basis": "documented",
+      "explanation": "다중 해상도의 계절 및 추세 성분을 서로 반대 방향으로 혼합합니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "has_component",
+      "target": "component:timemixer_decomposition",
+      "basis": "structural",
+      "explanation": "시계열을 추세와 잔차 계절 성분으로 나눕니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "has_component",
+      "target": "component:timemixer_season",
+      "basis": "structural",
+      "explanation": "세밀한 해상도에서 거친 해상도로 계절 성분을 전달합니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "has_component",
+      "target": "component:timemixer_trend",
+      "basis": "structural",
+      "explanation": "거친 해상도에서 세밀한 해상도로 추세 성분을 전달합니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "has_component",
+      "target": "component:timemixer_forecast",
+      "basis": "structural",
+      "explanation": "여러 해상도의 예측을 더합니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "trained_with",
+      "target": "objective:point_forecasting",
+      "basis": "documented",
+      "explanation": "원 논문에서 사용한 대표 학습 목적입니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "applied_to",
+      "target": "task:time_series_forecasting",
+      "basis": "documented",
+      "explanation": "원 논문에서 다루는 대표 과제입니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:timemixer",
+      "relation": "alternative_to",
+      "target": "model:nbeats",
+      "basis": "structural",
+      "explanation": "구조적 계보 또는 과제 관점의 관계입니다.",
+      "evidence": [
+        "paper:timemixer"
+      ],
+      "locator": "원 논문 및 공식 구현"
     }
   ]
 }

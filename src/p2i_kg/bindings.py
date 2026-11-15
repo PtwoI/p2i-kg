@@ -4,6 +4,9 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'kan': [('component:kan_spline', 'spline_one')],
+    'xlstm': [('component:xlstm_input', 'input_projection'), ('component:xlstm_memory', 'memory'), ('component:xlstm_output', 'output_projection')],
+    'timemixer': [('component:timemixer_decomposition', 'decomposition'), ('component:timemixer_season', 'season_down'), ('component:timemixer_trend', 'trend_up'), ('component:timemixer_forecast', 'predict_fine')],
     'double_dqn_rl': [('component:rl_encoder', 'encoder'), ('component:rl_q_head', 'q_head')],
     'dueling_dqn_rl': [('component:rl_encoder', 'encoder'), ('component:rl_value_stream', 'value_stream'), ('component:rl_advantage_stream', 'advantage_stream')],
     'rainbow_rl': [('component:rl_encoder', 'encoder'), ('component:rl_value_stream', 'value_stream'), ('component:rl_advantage_stream', 'advantage_stream')],
