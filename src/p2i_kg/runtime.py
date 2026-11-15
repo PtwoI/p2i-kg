@@ -10,7 +10,7 @@ BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18'
     'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
     'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet',
     'neuralode', 'fno', 'rwkv')
-BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('tcn', 'nbeats', 'tabnet')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('tcn', 'nbeats', 'tabnet', 'kan', 'xlstm', 'timemixer')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('dqn_rl', 'ppo_rl', 'dreamer_rl', 'diayn_rl')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('sac_rl', 'muzero_rl', 'decision_transformer_rl')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('dreamerv2_rl', 'dreamerv3_rl', 'dreamer4_rl')
@@ -29,6 +29,10 @@ def make_model(runtime_id):
     devices = list(range(torch.cuda.device_count())) if torch.cuda.is_initialized() else []
     with torch.random.fork_rng(devices=devices):
         torch.manual_seed(47)
+        if runtime_id in ('kan', 'xlstm', 'timemixer'):
+            from .new_architectures import TinyKAN, TinyXLSTM, TinyTimeMixer
+            model, inputs = {'kan': (TinyKAN, (2, 3)), 'xlstm': (TinyXLSTM, (2, 6, 4)), 'timemixer': (TinyTimeMixer, (2, 8))}[runtime_id]
+            return model().eval(), (torch.randn(*inputs),)
         if runtime_id == 'perceptron':
             from .models import ThresholdPerceptron
             return ThresholdPerceptron().eval(), (torch.tensor([[0., 0.], [0., 1.], [1., 0.], [1., 1.]]),)
