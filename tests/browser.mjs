@@ -15,7 +15,8 @@ try{
  await page.getByRole('button',{name:'지도 확대',exact:true}).click();
  if(await page.locator('#map').getAttribute('viewBox')===initialBox)throw Error('Zoom did not change camera');
  await page.getByRole('button',{name:'지도 전체 보기',exact:true}).click();
- await page.locator('#map [data-edge]').first().click();
+ await page.locator('#map [data-edge]').first().focus();
+ await page.keyboard.press('Enter');
  await expect(page.locator('#detail h2')).toHaveText('연결의 의미');
  await page.locator('#map [data-node="model:bert"]').click();
  await expect(page.locator('#detail h2')).toHaveText('BERT');

@@ -13,7 +13,7 @@ import shutil
 REPOSITORY = 'PtwoI/p2i-kg'
 DEFAULT_ARCHIVE = Path(__file__).resolve().parents[2] / 'model-archive'
 SOURCES = ('catalog.json', 'runtime.py', 'bindings.py', 'models.py',
-           'extended_models.py', 'extended_registry.py', 'rl_models.py', 'new_architectures.py', 'viewer.py')
+           'extended_models.py', 'extended_registry.py', 'rl_models.py', 'new_architectures.py', 'implicit_restoration_models.py', 'viewer.py')
 
 
 def source_hashes():

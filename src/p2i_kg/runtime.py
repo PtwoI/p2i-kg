@@ -10,6 +10,7 @@ BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18'
     'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
     'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet',
     'neuralode', 'fno', 'rwkv')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('siren', 'deeponet', 'nafnet')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('tcn', 'nbeats', 'tabnet', 'kan', 'xlstm', 'timemixer')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('dqn_rl', 'ppo_rl', 'dreamer_rl', 'diayn_rl')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('sac_rl', 'muzero_rl', 'decision_transformer_rl')
@@ -29,6 +30,11 @@ def make_model(runtime_id):
     devices = list(range(torch.cuda.device_count())) if torch.cuda.is_initialized() else []
     with torch.random.fork_rng(devices=devices):
         torch.manual_seed(47)
+        if runtime_id in ('siren', 'deeponet', 'nafnet'):
+            from .implicit_restoration_models import TinySIREN, TinyDeepONet, TinyNAFNet
+            if runtime_id == 'siren': return TinySIREN().eval(), (torch.randn(2, 2),)
+            if runtime_id == 'deeponet': return TinyDeepONet().eval(), (torch.randn(2, 8), torch.randn(2, 1))
+            return TinyNAFNet().eval(), (torch.randn(2, 3, 8, 8),)
         if runtime_id in ('kan', 'xlstm', 'timemixer'):
             from .new_architectures import TinyKAN, TinyXLSTM, TinyTimeMixer
             model, inputs = {'kan': (TinyKAN, (2, 3)), 'xlstm': (TinyXLSTM, (2, 6, 4)), 'timemixer': (TinyTimeMixer, (2, 8))}[runtime_id]
