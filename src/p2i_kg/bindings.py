@@ -4,6 +4,9 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'siren': [('component:siren_first', 'first'), ('component:siren_hidden', 'hidden'), ('component:siren_output', 'output')],
+    'deeponet': [('component:deeponet_branch', 'branch'), ('component:deeponet_trunk', 'trunk')],
+    'nafnet': [('component:naf_block', 'block'), ('component:naf_gate', 'block.gate'), ('component:naf_sca', 'block.channel_attention')],
     'kan': [('component:kan_spline', 'spline_one')],
     'xlstm': [('component:xlstm_input', 'input_projection'), ('component:xlstm_memory', 'memory'), ('component:xlstm_output', 'output_projection')],
     'timemixer': [('component:timemixer_decomposition', 'decomposition'), ('component:timemixer_season', 'season_down'), ('component:timemixer_trend', 'trend_up'), ('component:timemixer_forecast', 'predict_fine')],
