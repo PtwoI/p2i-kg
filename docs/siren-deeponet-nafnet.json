@@ -1,0 +1,418 @@
+{
+  "schema_version": "0.2",
+  "nodes": [
+    {
+      "id": "objective:image_restoration_l1",
+      "kind": "objective",
+      "label": "Image restoration L1 loss",
+      "summary": "복원 영상과 정답 영상의 절대 오차를 최소화합니다."
+    },
+    {
+      "id": "task:image_restoration",
+      "kind": "task",
+      "label": "Image restoration",
+      "summary": "손상된 영상에서 원래 영상을 추정합니다."
+    },
+    {
+      "id": "paper:siren",
+      "kind": "paper",
+      "label": "Implicit Neural Representations with Periodic Activation Functions",
+      "summary": "공식 구현: https://github.com/vsitzmann/siren",
+      "reference_year": 2020,
+      "url": "https://arxiv.org/abs/2006.09661",
+      "authors": [
+        "Vincent Sitzmann",
+        "Julien Martel",
+        "Alexander Bergman",
+        "David Lindell",
+        "Gordon Wetzstein"
+      ]
+    },
+    {
+      "id": "model:siren",
+      "kind": "model",
+      "label": "SIREN",
+      "summary": "좌표를 주기적 활성화 함수로 연속 신호에 대응시킵니다.",
+      "reference_year": 2020,
+      "family": "feedforward",
+      "runtime_id": "siren",
+      "runtime_note": "두 개의 작은 sinusoidal layer와 선형 출력으로 좌표를 처리합니다. 무작위 초기화이며 원 논문의 신호별 학습과 미분방정식 최적화는 포함하지 않습니다."
+    },
+    {
+      "id": "concept:siren_concept",
+      "kind": "concept",
+      "label": "Periodic activation",
+      "summary": "사인 함수를 활성화로 사용해 신호와 도함수를 표현합니다."
+    },
+    {
+      "id": "component:siren_first",
+      "kind": "component",
+      "label": "First sinusoidal layer",
+      "summary": "첫 좌표 투영과 사인 활성화"
+    },
+    {
+      "id": "component:siren_hidden",
+      "kind": "component",
+      "label": "Hidden sinusoidal layer",
+      "summary": "은닉 사인 활성화"
+    },
+    {
+      "id": "component:siren_output",
+      "kind": "component",
+      "label": "Signal readout",
+      "summary": "연속 신호 출력"
+    },
+    {
+      "id": "paper:deeponet",
+      "kind": "paper",
+      "label": "Learning nonlinear operators via DeepONet based on the universal approximation theorem of operators",
+      "summary": "공식 구현: https://github.com/lululxvi/deeponet",
+      "reference_year": 2021,
+      "url": "https://doi.org/10.1038/s42256-021-00302-5",
+      "authors": [
+        "Lu Lu",
+        "Pengzhan Jin",
+        "Guofei Pang",
+        "Zhiping Zhang",
+        "George Em Karniadakis"
+      ]
+    },
+    {
+      "id": "model:deeponet",
+      "kind": "model",
+      "label": "DeepONet",
+      "summary": "입력 함수의 표본과 출력 좌표를 별도 신경망으로 부호화해 연산자를 근사합니다.",
+      "reference_year": 2021,
+      "family": "neural-operator",
+      "runtime_id": "deeponet",
+      "runtime_note": "8개 입력 표본의 branch와 하나의 질의 좌표 trunk를 내적하는 작은 unstacked 예제입니다. 무작위 가중치이며 연산자 학습은 포함하지 않습니다."
+    },
+    {
+      "id": "concept:deeponet_concept",
+      "kind": "concept",
+      "label": "Branch–trunk operator learning",
+      "summary": "함수 표본과 질의 좌표의 표현을 결합해 출력 함수를 예측합니다."
+    },
+    {
+      "id": "component:deeponet_branch",
+      "kind": "component",
+      "label": "Branch network",
+      "summary": "입력 함수 표본을 부호화합니다."
+    },
+    {
+      "id": "component:deeponet_trunk",
+      "kind": "component",
+      "label": "Trunk network",
+      "summary": "출력 질의 좌표를 부호화합니다."
+    },
+    {
+      "id": "paper:nafnet",
+      "kind": "paper",
+      "label": "Simple Baselines for Image Restoration",
+      "summary": "공식 구현: https://github.com/megvii-research/NAFNet",
+      "reference_year": 2022,
+      "url": "https://arxiv.org/abs/2204.04676",
+      "authors": [
+        "Liangyu Chen",
+        "Xiaojie Chu",
+        "Xiangyu Zhang",
+        "Jian Sun"
+      ]
+    },
+    {
+      "id": "model:nafnet",
+      "kind": "model",
+      "label": "NAFNet",
+      "summary": "SimpleGate와 단순화 채널 어텐션을 이용한 영상 복원 신경망입니다.",
+      "reference_year": 2022,
+      "family": "vision",
+      "runtime_id": "nafnet",
+      "runtime_note": "단일 축소 블록의 depthwise convolution, SimpleGate, 채널 attention 및 잔차를 실행합니다. 원본의 채널별 LayerNorm 대신 GroupNorm을 사용하며 인코더·디코더와 두 번째 FFN 경로 및 학습은 생략합니다."
+    },
+    {
+      "id": "concept:nafnet_concept",
+      "kind": "concept",
+      "label": "Multiplicative simple gate",
+      "summary": "채널을 둘로 나누어 곱하는 비선형 게이트입니다."
+    },
+    {
+      "id": "component:naf_block",
+      "kind": "component",
+      "label": "NAF block",
+      "summary": "게이트와 채널 어텐션을 가진 잔차 블록입니다."
+    },
+    {
+      "id": "component:naf_gate",
+      "kind": "component",
+      "label": "SimpleGate",
+      "summary": "채널 분할 후 원소별 곱을 수행합니다."
+    },
+    {
+      "id": "component:naf_sca",
+      "kind": "component",
+      "label": "Simplified channel attention",
+      "summary": "전역 풀링으로 채널별 변조를 만듭니다."
+    },
+    {
+      "id": "task:operator_learning",
+      "kind": "task",
+      "label": "Operator learning",
+      "summary": "입력 함수에서 출력 함수로의 사상을 학습합니다."
+    }
+  ],
+  "edges": [
+    {
+      "source": "model:siren",
+      "relation": "documented_in",
+      "target": "paper:siren",
+      "basis": "documented",
+      "explanation": "원 논문에서 구조를 제안합니다.",
+      "evidence": [
+        "paper:siren"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:siren",
+      "relation": "uses",
+      "target": "concept:siren_concept",
+      "basis": "documented",
+      "explanation": "사인 함수를 활성화로 사용해 신호와 도함수를 표현합니다.",
+      "evidence": [
+        "paper:siren"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:siren",
+      "relation": "has_component",
+      "target": "component:siren_first",
+      "basis": "structural",
+      "explanation": "첫 좌표 투영과 사인 활성화",
+      "evidence": [
+        "paper:siren"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:siren",
+      "relation": "has_component",
+      "target": "component:siren_hidden",
+      "basis": "structural",
+      "explanation": "은닉 사인 활성화",
+      "evidence": [
+        "paper:siren"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:siren",
+      "relation": "has_component",
+      "target": "component:siren_output",
+      "basis": "structural",
+      "explanation": "연속 신호 출력",
+      "evidence": [
+        "paper:siren"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:siren",
+      "relation": "trained_with",
+      "target": "objective:function_fitting_mse",
+      "basis": "documented",
+      "explanation": "원 논문에서 해당 목적을 사용하는 설정을 제시합니다.",
+      "evidence": [
+        "paper:siren"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:siren",
+      "relation": "applied_to",
+      "target": "task:function_approximation",
+      "basis": "documented",
+      "explanation": "원 논문에서 해당 과제에 적용합니다.",
+      "evidence": [
+        "paper:siren"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:siren",
+      "relation": "alternative_to",
+      "target": "model:mlp",
+      "basis": "pedagogical",
+      "explanation": "동일하거나 관련된 문제 영역에 서로 다른 구조를 적용합니다.",
+      "evidence": [
+        "paper:siren"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:deeponet",
+      "relation": "documented_in",
+      "target": "paper:deeponet",
+      "basis": "documented",
+      "explanation": "원 논문에서 구조를 제안합니다.",
+      "evidence": [
+        "paper:deeponet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:deeponet",
+      "relation": "uses",
+      "target": "concept:deeponet_concept",
+      "basis": "documented",
+      "explanation": "함수 표본과 질의 좌표의 표현을 결합해 출력 함수를 예측합니다.",
+      "evidence": [
+        "paper:deeponet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:deeponet",
+      "relation": "has_component",
+      "target": "component:deeponet_branch",
+      "basis": "structural",
+      "explanation": "입력 함수 표본을 부호화합니다.",
+      "evidence": [
+        "paper:deeponet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:deeponet",
+      "relation": "has_component",
+      "target": "component:deeponet_trunk",
+      "basis": "structural",
+      "explanation": "출력 질의 좌표를 부호화합니다.",
+      "evidence": [
+        "paper:deeponet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:deeponet",
+      "relation": "trained_with",
+      "target": "objective:function_fitting_mse",
+      "basis": "documented",
+      "explanation": "원 논문에서 해당 목적을 사용하는 설정을 제시합니다.",
+      "evidence": [
+        "paper:deeponet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:deeponet",
+      "relation": "applied_to",
+      "target": "task:operator_learning",
+      "basis": "documented",
+      "explanation": "함수 간 비선형 연산자를 학습합니다.",
+      "evidence": [
+        "paper:deeponet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:deeponet",
+      "relation": "alternative_to",
+      "target": "model:fno",
+      "basis": "pedagogical",
+      "explanation": "동일하거나 관련된 문제 영역에 서로 다른 구조를 적용합니다.",
+      "evidence": [
+        "paper:deeponet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:nafnet",
+      "relation": "documented_in",
+      "target": "paper:nafnet",
+      "basis": "documented",
+      "explanation": "원 논문에서 구조를 제안합니다.",
+      "evidence": [
+        "paper:nafnet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:nafnet",
+      "relation": "uses",
+      "target": "concept:nafnet_concept",
+      "basis": "documented",
+      "explanation": "채널을 둘로 나누어 곱하는 비선형 게이트입니다.",
+      "evidence": [
+        "paper:nafnet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:nafnet",
+      "relation": "has_component",
+      "target": "component:naf_block",
+      "basis": "structural",
+      "explanation": "게이트와 채널 어텐션을 가진 잔차 블록입니다.",
+      "evidence": [
+        "paper:nafnet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:nafnet",
+      "relation": "has_component",
+      "target": "component:naf_gate",
+      "basis": "structural",
+      "explanation": "채널 분할 후 원소별 곱을 수행합니다.",
+      "evidence": [
+        "paper:nafnet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:nafnet",
+      "relation": "has_component",
+      "target": "component:naf_sca",
+      "basis": "structural",
+      "explanation": "전역 풀링으로 채널별 변조를 만듭니다.",
+      "evidence": [
+        "paper:nafnet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:nafnet",
+      "relation": "trained_with",
+      "target": "objective:image_restoration_l1",
+      "basis": "documented",
+      "explanation": "원 논문에서 해당 목적을 사용하는 설정을 제시합니다.",
+      "evidence": [
+        "paper:nafnet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:nafnet",
+      "relation": "applied_to",
+      "target": "task:image_restoration",
+      "basis": "documented",
+      "explanation": "원 논문에서 해당 과제에 적용합니다.",
+      "evidence": [
+        "paper:nafnet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    },
+    {
+      "source": "model:nafnet",
+      "relation": "alternative_to",
+      "target": "model:unet",
+      "basis": "pedagogical",
+      "explanation": "동일하거나 관련된 문제 영역에 서로 다른 구조를 적용합니다.",
+      "evidence": [
+        "paper:nafnet"
+      ],
+      "locator": "원 논문 및 공식 구현"
+    }
+  ]
+}

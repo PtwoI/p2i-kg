@@ -156,3 +156,5 @@ KAN, xLSTM and TimeMixer provide complementary examples of spline edge
 functions, exponential-gated scalar memory and decomposable multiscale time
 mixing. Their fixed random-weight runtimes are small illustrations whose notes
 describe the original structures and training components that are omitted.
+
+SIREN, DeepONet and NAFNet add sinusoidal coordinate networks, branch–trunk operator learning and gated image restoration. Their small, randomly initialized runtime notes specify the omitted training and architectural features.
