@@ -158,3 +158,10 @@ mixing. Their fixed random-weight runtimes are small illustrations whose notes
 describe the original structures and training components that are omitted.
 
 SIREN, DeepONet and NAFNet add sinusoidal coordinate networks, branch–trunk operator learning and gated image restoration. Their small, randomly initialized runtime notes specify the omitted training and architectural features.
+
+U²-Net, pix2pix and CycleGAN add nested U blocks, conditioned patch
+discrimination and bidirectional cycle reconstruction, respectively. The
+[image model fragment](image-translation-architectures.json) records original
+papers and author implementations. The bundled examples expose these paths with
+randomly initialized CPU models, including real and generated discriminator
+inputs for both translators.
