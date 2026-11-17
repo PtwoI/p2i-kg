@@ -4549,6 +4549,12 @@
       "kind": "objective",
       "label": "Adversarial and cycle-consistency loss",
       "summary": "도메인별 적대적 손실에 두 왕복 복원의 L1 오차를 더합니다."
+    },
+    {
+      "id": "component:affine_projection",
+      "kind": "component",
+      "label": "Affine projection",
+      "summary": "입력의 가중합에 편향을 더합니다."
     }
   ],
   "edges": [
@@ -15650,6 +15656,26 @@
       "explanation": "비정렬 영상으로 학습할 때는 쌍별 정답의 L1 대신 양방향 왕복 복원 제약을 사용합니다.",
       "evidence": [
         "paper:cyclegan"
+      ]
+    },
+    {
+      "source": "model:perceptron",
+      "relation": "has_component",
+      "target": "component:affine_projection",
+      "basis": "structural",
+      "explanation": "학습 가능한 가중합을 계산하는 실제 실행 모듈과 연결합니다.",
+      "evidence": [
+        "paper:perceptron"
+      ]
+    },
+    {
+      "source": "model:mlp",
+      "relation": "has_component",
+      "target": "component:affine_projection",
+      "basis": "structural",
+      "explanation": "학습 가능한 가중합을 계산하는 실제 실행 모듈과 연결합니다.",
+      "evidence": [
+        "paper:backprop"
       ]
     }
   ]
