@@ -9,6 +9,11 @@ from p2i_kg.publication import build_pages
 def test_canonical_archive_covers_every_model():
     manifest = verify_archive()
     assert len(manifest['snapshots']) >= 79
+    for runtime_id in manifest['snapshots']:
+        data = json.loads((DEFAULT_ARCHIVE/'snapshots'/(runtime_id+'.json')).read_text())
+        observed_paths = {module['qualified_name'] for module in data['observed']['modules']}
+        assert data['bindings'], runtime_id
+        assert all(binding['module_path'] in observed_paths for binding in data['bindings']), runtime_id
 
 
 def test_pages_uses_exact_canonical_bytes_without_runtime(tmp_path, monkeypatch):

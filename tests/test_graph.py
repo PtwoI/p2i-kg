@@ -9,7 +9,7 @@ from p2i_kg.app import create_app
 
 def test_seed_relations_and_jsonld():
     graph = seed_graph()
-    assert len(graph.nodes) == 533 and len(graph.edges) == 1039
+    assert len(graph.nodes) == 534 and len(graph.edges) == 1041
     assert len([node for node in graph.nodes if node.kind == 'model']) == 88
     assert all(edge.evidence for edge in graph.edges)
     data = graph.jsonld()
@@ -47,7 +47,7 @@ def test_sqlite_reopen_and_idempotent_import(tmp_path):
 def test_search_compare_detail_and_exports(tmp_path):
     with TestClient(create_app(tmp_path/'kg.sqlite3')) as client:
         graph = client.get('/api/kg').json()
-        assert len(graph['nodes']) == 533
+        assert len(graph['nodes']) == 534
         assert any(node['id'] == 'model:lstm' for node in client.get('/api/kg/search?q=LSTM').json()['nodes'])
         detail = client.get('/api/kg/nodes/model:transformer').json()
         assert detail['node']['kind'] == 'model' and detail['edges']

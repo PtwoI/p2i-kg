@@ -4,6 +4,9 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'perceptron': [('component:affine_projection', 'linear')],
+    'mlp': [('component:affine_projection', 'layers.0'),
+            ('component:affine_projection', 'layers.2')],
     'u2net': [('component:u2net_nested_rsu', 'encoder'), ('component:u2net_nested_rsu', 'bridge'),
               ('component:u2net_nested_rsu', 'decoder'), ('component:u2net_side_fusion', 'fusion')],
     'pix2pix': [('component:pix2pix_generator', 'generator'), ('component:pix2pix_patchgan', 'discriminator')],

@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "repository": "PtwoI/p2i-kg",
-  "generation_revision": "842bc1a57e924c45bbacb749172a5642cc62d1b6",
-  "catalog_revision": "5ae0073abd9e05614075d3728cf8285e207a61be0264c10d8cb098f0cbca3123",
+  "generation_revision": "a39a1c1d479855b07a6073894e02d5ff3b994fe1",
+  "catalog_revision": "27fef52cf0a37fc053bff6966e6453a7fe52be2358dafce87000cc6a59cf7118",
   "source_files": {
-    "catalog.json": "e8bea0e4dc5bc7844bd5c12b52e15dff11d4bf17ba7cbd92111e28b122c8830c",
+    "catalog.json": "aaee61584dcec50b311ee698b571924e1e360d44ff012169dd51a920f16eb683",
     "runtime.py": "67751b92b5b30603d5acb86d0c6616324333960d28ea56abcc3ddaae8bbbac8e",
-    "bindings.py": "4b90c285b04eed5c34748b8f74643d7969755a37ad71520ee76972c85ec7b177",
+    "bindings.py": "fd4d017887fcfbbfeb37980ce6bf47657d5df0dbce62b0f6b5c2b70a3cdc8a02",
     "models.py": "e93f70c6822928c193c163400dee817e765e9b8241895512c06498bd8a21c447",
     "extended_models.py": "138e589537627ddf4dc7f7dfded0b4f2c73cebdd2b316cf076ff23b1317a63e4",
     "extended_registry.py": "8251e71474d9015f5b7d691ef95bce95dbfe87bf17e963c69a839c62f625e9d3",
@@ -204,7 +204,7 @@
     },
     "mlp": {
       "model_id": "model:mlp",
-      "sha256": "1f7c6e022b4953299401ac6499727a95bfc8a96c9eb00d7c873082713179396f"
+      "sha256": "0969af880f0eac115004ea42fd16f6029121958fe7fc6bb53e3ddd1f0242e80c"
     },
     "mobilenet": {
       "model_id": "model:mobilenet",
@@ -244,7 +244,7 @@
     },
     "perceptron": {
       "model_id": "model:perceptron",
-      "sha256": "b76fd3f28042215da2be68b50a03a1ed724c64a4e872fa05a1cf16a302031652"
+      "sha256": "8bacc4c6bc490c40b32d82cce324819a58aa028f26943323c95d2812ac1e0002"
     },
     "pix2pix": {
       "model_id": "model:pix2pix",
