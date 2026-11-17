@@ -10,7 +10,7 @@ BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18'
     'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
     'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet',
     'neuralode', 'fno', 'rwkv')
-BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('siren', 'deeponet', 'nafnet')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('siren', 'deeponet', 'nafnet', 'u2net', 'pix2pix', 'cyclegan')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('tcn', 'nbeats', 'tabnet', 'kan', 'xlstm', 'timemixer')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('dqn_rl', 'ppo_rl', 'dreamer_rl', 'diayn_rl')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('sac_rl', 'muzero_rl', 'decision_transformer_rl')
@@ -30,6 +30,11 @@ def make_model(runtime_id):
     devices = list(range(torch.cuda.device_count())) if torch.cuda.is_initialized() else []
     with torch.random.fork_rng(devices=devices):
         torch.manual_seed(47)
+        if runtime_id in ('u2net', 'pix2pix', 'cyclegan'):
+            from .image_translation_models import TinyU2Net, TinyPix2Pix, TinyCycleGAN
+            models = {'u2net': TinyU2Net, 'pix2pix': TinyPix2Pix, 'cyclegan': TinyCycleGAN}
+            count = 1 if runtime_id == 'u2net' else 2
+            return models[runtime_id]().eval(), tuple(torch.randn(1, 3, 8, 8) for _ in range(count))
         if runtime_id in ('siren', 'deeponet', 'nafnet'):
             from .implicit_restoration_models import TinySIREN, TinyDeepONet, TinyNAFNet
             if runtime_id == 'siren': return TinySIREN().eval(), (torch.randn(2, 2),)
