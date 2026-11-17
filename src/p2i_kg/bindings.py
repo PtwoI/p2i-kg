@@ -4,6 +4,12 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'u2net': [('component:u2net_nested_rsu', 'encoder'), ('component:u2net_nested_rsu', 'bridge'),
+              ('component:u2net_nested_rsu', 'decoder'), ('component:u2net_side_fusion', 'fusion')],
+    'pix2pix': [('component:pix2pix_generator', 'generator'), ('component:pix2pix_patchgan', 'discriminator')],
+    'cyclegan': [('component:cyclegan_generators', 'a_to_b'), ('component:cyclegan_generators', 'b_to_a'),
+                 ('component:cyclegan_discriminators', 'discriminator_a'),
+                 ('component:cyclegan_discriminators', 'discriminator_b')],
     'siren': [('component:siren_first', 'first'), ('component:siren_hidden', 'hidden'), ('component:siren_output', 'output')],
     'deeponet': [('component:deeponet_branch', 'branch'), ('component:deeponet_trunk', 'trunk')],
     'nafnet': [('component:naf_block', 'block'), ('component:naf_gate', 'block.gate'), ('component:naf_sca', 'block.channel_attention')],
