@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "repository": "PtwoI/p2i-kg",
-  "generation_revision": "a39a1c1d479855b07a6073894e02d5ff3b994fe1",
-  "catalog_revision": "27fef52cf0a37fc053bff6966e6453a7fe52be2358dafce87000cc6a59cf7118",
+  "generation_revision": "1aa6bd671c228333ba77c6e47980ee9369c14249",
+  "catalog_revision": "98506ce0a4463b4e8d337837676d62bfaad059363377d73c7d2dfa28d2ce2e3b",
   "source_files": {
-    "catalog.json": "aaee61584dcec50b311ee698b571924e1e360d44ff012169dd51a920f16eb683",
-    "runtime.py": "67751b92b5b30603d5acb86d0c6616324333960d28ea56abcc3ddaae8bbbac8e",
-    "bindings.py": "fd4d017887fcfbbfeb37980ce6bf47657d5df0dbce62b0f6b5c2b70a3cdc8a02",
+    "catalog.json": "aa3c7ff5f9e18e015b7394d7d64563a1963b52384a45a7948cb5ac964913f9bd",
+    "runtime.py": "5762313b2b0d77775a5a9307a0dd526b446926d4868e2b3ad2eb160d7c47516a",
+    "bindings.py": "ba2ac176047c093e5e432d13eb7b68966260337dfe741301f376312d6b52e993",
     "models.py": "e93f70c6822928c193c163400dee817e765e9b8241895512c06498bd8a21c447",
     "extended_models.py": "138e589537627ddf4dc7f7dfded0b4f2c73cebdd2b316cf076ff23b1317a63e4",
     "extended_registry.py": "8251e71474d9015f5b7d691ef95bce95dbfe87bf17e963c69a839c62f625e9d3",
@@ -14,6 +14,7 @@
     "new_architectures.py": "30dff204ee0308e093ce9a7fafa1a6265ee47ee4e1145a07ddf3b510306b5f07",
     "implicit_restoration_models.py": "3d0e83298faab9f26999db297ab644e4c0f12fd40d21708c0ac3f2bfc2506597",
     "image_translation_models.py": "c2c24c390ee987d72ce6e24d5e2899c2d92706c335f8db22399a14e075c31e88",
+    "token_mixer_models.py": "201d7caaab7367390c6dc8ed46f81464f6e4131abf7876d93649f5199f3980a7",
     "viewer.py": "0dff67694069d5611e16c91915a25bd9719cbf85987edec877ecbec4b3b85dc3"
   },
   "weights": "random initialization, not trained checkpoints",
@@ -49,6 +50,10 @@
     "cnn": {
       "model_id": "model:cnn",
       "sha256": "a7c04d21b289b88ebccd78fbf1923077c92c19df7d130eec791dce1d94d322c1"
+    },
+    "convmixer": {
+      "model_id": "model:convmixer",
+      "sha256": "1e48c2d72180346239a1b6f7bc9c0c380cd7e8cc8add52fcdf14494ab416b269"
     },
     "convnext": {
       "model_id": "model:convnext",
@@ -258,6 +263,10 @@
       "model_id": "model:pointnet",
       "sha256": "523c6b5d2d301b92300109ba6d78864f02b80d509e8b294af66c05e4cb79bd9f"
     },
+    "poolformer": {
+      "model_id": "model:poolformer",
+      "sha256": "15b61069307b3b8c2750111db074a8b7bc30d60bdf3e910840fc150230a85e87"
+    },
     "ppo_rl": {
       "model_id": "model:ppo",
       "sha256": "bc33837cc14a944a31a923c9f20ce22617725f66f9762d2bec4e98ba758e13db"
@@ -269,6 +278,10 @@
     "reinforce_rl": {
       "model_id": "model:reinforce",
       "sha256": "0dc85258590954d9d947d07147fc2feec448a0f252cbc3073a2823612a1ac356"
+    },
+    "resmlp": {
+      "model_id": "model:resmlp",
+      "sha256": "6ec94215cab683e3ea207b34fad7c559d8870563eed709978b8e64746771ae62"
     },
     "resnet18": {
       "model_id": "model:resnet",

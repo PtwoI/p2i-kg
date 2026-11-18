@@ -165,3 +165,10 @@ discrimination and bidirectional cycle reconstruction, respectively. The
 papers and author implementations. The bundled examples expose these paths with
 randomly initialized CPU models, including real and generated discriminator
 inputs for both translators.
+
+PoolFormer, ConvMixer and ResMLP expose three complementary alternatives for
+mixing image patches. PoolFormer uses local average pooling, ConvMixer uses
+depthwise convolution, and ResMLP applies a shared linear projection across
+patches with channel-wise affine transforms. Their
+[token-mixer fragment](token-mixer-architectures.json) records original papers,
+author implementations and scope-limited runtime examples.

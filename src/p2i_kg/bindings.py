@@ -4,6 +4,10 @@ from .runtime import make_model
 # Paths refer to the fixed, versioned educational factories. They are verified
 # against the actual architecture, not guessed for arbitrary uploaded models.
 BINDINGS = {
+    'poolformer': [('component:poolformer_pool', 'block.mixer'), ('component:poolformer_mlp', 'block.channel_mlp')],
+    'convmixer': [('component:convmixer_spatial', 'block.spatial'), ('component:convmixer_channel', 'block.channel')],
+    'resmlp': [('component:resmlp_affine', 'block.affine1'), ('component:resmlp_token', 'block.token_mix'),
+               ('component:resmlp_channel', 'block.channel_mlp')],
     'perceptron': [('component:affine_projection', 'linear')],
     'mlp': [('component:affine_projection', 'layers.0'),
             ('component:affine_projection', 'layers.2')],

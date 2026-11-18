@@ -10,6 +10,7 @@ BASE_RUNTIME_IDS = ('perceptron', 'mlp', 'cnn', 'rnn', 'lstm', 'gru', 'resnet18'
     'nerf', 'perceiver', 'graphsage', 'deepsets', 'pointnet', 'simclr', 'byol',
     'ldm', 'dit', 'moco', 'dino', 'gin', 'mamba2', 'senet', 's4', 'retnet',
     'neuralode', 'fno', 'rwkv')
+BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('poolformer', 'convmixer', 'resmlp')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('siren', 'deeponet', 'nafnet', 'u2net', 'pix2pix', 'cyclegan')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('tcn', 'nbeats', 'tabnet', 'kan', 'xlstm', 'timemixer')
 BASE_RUNTIME_IDS = BASE_RUNTIME_IDS + ('dqn_rl', 'ppo_rl', 'dreamer_rl', 'diayn_rl')
@@ -30,6 +31,10 @@ def make_model(runtime_id):
     devices = list(range(torch.cuda.device_count())) if torch.cuda.is_initialized() else []
     with torch.random.fork_rng(devices=devices):
         torch.manual_seed(47)
+        if runtime_id in ('poolformer', 'convmixer', 'resmlp'):
+            from .token_mixer_models import TinyPoolFormer, TinyConvMixer, TinyResMLP
+            models = {'poolformer': TinyPoolFormer, 'convmixer': TinyConvMixer, 'resmlp': TinyResMLP}
+            return models[runtime_id]().eval(), (torch.randn(2, 3, 8, 8),)
         if runtime_id in ('u2net', 'pix2pix', 'cyclegan'):
             from .image_translation_models import TinyU2Net, TinyPix2Pix, TinyCycleGAN
             models = {'u2net': TinyU2Net, 'pix2pix': TinyPix2Pix, 'cyclegan': TinyCycleGAN}

@@ -4555,6 +4555,147 @@
       "kind": "component",
       "label": "Affine projection",
       "summary": "입력의 가중합에 편향을 더합니다."
+    },
+    {
+      "id": "paper:poolformer",
+      "kind": "paper",
+      "label": "MetaFormer Is Actually What You Need for Vision",
+      "summary": "공식 구현: https://github.com/sail-sg/poolformer/blob/main/models/poolformer.py",
+      "url": "https://arxiv.org/abs/2111.11418",
+      "reference_year": 2021,
+      "authors": [
+        "Weihao Yu",
+        "Mi Luo",
+        "Pan Zhou",
+        "Chenyang Si",
+        "Yichen Zhou",
+        "Xinchao Wang",
+        "Jiashi Feng",
+        "Shuicheng Yan"
+      ]
+    },
+    {
+      "id": "model:poolformer",
+      "kind": "model",
+      "label": "PoolFormer",
+      "summary": "평균 풀링 기반 토큰 혼합과 채널 MLP를 잔차 블록으로 구성합니다.",
+      "family": "vision",
+      "reference_year": 2021,
+      "runtime_id": "poolformer",
+      "runtime_note": "8채널 단일 스테이지에서 GroupNorm, average-pool-minus-input, LayerScale, 채널 MLP와 분류 헤드를 실행합니다. 원본의 전체 해상도 계층·깊이와 학습은 생략합니다."
+    },
+    {
+      "id": "concept:poolformer",
+      "kind": "concept",
+      "label": "Pooling token mixing",
+      "summary": "주변 평균에서 입력을 빼는 공간 혼합을 정규화와 잔차 경로 사이에 둡니다."
+    },
+    {
+      "id": "component:poolformer_pool",
+      "kind": "component",
+      "label": "Pooling token mixer",
+      "summary": "학습 가능한 attention 없이 국소 평균과 입력 차이를 계산합니다."
+    },
+    {
+      "id": "component:poolformer_mlp",
+      "kind": "component",
+      "label": "PoolFormer channel MLP",
+      "summary": "1×1 합성곱 두 개 사이의 GELU로 채널을 혼합합니다."
+    },
+    {
+      "id": "paper:convmixer",
+      "kind": "paper",
+      "label": "Patches Are All You Need?",
+      "summary": "공식 구현: https://github.com/locuslab/convmixer/blob/main/convmixer.py",
+      "url": "https://arxiv.org/abs/2201.09792",
+      "reference_year": 2022,
+      "authors": [
+        "Asher Trockman",
+        "J. Zico Kolter"
+      ]
+    },
+    {
+      "id": "model:convmixer",
+      "kind": "model",
+      "label": "ConvMixer",
+      "summary": "고정 해상도의 패치 표현에 depthwise 및 pointwise 합성곱을 순차 적용합니다.",
+      "family": "vision",
+      "reference_year": 2022,
+      "runtime_id": "convmixer",
+      "runtime_note": "2×2 패치 임베딩과 8채널 단일 블록에서 depthwise 잔차 경로·pointwise 혼합·GELU·BatchNorm을 실행합니다. 임의 초기화이며 논문의 큰 커널·깊이·학습은 생략합니다."
+    },
+    {
+      "id": "concept:convmixer",
+      "kind": "concept",
+      "label": "Isotropic convolutional patch mixing",
+      "summary": "패치 격자의 해상도를 유지하면서 공간 혼합과 채널 혼합을 분리합니다."
+    },
+    {
+      "id": "component:convmixer_spatial",
+      "kind": "component",
+      "label": "Depthwise residual spatial mixer",
+      "summary": "채널별 공간 합성곱 뒤에 GELU와 BatchNorm을 두고 입력을 더합니다."
+    },
+    {
+      "id": "component:convmixer_channel",
+      "kind": "component",
+      "label": "Pointwise channel mixer",
+      "summary": "1×1 합성곱으로 채널을 섞고 GELU 및 BatchNorm을 적용합니다."
+    },
+    {
+      "id": "paper:resmlp",
+      "kind": "paper",
+      "label": "ResMLP: Feedforward networks for image classification with data-efficient training",
+      "summary": "공식 구현: https://github.com/facebookresearch/deit/blob/main/resmlp_models.py",
+      "url": "https://arxiv.org/abs/2105.03404",
+      "reference_year": 2021,
+      "authors": [
+        "Hugo Touvron",
+        "Piotr Bojanowski",
+        "Mathilde Caron",
+        "Matthieu Cord",
+        "Alaaeldin El-Nouby",
+        "Edouard Grave",
+        "Gautier Izacard",
+        "Armand Joulin",
+        "Gabriel Synnaeve",
+        "Jakob Verbeek",
+        "Hervé Jégou"
+      ]
+    },
+    {
+      "id": "model:resmlp",
+      "kind": "model",
+      "label": "ResMLP",
+      "summary": "패치축의 공유 선형 변환과 채널 MLP를 affine 변환 및 LayerScale 잔차로 결합합니다.",
+      "family": "vision",
+      "reference_year": 2021,
+      "runtime_id": "resmlp",
+      "runtime_note": "8×8 영상의 16개 패치를 처리하는 8차원 단일 블록입니다. 통계 없는 affine 변환·공유 패치 선형 혼합·채널 MLP를 실행하며 원본의 전체 깊이·증류·학습은 생략합니다."
+    },
+    {
+      "id": "concept:resmlp",
+      "kind": "concept",
+      "label": "Affine residual patch mixing",
+      "summary": "채널별 affine과 작은 학습 가능한 잔차 스케일로 패치 및 채널 혼합을 조절합니다."
+    },
+    {
+      "id": "component:resmlp_affine",
+      "kind": "component",
+      "label": "Channel-wise affine transform",
+      "summary": "표본 통계 계산 없이 채널별 학습 가능한 스케일과 편향을 적용합니다."
+    },
+    {
+      "id": "component:resmlp_token",
+      "kind": "component",
+      "label": "Shared linear patch mixer",
+      "summary": "모든 채널에 같은 선형 변환을 패치축으로 적용합니다."
+    },
+    {
+      "id": "component:resmlp_channel",
+      "kind": "component",
+      "label": "ResMLP channel feedforward",
+      "summary": "패치별로 동일한 2층 채널 MLP를 적용합니다."
     }
   ],
   "edges": [
@@ -15676,6 +15817,226 @@
       "explanation": "학습 가능한 가중합을 계산하는 실제 실행 모듈과 연결합니다.",
       "evidence": [
         "paper:backprop"
+      ]
+    },
+    {
+      "source": "model:poolformer",
+      "relation": "uses",
+      "target": "concept:poolformer",
+      "basis": "documented",
+      "explanation": "주변 평균에서 입력을 빼는 공간 혼합을 정규화와 잔차 경로 사이에 둡니다.",
+      "evidence": [
+        "paper:poolformer"
+      ]
+    },
+    {
+      "source": "model:poolformer",
+      "relation": "has_component",
+      "target": "component:poolformer_pool",
+      "basis": "documented",
+      "explanation": "학습 가능한 attention 없이 국소 평균과 입력 차이를 계산합니다.",
+      "evidence": [
+        "paper:poolformer"
+      ]
+    },
+    {
+      "source": "model:poolformer",
+      "relation": "has_component",
+      "target": "component:poolformer_mlp",
+      "basis": "documented",
+      "explanation": "1×1 합성곱 두 개 사이의 GELU로 채널을 혼합합니다.",
+      "evidence": [
+        "paper:poolformer"
+      ]
+    },
+    {
+      "source": "model:poolformer",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "영상 분류 로짓과 정답 범주의 교차 엔트로피로 학습합니다.",
+      "evidence": [
+        "paper:poolformer"
+      ]
+    },
+    {
+      "source": "model:poolformer",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "패치 표현을 혼합하고 전역 평균으로 영상 범주를 예측합니다.",
+      "evidence": [
+        "paper:poolformer"
+      ]
+    },
+    {
+      "source": "model:poolformer",
+      "relation": "documented_in",
+      "target": "paper:poolformer",
+      "basis": "documented",
+      "explanation": "원논문에서 해당 구조를 제안합니다.",
+      "evidence": [
+        "paper:poolformer"
+      ]
+    },
+    {
+      "source": "model:poolformer",
+      "relation": "alternative_to",
+      "target": "model:vit",
+      "basis": "structural",
+      "explanation": "동일한 영상 분류 문제에서 평균 풀링을 토큰 혼합 연산자로 사용합니다.",
+      "evidence": [
+        "paper:poolformer"
+      ]
+    },
+    {
+      "source": "model:convmixer",
+      "relation": "uses",
+      "target": "concept:convmixer",
+      "basis": "documented",
+      "explanation": "패치 격자의 해상도를 유지하면서 공간 혼합과 채널 혼합을 분리합니다.",
+      "evidence": [
+        "paper:convmixer"
+      ]
+    },
+    {
+      "source": "model:convmixer",
+      "relation": "has_component",
+      "target": "component:convmixer_spatial",
+      "basis": "documented",
+      "explanation": "채널별 공간 합성곱 뒤에 GELU와 BatchNorm을 두고 입력을 더합니다.",
+      "evidence": [
+        "paper:convmixer"
+      ]
+    },
+    {
+      "source": "model:convmixer",
+      "relation": "has_component",
+      "target": "component:convmixer_channel",
+      "basis": "documented",
+      "explanation": "1×1 합성곱으로 채널을 섞고 GELU 및 BatchNorm을 적용합니다.",
+      "evidence": [
+        "paper:convmixer"
+      ]
+    },
+    {
+      "source": "model:convmixer",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "영상 분류 로짓과 정답 범주의 교차 엔트로피로 학습합니다.",
+      "evidence": [
+        "paper:convmixer"
+      ]
+    },
+    {
+      "source": "model:convmixer",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "패치 표현을 혼합하고 전역 평균으로 영상 범주를 예측합니다.",
+      "evidence": [
+        "paper:convmixer"
+      ]
+    },
+    {
+      "source": "model:convmixer",
+      "relation": "documented_in",
+      "target": "paper:convmixer",
+      "basis": "documented",
+      "explanation": "원논문에서 해당 구조를 제안합니다.",
+      "evidence": [
+        "paper:convmixer"
+      ]
+    },
+    {
+      "source": "model:convmixer",
+      "relation": "alternative_to",
+      "target": "model:mixer",
+      "basis": "structural",
+      "explanation": "패치의 공간축과 채널축을 분리해 혼합하는 구조에서 합성곱을 사용합니다.",
+      "evidence": [
+        "paper:convmixer"
+      ]
+    },
+    {
+      "source": "model:resmlp",
+      "relation": "uses",
+      "target": "concept:resmlp",
+      "basis": "documented",
+      "explanation": "채널별 affine과 작은 학습 가능한 잔차 스케일로 패치 및 채널 혼합을 조절합니다.",
+      "evidence": [
+        "paper:resmlp"
+      ]
+    },
+    {
+      "source": "model:resmlp",
+      "relation": "has_component",
+      "target": "component:resmlp_affine",
+      "basis": "documented",
+      "explanation": "표본 통계 계산 없이 채널별 학습 가능한 스케일과 편향을 적용합니다.",
+      "evidence": [
+        "paper:resmlp"
+      ]
+    },
+    {
+      "source": "model:resmlp",
+      "relation": "has_component",
+      "target": "component:resmlp_token",
+      "basis": "documented",
+      "explanation": "모든 채널에 같은 선형 변환을 패치축으로 적용합니다.",
+      "evidence": [
+        "paper:resmlp"
+      ]
+    },
+    {
+      "source": "model:resmlp",
+      "relation": "has_component",
+      "target": "component:resmlp_channel",
+      "basis": "documented",
+      "explanation": "패치별로 동일한 2층 채널 MLP를 적용합니다.",
+      "evidence": [
+        "paper:resmlp"
+      ]
+    },
+    {
+      "source": "model:resmlp",
+      "relation": "trained_with",
+      "target": "objective:supervised",
+      "basis": "documented",
+      "explanation": "영상 분류 로짓과 정답 범주의 교차 엔트로피로 학습합니다.",
+      "evidence": [
+        "paper:resmlp"
+      ]
+    },
+    {
+      "source": "model:resmlp",
+      "relation": "applied_to",
+      "target": "task:classification",
+      "basis": "documented",
+      "explanation": "패치 표현을 혼합하고 전역 평균으로 영상 범주를 예측합니다.",
+      "evidence": [
+        "paper:resmlp"
+      ]
+    },
+    {
+      "source": "model:resmlp",
+      "relation": "documented_in",
+      "target": "paper:resmlp",
+      "basis": "documented",
+      "explanation": "원논문에서 해당 구조를 제안합니다.",
+      "evidence": [
+        "paper:resmlp"
+      ]
+    },
+    {
+      "source": "model:resmlp",
+      "relation": "alternative_to",
+      "target": "model:mixer",
+      "basis": "structural",
+      "explanation": "MLP 기반 패치 혼합에서 단일 공유 선형 변환과 통계 없는 affine을 사용합니다.",
+      "evidence": [
+        "paper:resmlp"
       ]
     }
   ]
